@@ -4,7 +4,7 @@
   "description": "Find out why your React Native app is big and how to shrink it.",
   "type": "module",
   "bin": {
-    "rn-size-check": "./bin/rn-size-check.js"
+    "rn-size-check": "bin/rn-size-check.js"
   },
   "files": [
     "bin",
