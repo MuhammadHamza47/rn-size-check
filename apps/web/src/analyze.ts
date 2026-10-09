@@ -1,20 +1,32 @@
 import type { AnalyzeOptions, Report } from '@rnsc/core';
 import type { WorkerRequest, WorkerResponse } from './worker';
 
-/** Runs the analysis in a Web Worker. A fresh worker per run keeps memory from piling up. */
+const spawn = () => new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' });
+
+/**
+ * A worker started ahead of time, so its code is already downloaded when the user drops a file
+ * (scanning then works even if the connection drops after the page has loaded).
+ */
+let ready: Worker | null = null;
+
+export function prewarmWorker(): void {
+  ready ??= spawn();
+}
+
+/** Runs the analysis in a Web Worker. Each run gets a fresh worker so memory never piles up. */
 export function analyzeInWorker(file: File, options: AnalyzeOptions): Promise<Report> {
-  return new Promise((resolve, reject) => {
-    const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' });
+  const worker = ready ?? spawn();
+  ready = null;
+  return new Promise<Report>((resolve, reject) => {
     worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
-      worker.terminate();
       if (event.data.ok) resolve(event.data.report);
       else reject(new Error(friendlyError(event.data.error)));
     };
-    worker.onerror = (event) => {
-      worker.terminate();
-      reject(new Error(event.message || 'The analyzer crashed.'));
-    };
+    worker.onerror = (event) => reject(new Error(event.message || 'The analyzer crashed.'));
     worker.postMessage({ file, options } satisfies WorkerRequest);
+  }).finally(() => {
+    worker.terminate();
+    prewarmWorker();
   });
 }
 

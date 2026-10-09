@@ -3,17 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RN Size Check: why is your React Native app so big?</title>
+    <title>rn-size-check: why is your React Native app so big?</title>
     <meta
       name="description"
-      content="Drop your Android .aab or .apk and see what makes your React Native app big, with fixes and MB savings. Scanned in your browser; your file is never uploaded."
+      content="Drop a release .aab or .apk to see what makes your React Native Android app big and how many MB each fix saves: R8, ABIs, images, icon fonts, duplicates. The file is read in your browser and never uploaded."
     />
-    <meta property="og:title" content="RN Size Check" />
-    <meta property="og:description" content="Why is your React Native app so big? Drop your .aab/.apk and find out in seconds. Nothing is uploaded." />
+    <meta name="theme-color" content="#0d1117" />
+    <link rel="canonical" href="https://rn-size-check-web.vercel.app/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rn-size-check-web.vercel.app/" />
+    <meta property="og:title" content="Why is your React Native app so big?" />
+    <meta
+      property="og:description"
+      content="Drop your .aab or .apk and see what to fix, file by file, with the MB each fix saves. Nothing is uploaded."
+    />
+    <meta property="og:image" content="https://rn-size-check-web.vercel.app/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="rn-size-check: why is your React Native app so big?" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230e7c86'/><rect x='7' y='17' width='4' height='8' rx='1' fill='white'/><rect x='14' y='11' width='4' height='14' rx='1' fill='white'/><rect x='21' y='6' width='4' height='19' rx='1' fill='white'/></svg>" />
   </head>
   <body>
     <div id="root"></div>
+    <noscript>This page reads your build with JavaScript in your browser. Please enable JavaScript, or use the command line: npx rn-size-check app-release.aab</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,0 +1,712 @@
+{
+ "schemaVersion": 1,
+ "tool": {
+  "name": "rn-size-check",
+  "version": "0.1.1"
+ },
+ "createdAt": "2026-10-01T10:00:00.000Z",
+ "app": {
+  "platform": "android",
+  "artifact": "aab",
+  "fileName": "app-release.aab",
+  "abis": [
+   "arm64-v8a",
+   "armeabi-v7a",
+   "x86_64",
+   "x86"
+  ],
+  "extraModules": [],
+  "js": {
+   "engine": "hermes",
+   "hermesBytecodeVersion": 96,
+   "bundlePath": "base/assets/index.android.bundle",
+   "bytes": 2041836
+  },
+  "manifest": {
+   "packageName": "com.example.shop",
+   "versionName": "2.3.0",
+   "versionCode": 23,
+   "minSdk": 24,
+   "targetSdk": 35,
+   "extractNativeLibs": false
+  },
+  "code": {
+   "minified": false,
+   "obfuscatedShare": 0.012,
+   "mappingFile": false
+  }
+ },
+ "sizes": {
+  "file": 68917077,
+  "download": {
+   "bytes": 28494453,
+   "estimate": true,
+   "abi": "arm64-v8a",
+   "density": "xxhdpi"
+  },
+  "install": {
+   "bytes": 40837207,
+   "estimate": true,
+   "abi": "arm64-v8a"
+  },
+  "notDelivered": 21771475
+ },
+ "breakdown": [
+  {
+   "category": "native",
+   "compressed": 5986662,
+   "uncompressed": 18329416,
+   "count": 18
+  },
+  {
+   "category": "js",
+   "compressed": 2041836,
+   "uncompressed": 4415844,
+   "count": 1
+  },
+  {
+   "category": "dex",
+   "compressed": 10331811,
+   "uncompressed": 27004516,
+   "count": 3
+  },
+  {
+   "category": "image",
+   "compressed": 6868936,
+   "uncompressed": 6879080,
+   "count": 108
+  },
+  {
+   "category": "font",
+   "compressed": 2268028,
+   "uncompressed": 4572104,
+   "count": 27
+  },
+  {
+   "category": "resources",
+   "compressed": 930004,
+   "uncompressed": 3383799,
+   "count": 905
+  },
+  {
+   "category": "other",
+   "compressed": 67176,
+   "uncompressed": 125314,
+   "count": 110
+  }
+ ],
+ "nativeByAbi": [
+  {
+   "abi": "arm64-v8a",
+   "compressed": 5986662,
+   "uncompressed": 18329416,
+   "count": 18
+  },
+  {
+   "abi": "armeabi-v7a",
+   "compressed": 5129885,
+   "uncompressed": 12478804,
+   "count": 18
+  },
+  {
+   "abi": "x86_64",
+   "compressed": 6199885,
+   "uncompressed": 18940968,
+   "count": 18
+  },
+  {
+   "abi": "x86",
+   "compressed": 6552608,
+   "uncompressed": 19440848,
+   "count": 18
+  }
+ ],
+ "nativeLibs": [
+  {
+   "path": "base/lib/arm64-v8a/libreactnative.so",
+   "compressed": 2055399,
+   "uncompressed": 6170544,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libhermesvm.so",
+   "compressed": 894698,
+   "uncompressed": 2141744,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libucrop.so",
+   "compressed": 491656,
+   "uncompressed": 1162840,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libreanimated.so",
+   "compressed": 437589,
+   "uncompressed": 1293800,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libappmodules.so",
+   "compressed": 414209,
+   "uncompressed": 2132088,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libc++_shared.so",
+   "compressed": 406557,
+   "uncompressed": 1292904,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libworklets.so",
+   "compressed": 244939,
+   "uncompressed": 907416,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libnative-imagetranscoder.so",
+   "compressed": 224841,
+   "uncompressed": 585376,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libreact_codegen_rnscreens.so",
+   "compressed": 211605,
+   "uncompressed": 866496,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libreact_codegen_rnsvg.so",
+   "compressed": 201476,
+   "uncompressed": 735192,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libjsi.so",
+   "compressed": 172929,
+   "uncompressed": 395912,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libfbjni.so",
+   "compressed": 62764,
+   "uncompressed": 177000,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libreact_codegen_safeareacontext.so",
+   "compressed": 53514,
+   "uncompressed": 157128,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libhermestooling.so",
+   "compressed": 46448,
+   "uncompressed": 138824,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/librnscreens.so",
+   "compressed": 34865,
+   "uncompressed": 101064,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libgesturehandler.so",
+   "compressed": 17231,
+   "uncompressed": 38616,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libnative-filters.so",
+   "compressed": 12767,
+   "uncompressed": 23712,
+   "debugBytes": 0
+  },
+  {
+   "path": "base/lib/arm64-v8a/libimagepipeline.so",
+   "compressed": 3175,
+   "uncompressed": 8760,
+   "debugBytes": 0
+  }
+ ],
+ "largestFiles": [
+  {
+   "path": "base/dex/classes.dex",
+   "category": "dex",
+   "compressed": 3766522,
+   "uncompressed": 9430492,
+   "module": "base",
+   "delivered": true,
+   "crc32": 3831674602
+  },
+  {
+   "path": "base/dex/classes2.dex",
+   "category": "dex",
+   "compressed": 3431671,
+   "uncompressed": 9034988,
+   "module": "base",
+   "delivered": true,
+   "crc32": 232700822
+  },
+  {
+   "path": "base/dex/classes3.dex",
+   "category": "dex",
+   "compressed": 3133618,
+   "uncompressed": 8539036,
+   "module": "base",
+   "delivered": true,
+   "crc32": 3585039936
+  },
+  {
+   "path": "base/lib/arm64-v8a/libreactnative.so",
+   "category": "native",
+   "compressed": 2055399,
+   "uncompressed": 6170544,
+   "module": "base",
+   "delivered": true,
+   "crc32": 1835112923,
+   "abi": "arm64-v8a"
+  },
+  {
+   "path": "base/assets/index.android.bundle",
+   "category": "js",
+   "compressed": 2041836,
+   "uncompressed": 4415844,
+   "module": "base",
+   "delivered": true,
+   "crc32": 1226999112
+  },
+  {
+   "path": "base/res/drawable-mdpi-v4/src_assets_images_hero.png",
+   "category": "image",
+   "compressed": 1066977,
+   "uncompressed": 1066832,
+   "module": "base",
+   "delivered": true,
+   "crc32": 52408633
+  },
+  {
+   "path": "base/res/drawable-mdpi-v4/src_assets_images_banner_a.png",
+   "category": "image",
+   "compressed": 1066977,
+   "uncompressed": 1066832,
+   "module": "base",
+   "delivered": true,
+   "crc32": 52408633
+  },
+  {
+   "path": "base/res/drawable-mdpi-v4/src_assets_images_banner_b.png",
+   "category": "image",
+   "compressed": 991911,
+   "uncompressed": 991750,
+   "module": "base",
+   "delivered": true,
+   "crc32": 2027655196
+  },
+  {
+   "path": "base/lib/arm64-v8a/libhermesvm.so",
+   "category": "native",
+   "compressed": 894698,
+   "uncompressed": 2141744,
+   "module": "base",
+   "delivered": true,
+   "crc32": 3516107070,
+   "abi": "arm64-v8a"
+  },
+  {
+   "path": "base/res/drawable-mdpi-v4/src_assets_images_onboarding_1.png",
+   "category": "image",
+   "compressed": 599322,
+   "uncompressed": 599137,
+   "module": "base",
+   "delivered": true,
+   "crc32": 1255261477
+  },
+  {
+   "path": "base/res/drawable-mdpi-v4/src_assets_images_onboarding_2.png",
+   "category": "image",
+   "compressed": 588020,
+   "uncompressed": 587868,
+   "module": "base",
+   "delivered": true,
+   "crc32": 1133852694
+  },
+  {
+   "path": "base/res/drawable-mdpi-v4/src_assets_images_onboarding_3.png",
+   "category": "image",
+   "compressed": 573542,
+   "uncompressed": 573688,
+   "module": "base",
+   "delivered": true,
+   "crc32": 2381880204
+  },
+  {
+   "path": "base/res/drawable-mdpi-v4/src_assets_images_chart.png",
+   "category": "image",
+   "compressed": 571149,
+   "uncompressed": 570974,
+   "module": "base",
+   "delivered": true,
+   "crc32": 3505807927
+  },
+  {
+   "path": "base/res/drawable-mdpi-v4/src_assets_images_promo.png",
+   "category": "image",
+   "compressed": 553852,
+   "uncompressed": 553705,
+   "module": "base",
+   "delivered": true,
+   "crc32": 4139849870
+  },
+  {
+   "path": "base/resources.pb",
+   "category": "resources",
+   "compressed": 551917,
+   "uncompressed": 2179535,
+   "module": "base",
+   "delivered": true,
+   "crc32": 1835343803
+  },
+  {
+   "path": "base/res/drawable-mdpi-v4/src_assets_images_logo_light.png",
+   "category": "image",
+   "compressed": 550479,
+   "uncompressed": 551490,
+   "module": "base",
+   "delivered": true,
+   "crc32": 2595986234
+  },
+  {
+   "path": "base/assets/fonts/MaterialCommunityIcons.ttf",
+   "category": "font",
+   "compressed": 523319,
+   "uncompressed": 1147844,
+   "module": "base",
+   "delivered": true,
+   "crc32": 3900927860
+  },
+  {
+   "path": "base/lib/arm64-v8a/libucrop.so",
+   "category": "native",
+   "compressed": 491656,
+   "uncompressed": 1162840,
+   "module": "base",
+   "delivered": true,
+   "crc32": 1905888905,
+   "abi": "arm64-v8a"
+  },
+  {
+   "path": "base/lib/arm64-v8a/libreanimated.so",
+   "category": "native",
+   "compressed": 437589,
+   "uncompressed": 1293800,
+   "module": "base",
+   "delivered": true,
+   "crc32": 3032753477,
+   "abi": "arm64-v8a"
+  },
+  {
+   "path": "base/lib/arm64-v8a/libappmodules.so",
+   "category": "native",
+   "compressed": 414209,
+   "uncompressed": 2132088,
+   "module": "base",
+   "delivered": true,
+   "crc32": 3403581361,
+   "abi": "arm64-v8a"
+  },
+  {
+   "path": "base/lib/arm64-v8a/libc++_shared.so",
+   "category": "native",
+   "compressed": 406557,
+   "uncompressed": 1292904,
+   "module": "base",
+   "delivered": true,
+   "crc32": 3888269138,
+   "abi": "arm64-v8a"
+  },
+  {
+   "path": "base/assets/fonts/Ionicons.ttf",
+   "category": "font",
+   "compressed": 256499,
+   "uncompressed": 442604,
+   "module": "base",
+   "delivered": true,
+   "crc32": 797854248
+  },
+  {
+   "path": "base/lib/arm64-v8a/libworklets.so",
+   "category": "native",
+   "compressed": 244939,
+   "uncompressed": 907416,
+   "module": "base",
+   "delivered": true,
+   "crc32": 582606025,
+   "abi": "arm64-v8a"
+  },
+  {
+   "path": "base/lib/arm64-v8a/libnative-imagetranscoder.so",
+   "category": "native",
+   "compressed": 224841,
+   "uncompressed": 585376,
+   "module": "base",
+   "delivered": true,
+   "crc32": 273658952,
+   "abi": "arm64-v8a"
+  },
+  {
+   "path": "base/lib/arm64-v8a/libreact_codegen_rnscreens.so",
+   "category": "native",
+   "compressed": 211605,
+   "uncompressed": 866496,
+   "module": "base",
+   "delivered": true,
+   "crc32": 3034101,
+   "abi": "arm64-v8a"
+  }
+ ],
+ "findings": [
+  {
+   "checkId": "r8-off",
+   "severity": "warn",
+   "title": "R8 is off: 9.9 MB of Java/Kotlin code is not shrunk",
+   "files": [
+    "base/dex/classes.dex",
+    "base/dex/classes2.dex",
+    "base/dex/classes3.dex"
+   ],
+   "fix": "Set enableProguardInReleaseBuilds = true in android/app/build.gradle. On Expo, turn on minification for Android release builds in the expo-build-properties plugin. Test the release build afterwards; some libraries need keep rules in proguard-rules.pro.",
+   "items": [
+    {
+     "path": "base/dex/classes.dex",
+     "bytes": 3766522
+    },
+    {
+     "path": "base/dex/classes2.dex",
+     "bytes": 3431671
+    },
+    {
+     "path": "base/dex/classes3.dex",
+     "bytes": 3133618
+    }
+   ],
+   "savings": {
+    "bytes": 3616134,
+    "estimate": true
+   }
+  },
+  {
+   "checkId": "image-large",
+   "severity": "warn",
+   "title": "10 PNG/JPEG images over 100 KB (6.4 MB)",
+   "files": [
+    "base/res/drawable-mdpi-v4/src_assets_images_hero.png",
+    "base/res/drawable-mdpi-v4/src_assets_images_banner_a.png",
+    "base/res/drawable-mdpi-v4/src_assets_images_banner_b.png",
+    "base/res/drawable-mdpi-v4/src_assets_images_onboarding_1.png",
+    "base/res/drawable-mdpi-v4/src_assets_images_onboarding_2.png",
+    "base/res/drawable-mdpi-v4/src_assets_images_onboarding_3.png",
+    "base/res/drawable-mdpi-v4/src_assets_images_chart.png",
+    "base/res/drawable-mdpi-v4/src_assets_images_promo.png",
+    "base/res/drawable-mdpi-v4/src_assets_images_logo_light.png",
+    "base/res/drawable-mdpi-v4/src_assets_images_logo.png"
+   ],
+   "fix": "Convert to WebP (Android Studio: right-click → Convert to WebP, or `cwebp -q 80`). Also check the image is not far larger than it is displayed.",
+   "items": [
+    {
+     "path": "base/res/drawable-mdpi-v4/src_assets_images_hero.png",
+     "bytes": 1066977
+    },
+    {
+     "path": "base/res/drawable-mdpi-v4/src_assets_images_banner_a.png",
+     "bytes": 1066977
+    },
+    {
+     "path": "base/res/drawable-mdpi-v4/src_assets_images_banner_b.png",
+     "bytes": 991911
+    },
+    {
+     "path": "base/res/drawable-mdpi-v4/src_assets_images_onboarding_1.png",
+     "bytes": 599322
+    },
+    {
+     "path": "base/res/drawable-mdpi-v4/src_assets_images_onboarding_2.png",
+     "bytes": 588020
+    },
+    {
+     "path": "base/res/drawable-mdpi-v4/src_assets_images_onboarding_3.png",
+     "bytes": 573542
+    },
+    {
+     "path": "base/res/drawable-mdpi-v4/src_assets_images_chart.png",
+     "bytes": 571149
+    },
+    {
+     "path": "base/res/drawable-mdpi-v4/src_assets_images_promo.png",
+     "bytes": 553852
+    },
+    {
+     "path": "base/res/drawable-mdpi-v4/src_assets_images_logo_light.png",
+     "bytes": 550479
+    },
+    {
+     "path": "base/res/drawable-mdpi-v4/src_assets_images_logo.png",
+     "bytes": 127355
+    }
+   ],
+   "savings": {
+    "bytes": 2675835,
+    "estimate": true
+   }
+  },
+  {
+   "checkId": "duplicate-files",
+   "severity": "warn",
+   "title": "3 files stored more than once (3 extra copies, 1.1 MB)",
+   "files": [
+    "base/res/drawable-xxhdpi-v4/bootsplash_logo.png",
+    "base/res/drawable-night-xxhdpi-v8/bootsplash_logo.png",
+    "base/res/drawable-mdpi-v4/src_assets_images_hero.png",
+    "base/res/drawable-mdpi-v4/src_assets_images_banner_a.png",
+    "base/res/mipmap-xxhdpi-v4/ic_launcher.png",
+    "base/res/mipmap-xxhdpi-v4/ic_launcher_round.png"
+   ],
+   "fix": "Keep one copy. For RN images, require() the same file instead of copying it; for Android resources, move it to one drawable folder.",
+   "items": [
+    {
+     "path": "base/res/drawable-mdpi-v4/src_assets_images_banner_a.png",
+     "bytes": 1066977,
+     "note": "same as base/res/drawable-mdpi-v4/src_assets_images_hero.png"
+    },
+    {
+     "path": "base/res/drawable-night-xxhdpi-v8/bootsplash_logo.png",
+     "bytes": 43847,
+     "note": "same as base/res/drawable-xxhdpi-v4/bootsplash_logo.png"
+    },
+    {
+     "path": "base/res/mipmap-xxhdpi-v4/ic_launcher_round.png",
+     "bytes": 19264,
+     "note": "same as base/res/mipmap-xxhdpi-v4/ic_launcher.png"
+    }
+   ],
+   "savings": {
+    "bytes": 1130088,
+    "estimate": false
+   }
+  },
+  {
+   "checkId": "icon-fonts",
+   "severity": "warn",
+   "title": "All 19 icon fonts bundled (1.9 MB); most apps use 1–3",
+   "files": [
+    "base/assets/fonts/AntDesign.ttf",
+    "base/assets/fonts/Entypo.ttf",
+    "base/assets/fonts/EvilIcons.ttf",
+    "base/assets/fonts/Feather.ttf",
+    "base/assets/fonts/FontAwesome.ttf",
+    "base/assets/fonts/FontAwesome5_Brands.ttf",
+    "base/assets/fonts/FontAwesome5_Regular.ttf",
+    "base/assets/fonts/FontAwesome5_Solid.ttf",
+    "base/assets/fonts/FontAwesome6_Brands.ttf",
+    "base/assets/fonts/FontAwesome6_Regular.ttf",
+    "base/assets/fonts/FontAwesome6_Solid.ttf",
+    "base/assets/fonts/Fontisto.ttf",
+    "base/assets/fonts/Foundation.ttf",
+    "base/assets/fonts/Ionicons.ttf",
+    "base/assets/fonts/MaterialCommunityIcons.ttf",
+    "base/assets/fonts/MaterialIcons.ttf",
+    "base/assets/fonts/Octicons.ttf",
+    "base/assets/fonts/SimpleLineIcons.ttf",
+    "base/assets/fonts/Zocial.ttf"
+   ],
+   "fix": "Ship only the fonts you use: in android/app/build.gradle set project.ext.vectoricons = [ iconFontNames: [ \"MaterialIcons.ttf\" ] ], or import per-family packages (@react-native-vector-icons/<family>).",
+   "items": [
+    {
+     "path": "base/assets/fonts/MaterialCommunityIcons.ttf",
+     "bytes": 523319
+    },
+    {
+     "path": "base/assets/fonts/Ionicons.ttf",
+     "bytes": 256499
+    },
+    {
+     "path": "base/assets/fonts/MaterialIcons.ttf",
+     "bytes": 173019
+    },
+    {
+     "path": "base/assets/fonts/FontAwesome6_Solid.ttf",
+     "bytes": 172411
+    },
+    {
+     "path": "base/assets/fonts/Fontisto.ttf",
+     "bytes": 169152
+    },
+    {
+     "path": "base/assets/fonts/FontAwesome6_Brands.ttf",
+     "bytes": 122242
+    },
+    {
+     "path": "base/assets/fonts/FontAwesome5_Solid.ttf",
+     "bytes": 102584
+    },
+    {
+     "path": "base/assets/fonts/FontAwesome.ttf",
+     "bytes": 98167
+    },
+    {
+     "path": "base/assets/fonts/FontAwesome5_Brands.ttf",
+     "bytes": 90583
+    },
+    {
+     "path": "base/assets/fonts/Entypo.ttf",
+     "bytes": 40681
+    },
+    {
+     "path": "base/assets/fonts/AntDesign.ttf",
+     "bytes": 37759
+    },
+    {
+     "path": "base/assets/fonts/SimpleLineIcons.ttf",
+     "bytes": 36033
+    },
+    {
+     "path": "base/assets/fonts/Foundation.ttf",
+     "bytes": 33660
+    },
+    {
+     "path": "base/assets/fonts/FontAwesome6_Regular.ttf",
+     "bytes": 26721
+    },
+    {
+     "path": "base/assets/fonts/Octicons.ttf",
+     "bytes": 24945
+    },
+    {
+     "path": "base/assets/fonts/Feather.ttf",
+     "bytes": 24118
+    },
+    {
+     "path": "base/assets/fonts/Zocial.ttf",
+     "bytes": 17750
+    },
+    {
+     "path": "base/assets/fonts/FontAwesome5_Regular.ttf",
+     "bytes": 16251
+    },
+    {
+     "path": "base/assets/fonts/EvilIcons.ttf",
+     "bytes": 7982
+    }
+   ]
+  }
+ ],
+ "totals": {
+  "savingsBytes": 6995266
+ },
+ "meta": {
+  "durationMs": 230,
+  "warnings": []
+ }
+}

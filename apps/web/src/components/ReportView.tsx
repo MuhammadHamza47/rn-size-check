@@ -15,11 +15,13 @@ const DENSITIES = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
 interface Props {
   report: Report;
   options: AnalyzeOptions;
-  onOptionsChange: (options: AnalyzeOptions) => void;
+  /** Omitted for the sample report, which cannot be re-analyzed. */
+  onOptionsChange?: (options: AnalyzeOptions) => void;
   onReset: () => void;
+  sample?: boolean;
 }
 
-export function ReportView({ report, options, onOptionsChange, onReset }: Props) {
+export function ReportView({ report, options, onOptionsChange, onReset, sample }: Props) {
   const { app, sizes } = report;
   const m = app.manifest;
   const debug = m.debuggable === true;
@@ -55,10 +57,17 @@ export function ReportView({ report, options, onOptionsChange, onReset }: Props)
             Download JSON
           </button>
           <button type="button" className="btn btn-primary" onClick={onReset}>
-            Analyze another
+            {sample ? 'Check your own build' : 'Analyze another'}
           </button>
         </div>
       </section>
+
+      {sample && (
+        <div className="banner banner-info">
+          <strong>Sample report.</strong> This is a real production React Native app with its package and file names changed. Drop
+          your own build on the home page to get yours.
+        </div>
+      )}
 
       {debug && (
         <div className="banner banner-bad">
@@ -87,7 +96,8 @@ export function ReportView({ report, options, onOptionsChange, onReset }: Props)
           <span>Estimate for a phone with</span>
           <select
             value={options.abi ?? sizes.download.abi}
-            onChange={(e) => onOptionsChange({ ...options, abi: e.target.value })}
+            onChange={(e) => onOptionsChange?.({ ...options, abi: e.target.value })}
+            disabled={!onOptionsChange}
             aria-label="ABI"
           >
             {app.abis.map((abi) => (
@@ -96,7 +106,8 @@ export function ReportView({ report, options, onOptionsChange, onReset }: Props)
           </select>
           <select
             value={options.density ?? sizes.download.density}
-            onChange={(e) => onOptionsChange({ ...options, density: e.target.value })}
+            onChange={(e) => onOptionsChange?.({ ...options, density: e.target.value })}
+            disabled={!onOptionsChange}
             aria-label="Screen density"
           >
             {DENSITIES.map((d) => (
@@ -120,7 +131,7 @@ export function ReportView({ report, options, onOptionsChange, onReset }: Props)
       <section>
         <h2>Quick wins</h2>
         {findings.length === 0 ? (
-          <p className="all-good">✔ No quick wins found. This build is in good shape.</p>
+          <p className="all-good">Nothing to fix here. This build already avoids every issue the tool checks for.</p>
         ) : (
           <div className="findings">
             {findings.map((f) => (
@@ -143,7 +154,7 @@ export function ReportView({ report, options, onOptionsChange, onReset }: Props)
               {report.nativeByAbi.map((a) => (
                 <tr key={a.abi}>
                   <td>{a.abi}</td>
-                  <td className="num">{a.count} libs</td>
+                  <td className="num">{plural(a.count, 'lib')}</td>
                   <td className="num">{formatBytes(a.compressed)}</td>
                 </tr>
               ))}
@@ -248,7 +259,7 @@ function Breakdown({ report }: { report: Report }) {
                 <span className={`dot cat-${r.category}`} />
                 {label(r.category)}
               </td>
-              <td className="num muted">{r.count} files</td>
+              <td className="num muted">{plural(r.count, 'file')}</td>
               <td className="num">{formatBytes(r.compressed)}</td>
               <td className="num muted">{((r.compressed / total) * 100).toFixed(1)}%</td>
             </tr>
@@ -258,6 +269,8 @@ function Breakdown({ report }: { report: Report }) {
     </section>
   );
 }
+
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
 function engineLabel(report: Report): string {
   const js = report.app.js;

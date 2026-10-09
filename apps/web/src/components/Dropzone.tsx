@@ -42,13 +42,13 @@ export function Dropzone({ busy, busyLabel, error, onFile }: Props) {
           <>
             <span className="spinner" aria-hidden="true" />
             <strong>{busyLabel}</strong>
-            <span className="dz-hint">Usually takes a second or two</span>
+            <span className="dz-hint">A 200 MB build takes about a second</span>
           </>
         ) : (
           <>
-            <span className="dz-icon" aria-hidden="true">
-              ⬇
-            </span>
+            <svg className="dz-icon" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 4v11m0 0-4-4m4 4 4-4M5 19h14" />
+            </svg>
             <strong>Drop your .aab or .apk here</strong>
             <span className="dz-hint">or click to choose a file</span>
             <span className="dz-path">android/app/build/outputs/bundle/release/app-release.aab</span>

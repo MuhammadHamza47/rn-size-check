@@ -1,17 +1,26 @@
 import type { AnalyzeOptions, Report } from '@rnsc/core';
 import { useCallback, useState } from 'react';
+import cliPackage from '../../../packages/cli/package.json';
 import { analyzeInWorker } from './analyze';
 import { CliPromo } from './components/CliPromo';
 import { Dropzone } from './components/Dropzone';
+import { Info } from './components/Info';
 import { ReportView } from './components/ReportView';
+import sampleReport from './sample-report.json';
 
 type State =
   | { status: 'idle'; error?: string }
   | { status: 'analyzing'; file: File }
-  | { status: 'done'; file: File; report: Report; options: AnalyzeOptions };
+  | { status: 'done'; file: File; report: Report; options: AnalyzeOptions }
+  | { status: 'sample' };
+
+const REPO = 'https://github.com/MuhammadHamza47/rn-size-check';
 
 export function App() {
-  const [state, setState] = useState<State>({ status: 'idle' });
+  // /#sample opens the sample report directly, so it can be linked.
+  const [state, setState] = useState<State>(() =>
+    window.location.hash === '#sample' ? { status: 'sample' } : { status: 'idle' },
+  );
 
   const run = useCallback(async (file: File, options: AnalyzeOptions = {}) => {
     setState({ status: 'analyzing', file });
@@ -24,44 +33,64 @@ export function App() {
     }
   }, []);
 
+  const reset = () => {
+    if (window.location.hash) history.replaceState(null, '', window.location.pathname);
+    setState({ status: 'idle' });
+  };
+  const showSample = () => {
+    history.replaceState(null, '', '#sample');
+    setState({ status: 'sample' });
+    window.scrollTo({ top: 0 });
+  };
+
   return (
     <>
       <header className="topbar">
-        <a className="brand" href="./" onClick={(e) => (e.preventDefault(), setState({ status: 'idle' }))}>
+        <a className="brand" href="./" onClick={(e) => (e.preventDefault(), reset())}>
           <Logo /> rn-size-check
         </a>
-        <a className="topbar-link" href="https://github.com/MuhammadHamza47/rn-size-check" target="_blank" rel="noreferrer">
-          GitHub ↗
-        </a>
+        <nav className="topbar-links">
+          <a href="https://www.npmjs.com/package/rn-size-check" target="_blank" rel="noreferrer">
+            npm
+          </a>
+          <a href={REPO} target="_blank" rel="noreferrer">
+            GitHub
+          </a>
+        </nav>
       </header>
 
       <main>
-        {state.status === 'done' ? (
+        {state.status === 'done' && (
           <ReportView
             report={state.report}
             options={state.options}
             onOptionsChange={(options) => run(state.file, options)}
-            onReset={() => setState({ status: 'idle' })}
+            onReset={reset}
           />
-        ) : (
+        )}
+        {state.status === 'sample' && <ReportView report={sampleReport as Report} options={{}} sample onReset={reset} />}
+        {(state.status === 'idle' || state.status === 'analyzing') && (
           <>
             <section className="hero">
               <h1>Why is your React Native app so big?</h1>
               <p className="lede">
-                Drop your Android <code>.aab</code> or <code>.apk</code>. See what takes the space, what to fix, and how many MB
-                you'll save.
+                Drop a release <code>.aab</code> or <code>.apk</code>. You'll see what's taking the space, which files to fix, and
+                roughly how many MB each fix saves.
               </p>
               <Dropzone
                 busy={state.status === 'analyzing'}
-                busyLabel={state.status === 'analyzing' ? `Scanning ${state.file.name}…` : ''}
+                busyLabel={state.status === 'analyzing' ? `Reading ${state.file.name}…` : ''}
                 error={state.status === 'idle' ? state.error : undefined}
                 onFile={(file) => run(file)}
               />
               <p className="privacy">
-                🔒 Your build never leaves your computer. It's scanned right here in your browser; nothing is uploaded.
+                The file stays on your computer. It's read by this page in your browser and never uploaded.{' '}
+                <button type="button" className="link" onClick={showSample}>
+                  No build handy? Open a sample report
+                </button>
               </p>
             </section>
-            <HowItWorks />
+            <Info />
           </>
         )}
         <CliPromo />
@@ -69,36 +98,25 @@ export function App() {
 
       <footer className="footer">
         <span>
-          Open source (MIT) ·{' '}
-          <a href="https://github.com/MuhammadHamza47/rn-size-check" target="_blank" rel="noreferrer">
-            GitHub
+          Made by{' '}
+          <a href="https://github.com/MuhammadHamza47" target="_blank" rel="noreferrer">
+            Muhammad Hamza
           </a>{' '}
-          ·{' '}
-          <a href="https://github.com/MuhammadHamza47/rn-size-check/issues" target="_blank" rel="noreferrer">
-            Report an issue
+          · MIT licensed · v{cliPackage.version}
+        </span>
+        <span className="footer-links">
+          <a href={REPO} target="_blank" rel="noreferrer">
+            Source
+          </a>
+          <a href={`${REPO}/blob/main/CHANGELOG.md`} target="_blank" rel="noreferrer">
+            Changelog
+          </a>
+          <a href={`${REPO}/issues`} target="_blank" rel="noreferrer">
+            Report a problem
           </a>
         </span>
-        <span>Android today · iOS coming</span>
       </footer>
     </>
-  );
-}
-
-function HowItWorks() {
-  const items = [
-    ['Exact breakdown', 'JS / Hermes bundle, native libraries, Java/Kotlin code, images and fonts, for what one phone downloads.'],
-    ['Ranked quick wins', 'R8 off, unstripped native libraries, every ABI shipped, huge PNGs, 19 icon fonts, duplicate files.'],
-    ['Real MB savings', 'Each fix shows the files involved and how much it saves, counted once even if two checks flag a file.'],
-  ];
-  return (
-    <section className="how">
-      {items.map(([title, body]) => (
-        <div key={title} className="how-item">
-          <h3>{title}</h3>
-          <p>{body}</p>
-        </div>
-      ))}
-    </section>
   );
 }
 

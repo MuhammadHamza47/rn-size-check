@@ -21,7 +21,7 @@ export const r8Off: Check = {
         files: dex.map((f) => f.path),
         savingsByFile: Object.fromEntries(dex.map((f) => [f.path, Math.round(f.compressed * R8_SAVING)])),
         estimate: true,
-        fix: 'Set enableProguardInReleaseBuilds = true in android/app/build.gradle (Expo: "enableProguardInReleaseBuilds": true via expo-build-properties). Test the release build afterwards; some libraries need keep rules in proguard-rules.pro.',
+        fix: 'Set enableProguardInReleaseBuilds = true in android/app/build.gradle. On Expo, turn on minification for Android release builds in the expo-build-properties plugin. Test the release build afterwards; some libraries need keep rules in proguard-rules.pro.',
       },
     ];
   },

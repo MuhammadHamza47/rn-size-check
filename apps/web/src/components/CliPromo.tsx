@@ -6,10 +6,10 @@ export function CliPromo() {
   return (
     <section className="cli">
       <div>
-        <h2>Same report in your terminal and CI</h2>
+        <h2>Prefer the terminal?</h2>
         <p>
-          Run it locally or fail a CI build when the app grows past a budget with <code>--budget 40</code>. Save the full
-          report with <code>--json</code>.
+          The same checks run as a command. Add <code>--budget 40</code> to fail a CI build when the app passes 40 MB, or{' '}
+          <code>--json report.json</code> to keep the full report.
         </p>
       </div>
       <div className="cli-cmd">
