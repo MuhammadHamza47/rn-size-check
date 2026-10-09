@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rn-size-check-web.vercel.app/sitemap.xml

@@ -21,7 +21,15 @@
     "aab",
     "bundle-size",
     "app-size",
-    "hermes"
+    "hermes",
+    "rn-size-check",
+    "apk-size",
+    "android",
+    "app-size-analyzer",
+    "bundle-analyzer",
+    "apk-analyzer",
+    "r8",
+    "proguard"
   ],
   "license": "MIT",
   "author": "Muhammad Hamza",
@@ -30,7 +38,7 @@
     "url": "git+https://github.com/MuhammadHamza47/rn-size-check.git",
     "directory": "packages/cli"
   },
-  "homepage": "https://github.com/MuhammadHamza47/rn-size-check#readme",
+  "homepage": "https://rn-size-check-web.vercel.app",
   "bugs": "https://github.com/MuhammadHamza47/rn-size-check/issues",
   "dependencies": {
     "commander": "^12.1.0",
