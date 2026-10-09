@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+
+# Real app builds are never committed (client apps). Test fixtures are generated in tests.
+*.apk
+*.aab
+*.ipa
+*.map
+size-report*.json
+
+# Private business plan: kept local, not published
+docs/PLAN.md
