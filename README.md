@@ -11,6 +11,8 @@ Point it at your Android `.aab` or `.apk` and get one report for the whole app: 
 - 📱 **Realistic:** sizes for what *one phone* downloads from Google Play (one ABI, one screen density), not the size of the AAB file
 - 🧰 **Made for React Native:** Hermes, R8, vector-icon fonts, Metro image assets, ABI splits
 
+**🌐 Try it in your browser: [rn-size-check-web.vercel.app](https://rn-size-check-web.vercel.app)** (no install; your file is never uploaded)
+
 > **Status:** early (v0.1). Android AAB/APK today; iOS is planned. Feedback very welcome!
 
 ## Example
@@ -81,7 +83,7 @@ npx rn-size-check android/app/build/outputs/bundle/release/app-release.aab --bud
 
 ### In the browser
 
-No terminal needed: the website scans the file **inside your browser**, and nothing is uploaded. Drop the `.aab`/`.apk`, read the report, then copy it as Markdown for a PR or Slack. *(Public link coming soon; run it locally with `npm run web`.)*
+No terminal needed: open **[rn-size-check-web.vercel.app](https://rn-size-check-web.vercel.app)** and drop your `.aab`/`.apk`. The file is scanned **inside your browser**, and nothing is uploaded. Read the report, then copy it as Markdown for a PR or Slack.
 
 ## What it checks
 
