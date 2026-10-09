@@ -23,7 +23,7 @@ export function reportToMarkdown(report: Report): string {
     '|---|---:|---:|',
     ...[...report.breakdown]
       .sort((a, b) => b.compressed - a.compressed)
-      .map((r) => `| ${CATEGORY_LABELS[r.category]} | ${formatBytes(r.compressed)} | ${((r.compressed / total) * 100).toFixed(1)}% |`),
+      .map((r) => `| ${r.category === 'js' && app.js?.engine === 'hermes' ? 'JS bundle (Hermes)' : CATEGORY_LABELS[r.category]} | ${formatBytes(r.compressed)} | ${((r.compressed / total) * 100).toFixed(1)}% |`),
   ];
 
   if (report.findings.length > 0) {

@@ -179,6 +179,49 @@ describe('analyze: manifest, R8 and native symbols', async () => {
   });
 });
 
+describe('analyze: icon fonts and install size', () => {
+  const iconFontNames = [
+    'AntDesign', 'Entypo', 'EvilIcons', 'Feather', 'FontAwesome', 'FontAwesome5_Brands', 'FontAwesome5_Regular',
+    'FontAwesome5_Solid', 'Fontisto', 'Foundation', 'Ionicons', 'MaterialCommunityIcons', 'MaterialIcons',
+    'Octicons', 'SimpleLineIcons', 'Zocial', 'FontAwesome6_Brands', 'FontAwesome6_Regular', 'FontAwesome6_Solid',
+  ];
+  const apkWithFonts = (names: string[]) =>
+    makeZip(`fonts-${names.length}.apk`, {
+      'AndroidManifest.xml': KB,
+      'classes.dex': KB,
+      ...Object.fromEntries(names.map((n) => [`assets/fonts/${n}.ttf`, 20 * KB])),
+    });
+
+  it('does not flag a trimmed icon font list', async () => {
+    const r = await analyze(await apkWithFonts(iconFontNames.slice(0, 8)));
+    expect(r.findings.some((f) => f.checkId === 'icon-fonts')).toBe(false);
+  });
+
+  it('flags the full default icon font set', async () => {
+    const r = await analyze(await apkWithFonts(iconFontNames));
+    expect(r.findings.find((f) => f.checkId === 'icon-fonts')?.title).toMatch(/^All 19 icon fonts/);
+  });
+
+  const apkWithLib = (extractNativeLibs: boolean) =>
+    makeZip(`extract-${extractNativeLibs}.apk`, {
+      'AndroidManifest.xml': binaryManifest([
+        { name: 'manifest', attrs: [{ name: 'package', type: 'string', value: 'com.example.app' }] },
+        { name: 'uses-sdk', attrs: [{ name: 'minSdkVersion', resId: 0x0101020c, type: 'int', value: 24 }] },
+        { name: 'application', attrs: [{ name: 'extractNativeLibs', resId: 0x010104ea, type: 'bool', value: extractNativeLibs }] },
+      ]),
+      'classes.dex': KB,
+      'lib/arm64-v8a/libfoo.so': 500 * KB,
+    });
+
+  it('install size adds an unpacked copy of native libraries only when extractNativeLibs is true', async () => {
+    const inPlace = await analyze(await apkWithLib(false));
+    expect(inPlace.app.manifest.extractNativeLibs).toBe(false);
+    expect(inPlace.sizes.install.bytes).toBe(inPlace.sizes.file);
+    const extracted = await analyze(await apkWithLib(true));
+    expect(extracted.sizes.install.bytes).toBe(extracted.sizes.file + 500 * KB);
+  });
+});
+
 describe('analyze: bad input', () => {
   it('rejects an IPA with a clear message', async () => {
     const path = await makeZip('app.ipa', { 'Payload/App.app/App': KB });

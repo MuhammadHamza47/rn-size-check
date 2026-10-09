@@ -77,18 +77,30 @@ export async function analyzeBlob(blob: Blob, fileName: string, options: Analyze
       return { abi: a, compressed: sum(libs, 'compressed'), uncompressed: sum(libs, 'uncompressed'), count: libs.length };
     });
 
-    // APK: users download the file itself; only one ABI's libraries are extracted on install.
-    // AAB: Play builds a split APK set per device; summing compressed sizes is a close estimate.
+    // APK: users download the file itself. AAB: Play builds a split APK set per device; summing
+    // compressed sizes is a close estimate.
     const download =
       artifact === 'apk'
         ? { bytes: fileSize, estimate: false, abi: abis.length > 1 ? 'all' : abi }
         : { bytes: sum(delivered, 'compressed'), estimate: true, abi, density };
-    const install =
-      artifact === 'apk'
-        ? { bytes: fileSize + sum(delivered.filter((f) => f.abi === abi), 'uncompressed'), estimate: true, abi }
-        : { bytes: sum(delivered, 'uncompressed'), estimate: true, abi };
 
     const manifest = await readManifest(zip, artifact, warnings);
+
+    // Installed APKs stay compressed on the device. Native libraries are the exception: with
+    // extractNativeLibs=false (the default since minSdk 23 / AGP 3.6) they are stored uncompressed
+    // and loaded in place; with true, the installer also unpacks a copy of them.
+    const extractLibs = manifest.extractNativeLibs ?? (manifest.minSdk ?? 0) < 23;
+    const libs = delivered.filter((f) => f.category === 'native' && f.abi === abi);
+    const install =
+      artifact === 'apk'
+        ? { bytes: fileSize + (extractLibs ? sum(libs, 'uncompressed') : 0), estimate: true, abi }
+        : {
+            bytes:
+              sum(delivered, 'compressed') - sum(libs, 'compressed') + sum(libs, 'uncompressed') + (extractLibs ? sum(libs, 'compressed') : 0),
+            estimate: true,
+            abi,
+          };
+
     const code = await readCodeInfo(zip, delivered, warnings);
     const nativeLibs = await readNativeLibs(zip, delivered, abi, warnings);
 
