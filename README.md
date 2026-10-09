@@ -1,5 +1,7 @@
 # rn-size-check
 
+[![npm](https://img.shields.io/npm/v/rn-size-check)](https://www.npmjs.com/package/rn-size-check) [![CI](https://github.com/MuhammadHamza47/rn-size-check/actions/workflows/ci.yml/badge.svg)](https://github.com/MuhammadHamza47/rn-size-check/actions/workflows/ci.yml) [![license](https://img.shields.io/npm/l/rn-size-check)](https://github.com/MuhammadHamza47/rn-size-check/blob/main/LICENSE)
+
 **Find out why your React Native app is big, and how to shrink it.**
 
 Point it at your Android `.aab` or `.apk` and get one report for the whole app: JS / Hermes bundle, native libraries, Java/Kotlin code, images and fonts. You get a ranked list of fixes, each with the files involved and the MB it saves.
@@ -9,8 +11,7 @@ Point it at your Android `.aab` or `.apk` and get one report for the whole app: 
 - 📱 **Realistic:** sizes for what *one phone* downloads from Google Play (one ABI, one screen density), not the size of the AAB file
 - 🧰 **Made for React Native:** Hermes, R8, vector-icon fonts, Metro image assets, ABI splits
 
-> **Status:** early development. Android AAB/APK today; iOS is planned.
-> The npm package isn't published yet. Until it is, run it from source (see [Development](#development)).
+> **Status:** early (v0.1). Android AAB/APK today; iOS is planned. Feedback very welcome!
 
 ## Example
 
@@ -106,7 +107,7 @@ The build is a zip file. rn-size-check reads its directory, works out which file
 
 - [x] Android AAB/APK analysis, 9 checks, CLI with JSON and budgets
 - [x] Website that scans in the browser
-- [ ] Publish to npm
+- [x] Published to npm
 - [ ] `--project .`: which **npm packages** take the most space, plus unused images and fonts
 - [ ] `compare old.aab new.aab`: what grew between two builds
 - [ ] GitHub Action / EAS hook that comments size changes on pull requests
