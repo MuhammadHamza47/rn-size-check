@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, it } from 'vitest';
-import { analyze, UnsupportedArtifactError } from '../src/index.js';
+import { analyze, InvalidOptionError, UnsupportedArtifactError } from '../src/node.js';
 import { binaryManifest, dexWithClasses, elfLib, protoManifest } from './binary-fixtures.js';
 import { blob, cleanup, hermesBundle, jsBundle, makeZip } from './helpers.js';
 
@@ -183,8 +183,12 @@ describe('analyze: bad input', () => {
     expect(r.meta.warnings.join(' ')).toMatch(/No JS bundle/);
   });
 
+  it('reports a missing file as ENOENT', async () => {
+    await expect(analyze('does-not-exist.aab')).rejects.toMatchObject({ code: 'ENOENT' });
+  });
+
   it('rejects an unknown density', async () => {
     const path = await makeZip('d.apk', { 'AndroidManifest.xml': KB, 'classes.dex': KB });
-    await expect(analyze(path, { density: 'huge' })).rejects.toThrow(RangeError);
+    await expect(analyze(path, { density: 'huge' })).rejects.toThrow(InvalidOptionError);
   });
 });

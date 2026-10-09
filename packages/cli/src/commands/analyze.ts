@@ -1,5 +1,5 @@
 import { writeFile } from 'node:fs/promises';
-import { analyze, formatBytes, UnsupportedArtifactError } from '@rnsc/core';
+import { analyze, formatBytes, InvalidOptionError, UnsupportedArtifactError, ZipError } from '@rnsc/core/node';
 import { renderTerminal } from '../render/terminal.js';
 
 export interface AnalyzeCliOptions {
@@ -34,10 +34,8 @@ export async function runAnalyze(build: string, opts: AnalyzeCliOptions, version
         EXIT.badInput,
       );
     }
-    if (err instanceof UnsupportedArtifactError || err instanceof RangeError) return fail(e.message, EXIT.badInput);
-    if (/end of central directory|invalid signature/i.test(e.message)) {
-      return fail(`${build} is not a valid APK/AAB (zip) file.`, EXIT.badInput);
-    }
+    if (err instanceof UnsupportedArtifactError || err instanceof InvalidOptionError) return fail(e.message, EXIT.badInput);
+    if (err instanceof ZipError) return fail(`${build} is not a valid APK/AAB (zip) file: ${e.message}`, EXIT.badInput);
     throw err;
   }
 

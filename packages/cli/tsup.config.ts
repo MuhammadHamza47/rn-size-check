@@ -7,5 +7,5 @@ export default defineConfig({
   platform: 'node',
   clean: true,
   // Core is an internal workspace package: bundle it so only `rn-size-check` is published.
-  noExternal: ['@rnsc/core'],
+  noExternal: [/^@rnsc\/core/],
 });

@@ -1,5 +1,3 @@
-import { stat } from 'node:fs/promises';
-import { basename } from 'node:path';
 import { classifyEntries, deliveredTo } from './android/classify.js';
 import { DEFAULT_DENSITY, DENSITIES } from './android/density.js';
 import { detectArtifact } from './android/detect.js';
@@ -8,6 +6,7 @@ import { debugSectionBytes, readElfHeader } from './android/elf.js';
 import { parseBinaryManifest, parseProtoManifest, type ManifestInfo } from './android/manifest.js';
 import { ZipArchive } from './archive/zip.js';
 import { runChecks } from './checks/registry.js';
+import { InvalidOptionError } from './errors.js';
 import { detectBundleKind } from './js/hermes.js';
 import {
   CATEGORIES,
@@ -24,10 +23,14 @@ import {
 const ABI_PREFERENCE = ['arm64-v8a', 'armeabi-v7a', 'x86_64', 'x86'];
 const sum = (files: FileEntry[], key: 'compressed' | 'uncompressed') => files.reduce((s, f) => s + f[key], 0);
 
-export async function analyze(filePath: string, options: AnalyzeOptions = {}): Promise<Report> {
+/**
+ * Analyze an APK/AAB given as a Blob. Works in Node and in the browser; for a file path in Node use
+ * `analyze()` from the node entry.
+ */
+export async function analyzeBlob(blob: Blob, fileName: string, options: AnalyzeOptions = {}): Promise<Report> {
   const started = Date.now();
-  const { size: fileSize } = await stat(filePath);
-  const zip = await ZipArchive.open(filePath);
+  const fileSize = blob.size;
+  const zip = await ZipArchive.open(blob);
   try {
     const artifact = detectArtifact(zip.entries);
     const files = classifyEntries(zip.entries, artifact);
@@ -43,7 +46,7 @@ export async function analyze(filePath: string, options: AnalyzeOptions = {}): P
 
     const density = options.density ?? DEFAULT_DENSITY;
     if (!(density in DENSITIES)) {
-      throw new RangeError(`Unknown density "${density}". Use one of: ${Object.keys(DENSITIES).join(', ')}.`);
+      throw new InvalidOptionError(`Unknown density "${density}". Use one of: ${Object.keys(DENSITIES).join(', ')}.`);
     }
     const delivered = deliveredTo(files, artifact, abi, density);
     const js = await readJsInfo(zip, delivered);
@@ -95,7 +98,7 @@ export async function analyze(filePath: string, options: AnalyzeOptions = {}): P
       schemaVersion: 1,
       tool: { name: 'rn-size-check', version: options.toolVersion ?? '0.0.0' },
       createdAt: new Date().toISOString(),
-      app: { platform: 'android', artifact, fileName: basename(filePath), abis, extraModules, js, manifest, code },
+      app: { platform: 'android', artifact, fileName, abis, extraModules, js, manifest, code },
       sizes: {
         file: fileSize,
         download,
