@@ -11,8 +11,8 @@ coverage/
 *.map
 size-report*.json
 
-# Private business plan: kept local, not published
-docs/PLAN.md
+# Private docs (business plan, product/server design): kept local, never published
+docs/private/
 
 # Local editor/agent settings
 .claude/

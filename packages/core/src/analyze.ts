@@ -49,7 +49,7 @@ export async function analyzeBlob(blob: Blob, fileName: string, options: Analyze
       throw new InvalidOptionError(`Unknown density "${density}". Use one of: ${Object.keys(DENSITIES).join(', ')}.`);
     }
     const delivered = deliveredTo(files, artifact, abi, density);
-    const js = await readJsInfo(zip, delivered);
+    const js = await readJsInfo(zip, delivered, warnings);
     if (!js) {
       warnings.push(
         'No JS bundle found. Debug builds load JS from Metro instead of bundling it, so analyze a release build.',
@@ -170,10 +170,15 @@ async function readNativeLibs(zip: ZipArchive, delivered: FileEntry[], abi: stri
   return libs;
 }
 
-async function readJsInfo(zip: ZipArchive, delivered: FileEntry[]): Promise<JsEngineInfo | null> {
+async function readJsInfo(zip: ZipArchive, delivered: FileEntry[], warnings: string[]): Promise<JsEngineInfo | null> {
   const bundles = delivered.filter((f) => f.category === 'js').sort((a, b) => b.uncompressed - a.uncompressed);
   const main = bundles.find((f) => f.path.endsWith('index.android.bundle')) ?? bundles[0];
   if (!main) return null;
-  const head = await zip.read(main.path, 64);
-  return { ...detectBundleKind(head), bundlePath: main.path, bytes: main.compressed };
+  try {
+    const head = await zip.read(main.path, 64);
+    return { ...detectBundleKind(head), bundlePath: main.path, bytes: main.compressed };
+  } catch (err) {
+    warnings.push(`Could not read ${main.path}: ${(err as Error).message}`);
+    return { engine: 'unknown', bundlePath: main.path, bytes: main.compressed };
+  }
 }
