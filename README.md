@@ -10,6 +10,8 @@ One report for the whole app: JS/Hermes bundle, native libraries, dex, images an
 
 > Status: early development. Android AAB/APK only.
 
+**No terminal?** The web version scans your build right in the browser. The file is never uploaded (`apps/web`; public link coming soon).
+
 ## What it shows
 
 - **App info** from the manifest: package, version, minSdk, Hermes version, R8 on/off
@@ -49,11 +51,14 @@ npm install
 npm test            # vitest
 npm run typecheck
 npm run build       # bundles packages/cli → dist
+npm run web         # website dev server (http://localhost:5173/rn-size-check/)
+npm run build:web   # static site → apps/web/dist
 node packages/cli/bin/rn-size-check.js path/to/app-release.aab
 ```
 
-- `packages/core`: analysis engine (`analyze()` → versioned JSON `Report`)
+- `packages/core`: analysis engine (`analyzeBlob()` / `analyze(path)` → versioned JSON `Report`), runs in Node and browsers
 - `packages/cli`: the `rn-size-check` command (bundles core)
+- `apps/web`: the website (React + Vite); runs `@rnsc/core` in a Web Worker, no server
 
 See [docs/PRODUCT_STRUCTURE.md](docs/PRODUCT_STRUCTURE.md) for the design.
 

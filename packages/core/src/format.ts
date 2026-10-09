@@ -8,3 +8,13 @@ export function formatBytes(bytes: number): string {
   if (abs >= KB) return `${Math.round(bytes / KB)} KB`;
   return `${bytes} B`;
 }
+
+/**
+ * Short display name for a file inside the build. Resources and native libraries keep their folder,
+ * because it carries the meaning (`drawable-night-xxhdpi-v8/logo.png` vs `drawable-xxhdpi-v4/logo.png`,
+ * `x86/libfoo.so` vs `arm64-v8a/libfoo.so`); other files show the name only.
+ */
+export function shortPath(path: string): string {
+  const parts = path.split('/');
+  return parts.includes('res') || parts.includes('lib') ? parts.slice(-2).join('/') : parts[parts.length - 1]!;
+}

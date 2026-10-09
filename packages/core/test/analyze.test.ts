@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, it } from 'vitest';
-import { analyze, InvalidOptionError, UnsupportedArtifactError } from '../src/node.js';
+import { analyze, InvalidOptionError, reportToMarkdown, UnsupportedArtifactError } from '../src/node.js';
 import { binaryManifest, dexWithClasses, elfLib, protoManifest } from './binary-fixtures.js';
 import { blob, cleanup, hermesBundle, jsBundle, makeZip } from './helpers.js';
 
@@ -38,6 +38,15 @@ describe('analyze: universal APK', async () => {
   it('flags Hermes off, the large PNG and the shipped source map', () => {
     const ids = report.findings.map((f) => f.checkId);
     expect(ids).toEqual(expect.arrayContaining(['hermes-off', 'image-large', 'sourcemap-in-build']));
+  });
+
+  it('renders a Markdown summary with breakdown and quick wins', () => {
+    const md = reportToMarkdown(report);
+    expect(md).toMatch(/^### 📦 App size: universal.apk/);
+    expect(md).toContain('| Native libraries (.so) |');
+    expect(md).toContain('**Quick wins**');
+    expect(md).toMatch(/🔴 APK ships 4 ABIs/);
+    expect(md).toContain('Estimated total savings');
   });
 
   it('sorts errors before warnings', () => {

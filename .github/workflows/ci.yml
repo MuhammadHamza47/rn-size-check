@@ -22,5 +22,6 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - run: npm run build:web
       - name: Smoke test the CLI
         run: node packages/cli/bin/rn-size-check.js checks

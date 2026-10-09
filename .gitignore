@@ -13,3 +13,6 @@ size-report*.json
 
 # Private business plan: kept local, not published
 docs/PLAN.md
+
+# Local editor/agent settings
+.claude/

@@ -1,4 +1,4 @@
-import { CATEGORY_LABELS, formatBytes, type Report, type Severity } from '@rnsc/core';
+import { CATEGORY_LABELS, formatBytes, shortPath as fileName, type Report, type Severity } from '@rnsc/core';
 import { createColors } from 'picocolors';
 
 export interface RenderOptions {
@@ -9,15 +9,6 @@ export interface RenderOptions {
 const BAR_WIDTH = 14;
 const FINDING_ITEMS = 3;
 
-/**
- * Short display name. Resources and native libraries keep their folder, because it carries the meaning
- * (`drawable-night-xxhdpi-v8/logo.png` vs `drawable-xxhdpi-v4/logo.png`, `x86/libfoo.so` vs `arm64-v8a/libfoo.so`);
- * other files show the name only.
- */
-const fileName = (path: string) => {
-  const parts = path.split('/');
-  return parts.includes('res') || parts.includes('lib') ? parts.slice(-2).join('/') : parts[parts.length - 1]!;
-};
 
 export function renderTerminal(report: Report, opts: RenderOptions): string {
   const c = createColors(opts.color);

@@ -3,20 +3,23 @@
   "private": true,
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
     "build": "npm run build -w rn-size-check",
     "test": "vitest run",
-    "typecheck": "tsc -p packages/core --noEmit && tsc -p packages/cli --noEmit",
-    "dev": "npm run build && node packages/cli/bin/rn-size-check.js"
+    "typecheck": "tsc -p packages/core --noEmit && tsc -p packages/cli --noEmit && tsc -p apps/web --noEmit",
+    "dev": "npm run build && node packages/cli/bin/rn-size-check.js",
+    "web": "npm run dev -w @rnsc/web",
+    "build:web": "npm run build -w @rnsc/web"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
     "@types/yazl": "^2.4.5",
     "tsup": "^8.3.0",
     "typescript": "^5.6.0",
-    "vitest": "^2.1.0",
+    "vitest": "^4.1.11",
     "yazl": "^2.5.1"
   },
   "engines": {
