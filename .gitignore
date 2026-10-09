@@ -16,3 +16,7 @@ docs/private/
 
 # Local editor/agent settings
 .claude/
+
+# Copied into the CLI package at pack time
+packages/cli/README.md
+packages/cli/LICENSE

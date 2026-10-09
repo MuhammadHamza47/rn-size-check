@@ -100,7 +100,7 @@ Savings marked `~` are typical figures (e.g. WebP is usually ~40% smaller), not 
 
 ## How it works
 
-The build is a zip file. rn-size-check reads its directory, works out which files a phone would actually receive from Google Play, and reads just enough of each file to answer the questions: the manifest for app info, the bundle header for Hermes, class names for R8, ELF section tables for debug symbols. Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+The build is a zip file. rn-size-check reads its directory, works out which files a phone would actually receive from Google Play, and reads just enough of each file to answer the questions: the manifest for app info, the bundle header for Hermes, class names for R8, ELF section tables for debug symbols. Details: [docs/ARCHITECTURE.md](https://github.com/MuhammadHamza47/rn-size-check/blob/main/docs/ARCHITECTURE.md).
 
 ## Roadmap
 
@@ -134,7 +134,7 @@ npm run build:web   # static site → apps/web/dist
 | `packages/cli` | The `rn-size-check` command |
 | `apps/web` | The website (React + Vite) |
 
-Want to add a check? See [Adding a check](docs/ARCHITECTURE.md#adding-a-check). Please never commit real app builds; tests generate their own small APK/AAB files.
+Want to add a check? See [Adding a check](https://github.com/MuhammadHamza47/rn-size-check/blob/main/docs/ARCHITECTURE.md#adding-a-check). Please never commit real app builds; tests generate their own small APK/AAB files.
 
 ## License
 

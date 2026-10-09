@@ -11,7 +11,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "prepack": "npm run build && node -e \"for (const f of ['README.md', 'LICENSE']) require('fs').copyFileSync('../../' + f, f)\""
   },
   "keywords": [
     "react-native",
