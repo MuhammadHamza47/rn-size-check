@@ -112,7 +112,10 @@ export function renderTerminal(report: Report, opts: RenderOptions): string {
       }
       line(`    ${c.dim(`→ ${f.fix}`)}`);
     }
-    if (report.totals.savingsBytes > 0) {
+    if (app.manifest.debuggable) {
+      line(`  ${rule(72)}`);
+      line(`  ${c.dim('No savings total for a debug build: debug libraries and ABIs inflate it. Analyze a release build.')}`);
+    } else if (report.totals.savingsBytes > 0) {
       const pct = ((report.totals.savingsBytes / sizes.download.bytes) * 100).toFixed(0);
       line(`  ${rule(72)}`);
       line(
