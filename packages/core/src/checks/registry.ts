@@ -4,6 +4,7 @@ import { debuggable } from './debuggable.js';
 import { nativeDebugSymbols } from './native-debug-symbols.js';
 import { r8Off } from './r8-off.js';
 import { duplicateFiles } from './duplicate-files.js';
+import { fontWeights } from './font-weights.js';
 import { hermesOff } from './hermes-off.js';
 import { iconFonts } from './icon-fonts.js';
 import { imageLarge } from './image-large.js';
@@ -19,6 +20,7 @@ export const CHECKS: readonly Check[] = [
   hermesOff,
   imageLarge,
   iconFonts,
+  fontWeights,
   duplicateFiles,
 ];
 

@@ -64,7 +64,7 @@ Defined in `packages/core/src/types.ts`. Main fields:
 | `totals.savingsBytes` | De-duplicated savings |
 | `meta` | `durationMs`, `warnings` (non-fatal problems, e.g. "debug build has no JS bundle") |
 
-Sizes are bytes. Display uses 1024-based units (`formatBytes`), like Android Studio's APK Analyzer.
+Sizes are bytes. Display uses decimal units (`formatBytes`, 1 MB = 1,000,000 bytes), the same as Google Play Console.
 
 ## Checks
 
@@ -77,7 +77,8 @@ Sizes are bytes. Display uses 1024-based units (`formatBytes`), like Android Stu
 | `r8-off` | Java/Kotlin code not minified | ~35% of dex (est.) |
 | `hermes-off` | Plain JS bundle on JSC | — |
 | `image-large` | PNG/JPEG over 100 KB | ~40% via WebP (est.) |
-| `icon-fonts` | 4+ react-native-vector-icons fonts | — (needs project scan, planned) |
+| `icon-fonts` | 12+ react-native-vector-icons fonts (the untrimmed default set) | — (needs project scan, planned) |
+| `font-weights` | 8+ files of one font family (weights and italics) | — (needs project scan, planned) |
 | `duplicate-files` | Identical content stored twice (zip CRC-32 + size) | extra copies |
 
 `rn-size-check checks` prints the list.

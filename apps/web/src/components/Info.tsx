@@ -7,6 +7,7 @@ const CHECKS: [string, string][] = [
   ['Unstripped native libraries', '.so files that still contain debug symbols. Users never need them.'],
   ['Big PNG and JPEG images', 'Anything over 100 KB. As WebP these are usually 30–50% smaller.'],
   ['Every icon font bundled', 'react-native-vector-icons ships all 19 fonts unless you list the ones you use.'],
+  ['Too many font weights', 'One font family shipped in 14 weights and italics when the app uses four or five.'],
   ['Duplicate files', 'The same image or sound stored twice under different names.'],
   ['Source maps in the build', '.map files are for crash reports, not for users’ phones.'],
   ['Hermes turned off', 'The bundle is plain JavaScript instead of precompiled Hermes bytecode.'],

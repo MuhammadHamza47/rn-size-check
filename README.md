@@ -21,32 +21,32 @@ Point it at your Android `.aab` or `.apk` and get one report for the whole app: 
 RN Size Check · com.example.shop 1.0 (1)
   app-release.aab · AAB · Hermes bytecode v96 · R8 off · minSdk 24
 
-  Download (arm64-v8a, xxhdpi)  27.2 MB (est.)     Install  61.7 MB (est.)     File  65.7 MB
-  20.8 MB of the AAB is metadata/debug symbols that Play never sends to devices.
+  Download (arm64-v8a, xxhdpi)  28.5 MB (est.)     Install  40.8 MB (est.)     File  68.9 MB
+  21.8 MB of the AAB is metadata/debug symbols that Play never sends to devices.
 
   Breakdown                       Size       %
   ────────────────────────────────────────────
-  Dex (Java/Kotlin)             9.9 MB   36.3%  █████
-  Images                        6.6 MB   24.1%  ███
-  Native libraries (.so)        5.7 MB   21.0%  ███
-  Fonts                         2.2 MB    8.0%  █
-  JS bundle (Hermes)            1.9 MB    7.2%  █
+  Dex (Java/Kotlin)            10.3 MB   36.3%  █████
+  Images                        6.9 MB   24.1%  ███
+  Native libraries (.so)        6.0 MB   21.0%  ███
+  Fonts                         2.3 MB    8.0%  █
+  JS bundle (Hermes)            2.0 MB    7.2%  █
 
   Quick wins                                                         Saves
   ────────────────────────────────────────────────────────────────────────
-  ⚠ R8 is off: 9.9 MB of Java/Kotlin code is not shrunk            ~3.4 MB
+  ⚠ R8 is off: 10.3 MB of Java/Kotlin code is not shrunk           ~3.6 MB
     → Set enableProguardInReleaseBuilds = true in android/app/build.gradle …
-  ⚠ 10 PNG/JPEG images over 100 KB (6.4 MB)                        ~2.6 MB
-      1.0 MB  drawable-mdpi-v4/src_assets_images_banner_after.png
-      1.0 MB  drawable-mdpi-v4/src_assets_images_banner_before.png
-      969 KB  drawable-mdpi-v4/src_assets_images_onboarding_1.png
+  ⚠ 10 PNG/JPEG images over 100 KB (6.7 MB)                        ~2.7 MB
+      1.1 MB  drawable-mdpi-v4/src_assets_images_banner_after.png
+      1.1 MB  drawable-mdpi-v4/src_assets_images_banner_before.png
+      992 KB  drawable-mdpi-v4/src_assets_images_onboarding_1.png
               …and 7 more (full list in --json)
     → Convert to WebP …
   ⚠ 3 files stored more than once (3 extra copies, 1.1 MB)          1.1 MB
-      1.0 MB  drawable-mdpi-v4/src_assets_images_banner_before.png  (same as …banner_after.png)
-  ⚠ 19 icon fonts bundled (1.9 MB); most apps use 1–2
+      1.1 MB  drawable-mdpi-v4/src_assets_images_banner_before.png  (same as …banner_after.png)
+  ⚠ All 19 icon fonts bundled (2.0 MB); most apps use 1–3
   ────────────────────────────────────────────────────────────────────────
-  Estimated total savings                                          ~6.7 MB (25%)
+  Estimated total savings                                          ~7.0 MB (25%)
 ```
 
 *A real production app. The fixes above cut its download by about a quarter.*
@@ -97,6 +97,7 @@ No terminal needed: open **[rn-size-check-web.vercel.app](https://rn-size-check-
 | `hermes-off` | App running on JSC instead of Hermes |
 | `image-large` | Big PNG/JPEG images that would be much smaller as WebP |
 | `icon-fonts` | Every react-native-vector-icons font bundled when you use one or two |
+| `font-weights` | One font family shipped with many weights (e.g. 14 Rubik files) when the app uses a few |
 | `duplicate-files` | The same image or file stored more than once |
 
 Savings marked `~` are typical figures (e.g. WebP is usually ~40% smaller), not exact byte counts. A file flagged by two checks is only counted once in the total.
@@ -107,7 +108,7 @@ The build is a zip file. rn-size-check reads its directory, works out which file
 
 ## Roadmap
 
-- [x] Android AAB/APK analysis, 9 checks, CLI with JSON and budgets
+- [x] Android AAB/APK analysis, 10 checks, CLI with JSON and budgets
 - [x] Website that scans in the browser
 - [x] Published to npm
 - [ ] `--project .`: which **npm packages** take the most space, plus unused images and fonts

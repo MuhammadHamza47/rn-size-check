@@ -471,7 +471,7 @@
   {
    "checkId": "r8-off",
    "severity": "warn",
-   "title": "R8 is off: 9.9 MB of Java/Kotlin code is not shrunk",
+   "title": "R8 is off: 10.3 MB of Java/Kotlin code is not shrunk",
    "files": [
     "base/dex/classes.dex",
     "base/dex/classes2.dex",
@@ -500,7 +500,7 @@
   {
    "checkId": "image-large",
    "severity": "warn",
-   "title": "10 PNG/JPEG images over 100 KB (6.4 MB)",
+   "title": "10 PNG/JPEG images over 100 KB (6.7 MB)",
    "files": [
     "base/res/drawable-mdpi-v4/src_assets_images_hero.png",
     "base/res/drawable-mdpi-v4/src_assets_images_banner_a.png",
@@ -599,7 +599,7 @@
   {
    "checkId": "icon-fonts",
    "severity": "warn",
-   "title": "All 19 icon fonts bundled (1.9 MB); most apps use 1–3",
+   "title": "All 19 icon fonts bundled (2.0 MB); most apps use 1–3",
    "files": [
     "base/assets/fonts/AntDesign.ttf",
     "base/assets/fonts/Entypo.ttf",

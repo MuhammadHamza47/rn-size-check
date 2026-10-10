@@ -50,7 +50,7 @@ export async function runAnalyze(build: string, opts: AnalyzeCliOptions, version
   }
 
   if (opts.budget) {
-    const budgetBytes = Number(opts.budget) * 1024 * 1024;
+    const budgetBytes = Number(opts.budget) * 1_000_000; // decimal MB, same as the report and Play Console
     if (report.sizes.download.bytes > budgetBytes) {
       process.stderr.write(
         `Size budget exceeded: download ${formatBytes(report.sizes.download.bytes)} > budget ${opts.budget} MB\n`,

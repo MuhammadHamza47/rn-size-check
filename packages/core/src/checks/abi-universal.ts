@@ -16,10 +16,10 @@ export const abiUniversal: Check = {
     return [
       {
         severity: 'error',
-        title: `APK ships ${abis.length} ABIs (${abis.join(', ')}): ${formatBytes(bytes)} of native code that ${ctx.abi} phones never use`,
+        title: `APK ships ${abis.length} ABIs (${abis.join(', ')}): every phone downloads ${formatBytes(bytes)} of native code it can't use`,
         files: others.map((f) => f.path),
         savingsByFile,
-        fix: 'Upload an AAB to Google Play (it splits by ABI automatically), or enable ABI splits: splits { abi { enable true; universalApk false } } in android/app/build.gradle.',
+        fix: "Don't delete an ABI: older 32-bit phones still need armeabi-v7a. Give each phone only its own instead: upload an AAB to Google Play (it splits by ABI automatically), or for APKs you share directly, enable ABI splits: splits { abi { enable true; universalApk false } } in android/app/build.gradle.",
       },
     ];
   },

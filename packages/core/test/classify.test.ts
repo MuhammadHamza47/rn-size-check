@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { categorize, classifyEntries } from '../src/android/classify.js';
 import { selectDensity } from '../src/android/density.js';
+import { formatBytes } from '../src/format.js';
 import { detectBundleKind } from '../src/js/hermes.js';
 import type { ArchiveEntry } from '../src/types.js';
 import { hermesBundle, jsBundle } from './helpers.js';
@@ -86,6 +87,14 @@ describe('selectDensity', () => {
     );
     expect(pick('xhdpi')).toContain('base/res/drawable-xhdpi-v4/a.png');
     expect(pick('xhdpi')).not.toContain('base/res/drawable-xxxhdpi-v4/a.png');
+  });
+});
+
+describe('formatBytes', () => {
+  it('uses decimal units like Google Play Console', () => {
+    expect(formatBytes(48_776_475)).toBe('48.8 MB');
+    expect(formatBytes(132_000)).toBe('132 KB');
+    expect(formatBytes(512)).toBe('512 B');
   });
 });
 

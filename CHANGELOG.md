@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.2
+
+Found by checking a real release APK against Play Console and the app source.
+
+- **Sizes now use decimal MB** (1 MB = 1,000,000 bytes), the same as Google Play Console. A 48,776,475-byte APK now shows 48.8 MB instead of 46.5. `--budget` uses the same units.
+- **New check `font-weights`:** flags one font family shipped with many weights and italics (for example 14 Rubik files when the app uses 5).
+- **ABI advice is safer:** the universal-APK finding now says not to delete armeabi-v7a (32-bit phones need it) and to give each phone only its own ABI with an AAB or ABI splits.
+- npm page links to the website.
+
 ## 0.1.1
 
 Accuracy fixes found by checking real app reports against their source.

@@ -1,14 +1,14 @@
 import { formatBytes } from '../format.js';
 import type { Check } from './types.js';
 
-const THRESHOLD = 100 * 1024;
+const THRESHOLD = 100_000;
 /** Typical lossy WebP (q≈80) saving over PNG/JPEG for photos and UI art. Refined with sharp later. */
 const WEBP_SAVING = 0.4;
 
 export const imageLarge: Check = {
   id: 'image-large',
   title: 'Large PNG/JPEG images',
-  description: `PNG or JPEG files over ${THRESHOLD / 1024} KB that would usually be much smaller as WebP.`,
+  description: `PNG or JPEG files over ${THRESHOLD / 1000} KB that would usually be much smaller as WebP.`,
   requires: 'build',
   run(ctx) {
     const big = ctx.delivered
@@ -21,7 +21,7 @@ export const imageLarge: Check = {
     return [
       {
         severity: 'warn',
-        title: `${big.length} PNG/JPEG image${big.length === 1 ? '' : 's'} over ${THRESHOLD / 1024} KB (${formatBytes(total)})`,
+        title: `${big.length} PNG/JPEG image${big.length === 1 ? '' : 's'} over ${THRESHOLD / 1000} KB (${formatBytes(total)})`,
         files: big.map((f) => f.path),
         savingsByFile,
         estimate: true,

@@ -1,7 +1,10 @@
-const MB = 1024 * 1024;
-const KB = 1024;
+const MB = 1_000_000;
+const KB = 1_000;
 
-/** Human size using 1024-based units, matching Android Studio's APK Analyzer. */
+/**
+ * Human size in decimal units (1 MB = 1,000,000 bytes), the same units Google Play Console and the
+ * Play Store listing use, so numbers can be compared directly.
+ */
 export function formatBytes(bytes: number): string {
   const abs = Math.abs(bytes);
   if (abs >= MB) return `${(bytes / MB).toFixed(1)} MB`;

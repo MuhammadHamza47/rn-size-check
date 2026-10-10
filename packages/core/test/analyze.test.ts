@@ -222,6 +222,38 @@ describe('analyze: icon fonts and install size', () => {
   });
 });
 
+describe('analyze: font weights', () => {
+  const weights = ['Black', 'BlackItalic', 'Bold', 'BoldItalic', 'ExtraBold', 'ExtraBoldItalic', 'Italic', 'Light',
+    'LightItalic', 'Medium', 'MediumItalic', 'Regular', 'SemiBold', 'SemiBoldItalic'];
+
+  it('flags one family shipped with many weights', async () => {
+    const path = await makeZip('rubik.apk', {
+      'AndroidManifest.xml': KB,
+      'classes.dex': KB,
+      ...Object.fromEntries(weights.map((w) => [`assets/fonts/Rubik-${w}.ttf`, 30 * KB])),
+      'assets/fonts/Inter-Regular.ttf': 30 * KB,
+      'assets/fonts/Inter-Bold.ttf': 30 * KB,
+      'res/ab.ttf': 30 * KB,
+    });
+    const r = await analyze(path);
+    const f = r.findings.filter((x) => x.checkId === 'font-weights');
+    expect(f).toHaveLength(1);
+    expect(f[0]!.title).toMatch(/^14 Rubik font files/);
+    expect(f[0]!.files.every((p) => p.includes('Rubik-'))).toBe(true);
+  });
+
+  it('ignores icon fonts and small families', async () => {
+    const path = await makeZip('fonts-ok.apk', {
+      'AndroidManifest.xml': KB,
+      'classes.dex': KB,
+      ...Object.fromEntries(['Regular', 'Medium', 'SemiBold', 'Bold'].map((w) => [`assets/fonts/Inter-${w}.ttf`, 30 * KB])),
+      ...Object.fromEntries(['Solid', 'Regular', 'Brands'].map((w) => [`assets/fonts/FontAwesome5_${w}.ttf`, 30 * KB])),
+    });
+    const r = await analyze(path);
+    expect(r.findings.some((x) => x.checkId === 'font-weights')).toBe(false);
+  });
+});
+
 describe('analyze: bad input', () => {
   it('rejects an IPA with a clear message', async () => {
     const path = await makeZip('app.ipa', { 'Payload/App.app/App': KB });
