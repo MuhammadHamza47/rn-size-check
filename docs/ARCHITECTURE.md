@@ -44,6 +44,7 @@ All in `packages/core/src`.
    - `js/hermes.ts`: Hermes bytecode magic + version, or plain JS.
    - `android/dex.ts`: class names → share of minified names → R8 on/off (an AAB with an R8 mapping file is always "on").
    - `android/elf.ts`: size of non-loaded ELF sections (debug info, symbol tables) per native library.
+   - `assets/lottie.ts`: recognises Lottie JSON (Bodymovin and LottieFiles layouts) and measures embedded base64 images. Lottie that the JS code require()s is inside the JS bundle and needs the source map (planned).
 6. **Checks** (`checks/`). Pure functions over a `CheckContext`. See below.
 7. **Savings** (`checks/registry.ts`). Each check reports savings per file. The total counts every file once, at its biggest saving, so two checks flagging the same file don't double count.
 8. **Report** (`analyze.ts`). A versioned JSON object, the contract for every renderer.
@@ -79,6 +80,7 @@ Sizes are bytes. Display uses decimal units (`formatBytes`, 1 MB = 1,000,000 byt
 | `image-large` | PNG/JPEG over 100 KB | ~40% via WebP (est.) |
 | `icon-fonts` | 12+ react-native-vector-icons fonts (the untrimmed default set) | — (needs project scan, planned) |
 | `font-weights` | 8+ files of one font family (weights and italics) | — (needs project scan, planned) |
+| `lottie-large` | Lottie files (res/raw, assets) over 100 KB unpacked or with embedded base64 images; warn with images, info for vector-only | — |
 | `duplicate-files` | Identical content stored twice (zip CRC-32 + size) | extra copies |
 
 `rn-size-check checks` prints the list.

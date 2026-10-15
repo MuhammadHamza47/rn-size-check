@@ -29,7 +29,7 @@ export function reportToMarkdown(report: Report): string {
   if (report.findings.length > 0) {
     lines.push('', '**Quick wins**', '');
     for (const f of report.findings) {
-      const saves = f.savings ? ` (saves ${f.savings.estimate ? '~' : ''}${formatBytes(f.savings.bytes)})` : '';
+      const saves = f.savings ? ` · saves ${f.savings.estimate ? '~' : ''}${formatBytes(f.savings.bytes)}` : '';
       lines.push(`- ${SEVERITY_ICON[f.severity]} ${f.title}${saves}`);
     }
     if (report.totals.savingsBytes > 0 && !m.debuggable) {

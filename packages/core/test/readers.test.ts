@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { obfuscatedShare, readDexClassNames } from '../src/android/dex.js';
 import { debugSectionBytes, readElfHeader } from '../src/android/elf.js';
 import { parseBinaryManifest, parseProtoManifest } from '../src/android/manifest.js';
+import { embeddedImages, looksLikeLottie } from '../src/assets/lottie.js';
 import { binaryManifest, dexWithClasses, elfLib, protoManifest } from './binary-fixtures.js';
 
 describe('parseBinaryManifest (APK)', () => {
@@ -74,6 +75,25 @@ describe('dex', () => {
 
   it('ignores files that are not dex', () => {
     expect(readDexClassNames(Buffer.alloc(200))).toEqual([]);
+  });
+});
+
+describe('lottie', () => {
+  it('recognises Lottie JSON by its header fields', () => {
+    expect(looksLikeLottie('{"v":"5.7.4","fr":30,"ip":0,"op":90,"layers":[]}')).toBe(true);
+    expect(looksLikeLottie('  {"v":"5.12.1","layers":[') ).toBe(true);
+    // LottieFiles toolkit exports: name and layers first, version at the end of the file.
+    expect(looksLikeLottie('{"nm":"Comp 1","ddd":0,"h":1000,"w":1000,"meta":{"g":"@lottiefiles/toolkit-js 0.33.2"},"layers":[{"ty":4,"nm":"x"')).toBe(true);
+    expect(looksLikeLottie('{"name":"app","version":"1.0.0"}')).toBe(false);
+    expect(looksLikeLottie('{"data":{"layers":["a","b"]}}')).toBe(false);
+    expect(looksLikeLottie('[1,2,3]')).toBe(false);
+  });
+
+  it('counts embedded base64 images and their decoded size', () => {
+    const img = Buffer.alloc(3000, 7).toString('base64');
+    const json = `{"assets":[{"id":"a","p":"data:image/png;base64,${img}"},{"id":"b","p":"data:image/jpeg;base64,${img}"},{"id":"c","p":"img_2.png"}]}`;
+    expect(embeddedImages(json)).toEqual({ count: 2, bytes: 6000 });
+    expect(embeddedImages('{"assets":[]}')).toEqual({ count: 0, bytes: 0 });
   });
 });
 

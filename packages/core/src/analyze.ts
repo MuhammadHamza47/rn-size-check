@@ -1,6 +1,7 @@
 import { classifyEntries, deliveredTo } from './android/classify.js';
 import { DEFAULT_DENSITY, DENSITIES } from './android/density.js';
 import { detectArtifact } from './android/detect.js';
+import { embeddedImages, looksLikeLottie } from './assets/lottie.js';
 import { obfuscatedShare as obfuscatedShareOf, readDexClassNames } from './android/dex.js';
 import { debugSectionBytes, readElfHeader } from './android/elf.js';
 import { parseBinaryManifest, parseProtoManifest, type ManifestInfo } from './android/manifest.js';
@@ -16,6 +17,7 @@ import {
   type CodeInfo,
   type FileEntry,
   type JsEngineInfo,
+  type LottieInfo,
   type NativeLibInfo,
   type Report,
 } from './types.js';
@@ -103,8 +105,9 @@ export async function analyzeBlob(blob: Blob, fileName: string, options: Analyze
 
     const code = await readCodeInfo(zip, delivered, warnings);
     const nativeLibs = await readNativeLibs(zip, delivered, abi, warnings);
+    const lottie = await readLottie(zip, delivered, warnings);
 
-    const checks = runChecks({ artifact, abi, files, delivered, js, manifest, code, nativeLibs }, options.ignore);
+    const checks = runChecks({ artifact, abi, files, delivered, js, manifest, code, nativeLibs, lottie }, options.ignore);
 
     return {
       schemaVersion: 1,
@@ -120,6 +123,7 @@ export async function analyzeBlob(blob: Blob, fileName: string, options: Analyze
       breakdown,
       nativeByAbi,
       nativeLibs: nativeLibs.sort((a, b) => b.compressed - a.compressed),
+      lottie,
       largestFiles: [...delivered].sort((a, b) => b.compressed - a.compressed).slice(0, options.topFiles ?? 25),
       findings: checks.findings,
       totals: { savingsBytes: checks.savingsBytes },
@@ -163,6 +167,33 @@ async function readCodeInfo(zip: ZipArchive, delivered: FileEntry[], warnings: s
   const obfuscatedShare = obfuscatedShareOf(names);
   const minified = mappingFile ? true : names.length === 0 ? null : obfuscatedShare < UNMINIFIED_MAX_SHARE ? false : obfuscatedShare > 0.15 ? true : null;
   return { minified, obfuscatedShare: Math.round(obfuscatedShare * 1000) / 1000, mappingFile };
+}
+
+/** Lottie files smaller than this are not worth reading. */
+const LOTTIE_MIN_BYTES = 20_000;
+/** Don't load huge JSON files into memory just to count embedded images. */
+const LOTTIE_MAX_INSPECT = 30_000_000;
+
+async function readLottie(zip: ZipArchive, delivered: FileEntry[], warnings: string[]): Promise<LottieInfo[]> {
+  const found: LottieInfo[] = [];
+  const candidates = delivered.filter(
+    (f) => /\.(json|lottie)$/i.test(f.path) && /(^|\/)(res|assets)\//.test(f.path) && f.uncompressed >= LOTTIE_MIN_BYTES,
+  );
+  for (const f of candidates) {
+    try {
+      const base = { path: f.path, compressed: f.compressed, uncompressed: f.uncompressed, embeddedImages: 0, embeddedImageBytes: 0 };
+      if (/\.lottie$/i.test(f.path)) {
+        found.push({ ...base, format: 'dotlottie' });
+        continue;
+      }
+      if (!looksLikeLottie((await zip.read(f.path, 1024)).toString('utf8'))) continue;
+      const images = f.uncompressed <= LOTTIE_MAX_INSPECT ? embeddedImages((await zip.read(f.path)).toString('utf8')) : { count: 0, bytes: 0 };
+      found.push({ ...base, format: 'json', embeddedImages: images.count, embeddedImageBytes: images.bytes });
+    } catch (err) {
+      warnings.push(`Could not read ${f.path}: ${(err as Error).message}`);
+    }
+  }
+  return found.sort((a, b) => b.compressed - a.compressed);
 }
 
 async function readNativeLibs(zip: ZipArchive, delivered: FileEntry[], abi: string, warnings: string[]): Promise<NativeLibInfo[]> {

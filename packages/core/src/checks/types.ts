@@ -5,6 +5,7 @@ import type {
   Finding,
   FindingItem,
   JsEngineInfo,
+  LottieInfo,
   ManifestInfo,
   NativeLibInfo,
 } from '../types.js';
@@ -15,6 +16,8 @@ export interface CheckContext {
   code: CodeInfo;
   /** Native libraries delivered for the target ABI, with ELF details. */
   nativeLibs: NativeLibInfo[];
+  /** Lottie animations shipped as files. */
+  lottie: LottieInfo[];
   /** Target ABI for the download estimate. */
   abi: string;
   /** Every file in the artifact. */

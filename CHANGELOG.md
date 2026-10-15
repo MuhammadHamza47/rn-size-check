@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3
+
+- **New check `lottie-large`:** finds Lottie animations shipped in res/raw or assets that are over 100 KB unpacked or have images embedded inside (base64 PNG/JPG). Embedded images are flagged as a warning because they barely compress; big vector-only animations are flagged as info because they compress well but are still parsed at full size. Recognises both After Effects (Bodymovin) and LottieFiles exports. Suggested by a reader of the launch post.
+- Markdown summary: savings read "· saves 54 KB" instead of a second set of brackets.
+
 ## 0.1.2
 
 Found by checking a real release APK against Play Console and the app source.

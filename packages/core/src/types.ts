@@ -100,6 +100,17 @@ export interface NativeLibInfo {
   debugBytes: number;
 }
 
+export interface LottieInfo {
+  path: string;
+  format: 'json' | 'dotlottie';
+  compressed: number;
+  uncompressed: number;
+  /** Raster images embedded as base64 (JSON only; 0 for .lottie files, which are not inspected). */
+  embeddedImages: number;
+  /** Decoded bytes of those embedded images. */
+  embeddedImageBytes: number;
+}
+
 export interface Report {
   schemaVersion: 1;
   tool: { name: string; version: string };
@@ -130,6 +141,8 @@ export interface Report {
   nativeByAbi: { abi: string; compressed: number; uncompressed: number; count: number }[];
   /** Native libraries for the target ABI with ELF details, biggest first. */
   nativeLibs: NativeLibInfo[];
+  /** Lottie animations shipped as files (res/raw, assets), biggest first. */
+  lottie: LottieInfo[];
   /** Largest delivered files (for the target ABI). */
   largestFiles: FileEntry[];
   findings: Finding[];

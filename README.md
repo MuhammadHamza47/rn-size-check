@@ -98,6 +98,7 @@ No terminal needed: open **[rn-size-check-web.vercel.app](https://rn-size-check-
 | `image-large` | Big PNG/JPEG images that would be much smaller as WebP |
 | `icon-fonts` | Every react-native-vector-icons font bundled when you use one or two |
 | `font-weights` | One font family shipped with many weights (e.g. 14 Rubik files) when the app uses a few |
+| `lottie-large` | Big Lottie animations in res/raw or assets, especially ones with images embedded inside |
 | `duplicate-files` | The same image or file stored more than once |
 
 Savings marked `~` are typical figures (e.g. WebP is usually ~40% smaller), not exact byte counts. A file flagged by two checks is only counted once in the total.
@@ -108,7 +109,7 @@ The build is a zip file. rn-size-check reads its directory, works out which file
 
 ## Roadmap
 
-- [x] Android AAB/APK analysis, 10 checks, CLI with JSON and budgets
+- [x] Android AAB/APK analysis, 11 checks, CLI with JSON and budgets
 - [x] Website that scans in the browser
 - [x] Published to npm
 - [ ] `--project .`: which **npm packages** take the most space, plus unused images and fonts

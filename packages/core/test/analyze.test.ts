@@ -254,6 +254,60 @@ describe('analyze: font weights', () => {
   });
 });
 
+describe('analyze: Lottie animations', () => {
+  const lottie = (layers: number, images: Buffer[] = []) =>
+    Buffer.from(
+      JSON.stringify({
+        v: '5.7.4',
+        fr: 30,
+        ip: 0,
+        op: 90,
+        w: 512,
+        h: 512,
+        assets: images.map((img, i) => ({ id: `image_${i}`, w: 200, h: 200, p: `data:image/png;base64,${img.toString('base64')}` })),
+        layers: Array.from({ length: layers }, (_, i) => ({ ind: i, ty: 4, nm: `shape ${i}`, ks: { o: { a: 0, k: 100 } } })),
+      }),
+    );
+
+  it('flags big animations and counts embedded images', async () => {
+    const path = await makeZip('lottie.apk', {
+      'AndroidManifest.xml': KB,
+      'classes.dex': KB,
+      'res/raw/confetti.json': lottie(50, [blob(60 * KB), blob(40 * KB)]),
+      'res/raw/big_vector.json': lottie(3000),
+      'res/raw/tiny.json': lottie(2),
+      'res/raw/countries.json': Buffer.from(JSON.stringify({ countries: Array.from({ length: 4000 }, (_, i) => `country-${i}`) })),
+      'assets/intro.lottie': 150 * KB,
+    });
+    const r = await analyze(path);
+
+    const confetti = r.lottie.find((l) => l.path === 'res/raw/confetti.json');
+    expect(confetti).toMatchObject({ format: 'json', embeddedImages: 2 });
+    expect(confetti!.embeddedImageBytes).toBe(100 * KB);
+    expect(r.lottie.some((l) => l.path === 'res/raw/countries.json')).toBe(false);
+    expect(r.lottie.some((l) => l.path === 'res/raw/tiny.json')).toBe(false);
+
+    const f = r.findings.find((x) => x.checkId === 'lottie-large');
+    expect(f?.title).toMatch(/^3 Lottie animations take .*; 1 has images embedded inside$/);
+    expect(f?.files.sort()).toEqual(['assets/intro.lottie', 'res/raw/big_vector.json', 'res/raw/confetti.json']);
+    expect(f?.items.find((i) => i.path === 'res/raw/confetti.json')?.note).toMatch(/^2 embedded images/);
+    expect(f?.severity).toBe('warn');
+  });
+
+  it('marks vector-only animations as info, since they compress well', async () => {
+    const path = await makeZip('lottie-vector.apk', { 'AndroidManifest.xml': KB, 'classes.dex': KB, 'res/raw/big.json': lottie(3000) });
+    const f = (await analyze(path)).findings.find((x) => x.checkId === 'lottie-large');
+    expect(f?.severity).toBe('info');
+    expect(f?.title).toMatch(/^1 Lottie animation takes .* unpacked\)$/);
+  });
+
+  it('stays quiet when there are no heavy animations', async () => {
+    const path = await makeZip('lottie-ok.apk', { 'AndroidManifest.xml': KB, 'classes.dex': KB, 'res/raw/spinner.json': lottie(40) });
+    const r = await analyze(path);
+    expect(r.findings.some((x) => x.checkId === 'lottie-large')).toBe(false);
+  });
+});
+
 describe('analyze: bad input', () => {
   it('rejects an IPA with a clear message', async () => {
     const path = await makeZip('app.ipa', { 'Payload/App.app/App': KB });
