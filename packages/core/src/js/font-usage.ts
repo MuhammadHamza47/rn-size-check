@@ -56,8 +56,10 @@ export function fontUsage(fontPaths: string[], appText: string, iconFamilies: Se
       // An icon font is used when its family's component is in the bundle.
       return { path, used: iconFamilies.has(iconFamilyKey(name)) };
     }
-    // Obfuscated resource fonts (res/ab.ttf) can't be matched to names in code.
-    if (name.length < 3 || !/[A-Za-z]{3}/.test(name)) return { path, used: null };
+    // Only assets/fonts is where React Native looks up fontFamily names. Fonts in res/font are Android
+    // resources that native libraries use from Java/Kotlin or XML, which the JS can't show; obfuscated
+    // names (res/ab.ttf) can't be matched either.
+    if (!/(^|\/)assets\/fonts\//.test(path) || name.length < 3) return { path, used: null };
 
     // A wrong-case spelling is worth reporting even when the right spelling is used elsewhere.
     let writtenAs: string | undefined;

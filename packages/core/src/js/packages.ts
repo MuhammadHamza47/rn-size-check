@@ -62,6 +62,7 @@ export function analyzePackages(
   const scaled = (n: number) => Math.round(n * scale);
 
   const maps = [input.main, input.packager].filter(Boolean) as RawSourceMap[];
+  const appText = appSourceText(maps);
   const encoder = new TextEncoder();
   const seen = new Set<string>();
   const jsonInfo = maps
@@ -112,15 +113,16 @@ export function analyzePackages(
         .sort((a, b) => b.bytes - a.bytes)
         .map((m) => ({ path: m.path, bytes: m.bytes, lottie: m.lottie })),
       duplicateModules: findDuplicateModules(maps, encoder),
-      fontUsage: fontUsageFromMaps(maps, fontPaths),
+      fontUsage: fontUsageFromMaps(maps, appText, fontPaths),
+      directImports: appText === null ? null : directImports(appText),
       maps: input.names,
     },
     bundledLottie,
   };
 }
 
-function fontUsageFromMaps(maps: RawSourceMap[], fontPaths: string[]) {
-  if (fontPaths.length === 0) return [];
+/** The app's own source code (not node_modules, not JSON) from the maps' sourcesContent, or null. */
+function appSourceText(maps: RawSourceMap[]): string | null {
   const appSources: string[] = [];
   for (const map of maps) {
     const contents = (map as { sourcesContent?: (string | null)[] }).sourcesContent ?? [];
@@ -131,9 +133,24 @@ function fontUsageFromMaps(maps: RawSourceMap[], fontPaths: string[]) {
       }
     });
   }
+  return appSources.length > 0 ? appSources.join('\n') : null;
+}
+
+function fontUsageFromMaps(maps: RawSourceMap[], appText: string | null, fontPaths: string[]) {
+  if (fontPaths.length === 0) return [];
   // Without the app's own source text there is nothing to search.
-  if (appSources.length === 0) return null;
-  return fontUsage(fontPaths, appSources.join('\n'), iconFamiliesIn(maps.flatMap((m) => m.sources.filter(Boolean) as string[])));
+  if (appText === null) return null;
+  return fontUsage(fontPaths, appText, iconFamiliesIn(maps.flatMap((m) => m.sources.filter(Boolean) as string[])));
+}
+
+/** npm packages the app's own code imports (import … from 'x', require('x'), import('x')). */
+export function directImports(appText: string): string[] {
+  const names = new Set<string>();
+  for (const m of appText.matchAll(/(?:\bfrom\s*|\brequire\(\s*|\bimport\(\s*|\bimport\s+)['"]([^'"./][^'"]*)['"]/g)) {
+    const parts = m[1]!.split('/');
+    names.add(parts[0]!.startsWith('@') && parts[1] ? `${parts[0]}/${parts[1]}` : parts[0]!);
+  }
+  return [...names].sort();
 }
 
 /** Files this small are not worth reporting as duplicates. */

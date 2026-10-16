@@ -152,6 +152,8 @@ export interface PackageReport {
   duplicateModules: { paths: string[]; bytes: number }[];
   /** Which font files in the build the app code references; null when the maps have no app source text. */
   fontUsage: FontUsageInfo[] | null;
+  /** npm packages the app's own code imports directly; null when the maps have no app source text. */
+  directImports: string[] | null;
   /** Map file names used (no local paths). */
   maps: string[];
 }

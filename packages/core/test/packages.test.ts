@@ -109,6 +109,59 @@ describe('npm package breakdown', async () => {
   });
 });
 
+describe('heavy-package advice depends on the rest of the bundle', () => {
+  const mapWith = (packages: [string, number][]) => {
+    let offset = 0;
+    const segments: [number, number][] = [];
+    packages.forEach(([, bytes], i) => {
+      segments.push([offset, i]);
+      offset += bytes;
+    });
+    segments.push([offset, packages.length - 1]);
+    return hermesMap(packages.map(([name]) => ({ path: `/app/node_modules/${name}/index.js` })), segments);
+  };
+  const run = async (packages: [string, number][]) => {
+    const path = await makeZip(`heavy-${Math.random()}.apk`, { 'AndroidManifest.xml': KB, 'classes.dex': KB, 'assets/index.android.bundle': hermesBundle(BUNDLE) });
+    const r = await analyze(path, { sourceMaps: { main: mapWith(packages), names: ['m.map'] } });
+    return r.findings.filter((f) => f.checkId === 'heavy-package');
+  };
+
+  it('tells you to move moment code to the date library you already have', async () => {
+    const f = await run([['moment', 45 * KB], ['date-fns', 20 * KB]]);
+    expect(f).toHaveLength(1);
+    expect(f[0]!.fix).toMatch(/already includes date-fns/);
+  });
+
+  it('gives different advice when another dependency pulls the package in', async () => {
+    const path = await makeZip('transitive.apk', { 'AndroidManifest.xml': KB, 'classes.dex': KB, 'assets/index.android.bundle': hermesBundle(BUNDLE) });
+    const main = hermesMap(
+      [
+        { path: '/app/node_modules/ramda/src/index.js' },
+        { path: '/app/node_modules/date-fns/index.js' },
+        { path: '/app/src/App.tsx', content: "import { format } from 'date-fns';\nimport RenderHtml from 'react-native-render-html';" },
+      ],
+      [
+        [0, 0], // ramda: 60 KB
+        [60 * KB, 1], // date-fns: 50 KB
+        [110 * KB, 2], // App.tsx: 9 KB
+        [119 * KB, 2],
+      ],
+    );
+    const r = await analyze(path, { sourceMaps: { main, names: ['m.map'] } });
+    expect(r.packages?.directImports).toEqual(['date-fns', 'react-native-render-html']);
+    const ramda = r.findings.find((f) => f.checkId === 'heavy-package' && f.title.startsWith('ramda'));
+    expect(ramda?.severity).toBe('info');
+    expect(ramda?.title).toMatch(/pulled in by another package/);
+    expect(ramda?.fix).toMatch(/npm ls ramda/);
+  });
+
+  it('flags a whole date-fns only when it is big', async () => {
+    expect(await run([['date-fns', 60 * KB]])).toHaveLength(0);
+    const f = await run([['date-fns', 110 * KB]]);
+    expect(f[0]?.fix).toMatch(/its own path/);
+  });
+});
+
 describe('npm package breakdown: refusing maps that do not fit', () => {
   it('skips a map from a different build', async () => {
     const r = await analyze(await apk(), { sourceMaps: { main: mainMap, siblingBundleBytes: BUNDLE + 1, names: ['x.map'] } });

@@ -15,6 +15,8 @@ npx rn-size-check app-release.apk --project .
 - New checks (need a map): **heavy-package** (moment, lodash, big icon libraries), **duplicate-packages** (one package bundled in two versions), **duplicate-modules** (the same file bundled twice under different paths), **font-name-case** (a fontFamily that differs from the font file only in letter case, which Android won't find).
 - New flags: `--project <dir>` and `--sourcemap <file>`. The website accepts .map files dropped with the build, or added afterwards.
 - Markdown summary includes the top packages.
+- Package advice looks at the rest of the bundle: moment next to date-fns says to move to date-fns; a package your code never imports (only another dependency does) is shown as info, with `npm ls` advice instead of import tips.
+- Fonts in `res/font` (Android resources used by native libraries) are never reported as unused; only `assets/fonts` is judged against the JS code.
 
 ## 0.1.3
 

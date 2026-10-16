@@ -59,7 +59,7 @@ React Native's Gradle build writes two maps per variant. The **composed map** (`
 - **Long runs of source-less segments** (16 KB+) are whole modules the composed map leaves out, mostly `require()`d JSON (Lottie, emoji data) that Hermes compiled into code. They are reported as their own bucket instead of inflating the previous file.
 - Everything after the last segment is Hermes's **string and data tables**.
 
-The **packager map** (`intermediates/sourcemaps/react/<variant>/index.android.bundle.packager.map`) still lists JSON modules with their text in `sourcesContent`, which is used for Lottie detection and duplicate files. Both maps carry the app's own source text, used to see which font names the code references (Android matches `fontFamily` to font file names case-sensitively).
+The **packager map** (`intermediates/sourcemaps/react/<variant>/index.android.bundle.packager.map`) still lists JSON modules with their text in `sourcesContent`, which is used for Lottie detection and duplicate files. Both maps carry the app's own source text, used to see which font names the code references (Android matches `fontFamily` to font file names case-sensitively; only `assets/fonts` is judged, since `res/font` belongs to native code) and which npm packages the app imports directly (a heavy package that only another dependency imports gets different advice).
 
 Safety: in project mode the bundle next to the map must have the same size as the bundle inside the APK/AAB, and a Hermes map is refused for a plain JS bundle. Otherwise the breakdown is skipped with a warning rather than showing wrong numbers. Plain JS maps (no Hermes) are measured in JS text; with a Hermes bundle their shares are scaled and marked as estimates.
 

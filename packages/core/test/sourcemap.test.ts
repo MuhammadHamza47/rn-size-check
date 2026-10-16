@@ -141,6 +141,11 @@ describe('fontUsage', () => {
     expect(used).toEqual([true, true, true, false]);
   });
 
+  it('does not judge Android resource fonts, which native libraries use', () => {
+    const [u] = fontUsage(['base/res/font/roboto_medium_numbers.ttf'], "fontFamily: 'Inter'", new Set());
+    expect(u!.used).toBeNull();
+  });
+
   it('gives up on names built at runtime', () => {
     const [u] = fontUsage(['assets/fonts/Rubik-Light.ttf'], 'fontFamily: `Rubik-${weight}`', new Set());
     expect(u!.used).toBeNull();
