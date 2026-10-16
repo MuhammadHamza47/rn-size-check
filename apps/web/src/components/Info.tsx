@@ -61,6 +61,14 @@ const FAQ: [string, ReactNode][] = [
     </>,
   ],
   [
+    'Can I see what grew since my last release?',
+    <>
+      Yes. Open <a href="#compare">Compare</a> and drop the old and the new build. You'll see which files and npm packages got
+      bigger, and which problems are new or fixed. On the command line: <code>npx rn-size-check compare old.aab new.aab</code>. Either
+      side can also be a report saved with <code>--json</code>, which is handy in CI.
+    </>,
+  ],
+  [
     'What about iOS?',
     <>
       Not yet. iOS (.ipa) support is on the roadmap.

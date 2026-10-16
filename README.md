@@ -10,11 +10,12 @@ Point it at your Android `.aab` or `.apk` and get one report for the whole app: 
 - 🔒 **Private:** runs on your machine; your build is never uploaded
 - 📱 **Realistic:** sizes for what *one phone* downloads from Google Play (one ABI, one screen density), not the size of the AAB file
 - 🧰 **Made for React Native:** Hermes, R8, vector-icon fonts, Lottie, Metro image assets, ABI splits
+- 🔁 **What grew?** `compare old.aab new.aab` shows which files, packages and problems changed between two builds ([details](#what-grew-between-two-builds))
 - 📦 **Which npm package is big?** Add `--project` to split the JS bundle by npm package, and find unused fonts and duplicate files exactly ([details](#which-npm-packages-make-the-js-bundle-big))
 
 **🌐 Try it in your browser: [rn-size-check-web.vercel.app](https://rn-size-check-web.vercel.app)** (no install; your file is never uploaded)
 
-> **Status:** v0.2. Android AAB/APK today; iOS is planned. Feedback very welcome!
+> **Status:** v0.3. Android AAB/APK today; iOS is planned. Feedback very welcome!
 
 ## Example
 
@@ -109,6 +110,40 @@ Expo: run a local release build (`npx expo prebuild`, then `./gradlew bundleRele
 
 Exit codes: `0` ok · `1` over budget · `2` bad input · `3` internal error.
 
+### What grew between two builds?
+
+```bash
+npx rn-size-check compare old-release.aab new-release.aab
+```
+
+```
+  Download (arm64-v8a, xxhdpi)       28.5 MB → 29.4 MB    +950 KB (+3.3%)
+
+  By category                       Before     After     Change
+  ─────────────────────────────────────────────────────────────
+  Images                            6.9 MB    7.9 MB    +992 KB
+  Fonts                             2.3 MB    2.2 MB     −42 KB
+
+  Biggest file changes
+    +992 KB  new    drawable-mdpi-v4/src_assets_images_onboarding.png
+     −42 KB  gone   Manrope-Light.ttf
+
+  Got worse
+  ⚠ 11 PNG/JPEG images over 100 KB (7.7 MB)
+      was: 10 PNG/JPEG images over 100 KB (6.7 MB)
+```
+
+Each side can be a build or a report saved with `--json`, so in CI you can keep the report of your last release and compare every new build against it. Add `--project` (or `--sourcemap` / `--old-sourcemap`) to also compare npm packages.
+
+| Option | Purpose |
+|---|---|
+| `--markdown <file>` | Write the comparison as Markdown, ready for a PR comment |
+| `--json <file>` | Save the comparison as JSON |
+| `--max-growth <MB>` | Exit with code 1 if the download grew by more than this |
+| `--format pretty\|plain\|json\|markdown` | Output format |
+
+The website has the same thing: open **Compare** and drop the old and the new build.
+
 ### In CI
 
 Fail the build when the app grows past a budget, and keep the report as an artifact:
@@ -159,7 +194,7 @@ The build is a zip file. rn-size-check reads its directory, works out which file
 - [x] `--project`: which **npm packages** take the most space, require()d Lottie, exact unused fonts
 - [ ] Unused images (needs a scan of the project's source files)
 - [ ] Real names for resources renamed by `shrinkResources`
-- [ ] `compare old.aab new.aab`: what grew between two builds
+- [x] `compare old.aab new.aab`: what grew between two builds
 - [ ] GitHub Action / EAS hook that comments size changes on pull requests
 - [ ] iOS (`.ipa`)
 

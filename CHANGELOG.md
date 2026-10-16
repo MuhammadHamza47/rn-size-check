@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0 (unreleased)
+
+**What grew between two builds?**
+
+```bash
+npx rn-size-check compare old.aab new.aab
+```
+
+- New `compare` command. Each side can be a build (.aab/.apk) or a report saved with `--json`.
+- Shows the change in download, install and file size, per category, the files that were added, removed, grew or shrank, and the npm packages that changed (when both builds have source maps).
+- Lists problems that are **new**, **fixed**, **got worse** (10 → 11 big PNGs) or **got better**.
+- `--markdown size.md` writes a PR comment, `--json` saves the comparison, and `--max-growth <MB>` exits with code 1 when the download grows too much (for CI).
+- The website has a **Compare** page: drop the old and the new build (or two saved reports). Still read in your browser.
+- Saved reports now include the full file list, so two reports can be compared file by file. Reports from older versions still compare by category.
+
 ## 0.2.1
 
 - **The build path is optional.** Run inside the project and it picks the newest release .aab or .apk in android/app/build/outputs (flavors too), so the whole command is `npx rn-size-check --project`.
