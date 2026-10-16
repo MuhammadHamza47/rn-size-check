@@ -1,8 +1,9 @@
-import type { AnalyzeOptions, Report } from '@rnsc/core';
-import { useCallback, useState } from 'react';
+import { compareReports, reportFromJson, type AnalyzeOptions, type Comparison, type Report } from '@rnsc/core';
+import { useCallback, useEffect, useState } from 'react';
 import cliPackage from '../../../packages/cli/package.json';
 import { analyzeInWorker } from './analyze';
 import { CliPromo } from './components/CliPromo';
+import { CompareForm, ComparisonView, type CompareInput } from './components/Compare';
 import { Dropzone } from './components/Dropzone';
 import { Arrow, Preview, Proof, TrustRow } from './components/Home';
 import { Info } from './components/Info';
@@ -13,14 +14,20 @@ type State =
   | { status: 'idle'; error?: string }
   | { status: 'analyzing'; file: File }
   | { status: 'done'; file: File; maps: File[]; report: Report; options: AnalyzeOptions }
-  | { status: 'sample' };
+  | { status: 'sample' }
+  | { status: 'compare'; busy: string | null; error?: string }
+  | { status: 'compared'; comparison: Comparison };
 
 const REPO = 'https://github.com/MuhammadHamza47/rn-size-check';
 
 export function App() {
   // /#sample opens the sample report directly, so it can be linked.
   const [state, setState] = useState<State>(() =>
-    window.location.hash === '#sample' ? { status: 'sample' } : { status: 'idle' },
+    window.location.hash === '#sample'
+      ? { status: 'sample' }
+      : window.location.hash === '#compare'
+        ? { status: 'compare', busy: null }
+        : { status: 'idle' },
   );
 
   const run = useCallback(async (file: File, options: AnalyzeOptions = {}, maps: File[] = []) => {
@@ -34,6 +41,25 @@ export function App() {
     }
   }, []);
 
+  const compare = useCallback(async (oldInput: CompareInput, newInput: CompareInput) => {
+    try {
+      setState({ status: 'compare', busy: 'Reading the old build…' });
+      const oldReport = await load(oldInput);
+      setState({ status: 'compare', busy: 'Reading the new build…' });
+      const newReport = await load(newInput);
+      setState({ status: 'compared', comparison: compareReports(oldReport, newReport) });
+      window.scrollTo({ top: 0 });
+    } catch (err) {
+      setState({ status: 'compare', busy: null, error: (err as Error).message });
+    }
+  }, []);
+
+  const openCompare = () => {
+    history.replaceState(null, '', '#compare');
+    setState({ status: 'compare', busy: null });
+    window.scrollTo({ top: 0 });
+  };
+
   const reset = () => {
     if (window.location.hash) history.replaceState(null, '', window.location.pathname);
     setState({ status: 'idle' });
@@ -43,6 +69,16 @@ export function App() {
     setState({ status: 'sample' });
     window.scrollTo({ top: 0 });
   };
+
+  // Plain links to #compare and #sample (e.g. in the FAQ) open those pages too.
+  useEffect(() => {
+    const onHash = () => {
+      if (window.location.hash === '#compare') openCompare();
+      else if (window.location.hash === '#sample') showSample();
+    };
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
 
   const home = state.status === 'idle' || state.status === 'analyzing';
 
@@ -67,7 +103,14 @@ export function App() {
                 </a>
               </>
             )}
-            <a href="https://www.npmjs.com/package/rn-size-check" target="_blank" rel="noreferrer">
+            <a
+              href="#compare"
+              className={state.status === 'compare' || state.status === 'compared' ? 'active' : undefined}
+              onClick={(e) => (e.preventDefault(), openCompare())}
+            >
+              Compare
+            </a>
+            <a className="hide-sm" href="https://www.npmjs.com/package/rn-size-check" target="_blank" rel="noreferrer">
               npm
             </a>
             <a className="btn btn-small btn-github" href={REPO} target="_blank" rel="noreferrer">
@@ -88,6 +131,8 @@ export function App() {
           />
         )}
         {state.status === 'sample' && <ReportView report={sampleReport as Report} options={{}} sample onReset={reset} />}
+        {state.status === 'compare' && <CompareForm busy={state.busy} error={state.error} onCompare={compare} />}
+        {state.status === 'compared' && <ComparisonView cmp={state.comparison} onReset={openCompare} />}
         {home && (
           <>
             <section className="hero">
@@ -115,6 +160,10 @@ export function App() {
                 <button type="button" className="link" onClick={showSample}>
                   Open a sample report
                 </button>
+                {' · '}
+                <button type="button" className="link" onClick={openCompare}>
+                  Compare two builds
+                </button>
               </p>
             </section>
             <Proof />
@@ -122,7 +171,7 @@ export function App() {
             <Info />
           </>
         )}
-        <CliPromo />
+        <CliPromo compare={state.status === 'compare' || state.status === 'compared'} />
       </main>
 
       <footer className="footer">
@@ -157,6 +206,18 @@ export function App() {
       </footer>
     </>
   );
+}
+
+/** A saved report is read here; a build goes to the worker. */
+async function load(input: CompareInput): Promise<Report> {
+  if (input.kind === 'build') return analyzeInWorker(input.build, {}, input.maps);
+  let value: unknown;
+  try {
+    value = JSON.parse(await input.report.text());
+  } catch {
+    throw new Error(`${input.report.name} is not valid JSON.`);
+  }
+  return reportFromJson(value, input.report.name);
 }
 
 function GitHubIcon() {

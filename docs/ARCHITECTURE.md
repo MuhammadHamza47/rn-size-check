@@ -27,6 +27,8 @@ Everything runs locally. Nothing is uploaded, by the CLI or by the website.
 import { analyzeBlob } from '@rnsc/core';        // browser or Node: (blob, fileName, options) → Report
 import { analyze } from '@rnsc/core/node';       // Node only: (filePath, options) → Report
 import { reportToMarkdown } from '@rnsc/core';   // Report → Markdown summary
+import { compareReports } from '@rnsc/core';     // (old Report, new Report) → Comparison
+import { comparisonToMarkdown } from '@rnsc/core'; // Comparison → Markdown (PR comment)
 ```
 
 Options: `abi` (default `arm64-v8a` if present), `density` (default `xxhdpi`), `ignore` (check ids), `topFiles`, `sourceMaps` (parsed maps for the npm package breakdown). The Node `analyze()` also takes `project` (finds the maps in a React Native project's Gradle output) and `sourcemap` (a map file).
@@ -79,11 +81,22 @@ Defined in `packages/core/src/types.ts`. Main fields:
 | `lottie` | Lottie animations: files in res/raw or assets, and require()d ones from the packager map |
 | `packages` | npm package breakdown (`null` without a map): `items`, `appCodeBytes`, `unmappedCodeBytes`, `dataBytes`, `runtimeBytes`, `jsonModules`, `duplicateModules`, `fontUsage` |
 | `largestFiles` | Biggest delivered files |
+| `files` | Every delivered file (`path`, `category`, `compressed`), so saved reports can be compared file by file. Added in 0.3; older reports don't have it |
 | `findings` | `checkId`, `severity` (`error`/`warn`/`info`), `title`, `savings`, `files`, `items` (display list with optional notes), `fix` |
 | `totals.savingsBytes` | De-duplicated savings |
 | `meta` | `durationMs`, `warnings` (non-fatal problems, e.g. "debug build has no JS bundle") |
 
 Sizes are bytes. Display uses decimal units (`formatBytes`, 1 MB = 1,000,000 bytes), the same as Google Play Console.
+
+## Comparing two builds
+
+`compare.ts` diffs two Reports, so it works the same for two builds, two saved `--json` reports, or one of each. It returns a `Comparison` (`kind: 'rn-size-check-comparison'`):
+
+- `sizes`, `categories`: old, new and change for download, install, file and each category.
+- `files`: added, removed, grown and shrunk files (changes under 1 KB are left out). AAB paths are matched in their APK form (`base/res/x.png` = `res/x.png`, `base/dex/classes.dex` = `classes.dex`). `null` when a report has no `files` list (saved before 0.3).
+- `packages`, `js`: npm package and app-code changes, when both reports have the package breakdown.
+- `findings`: `added`, `fixed`, `worse`, `better`. Titles carry numbers that change between builds, so findings are paired by check id, then by package name (`heavy-package`) or a shared file (one finding per font family). A pair whose size grew is `worse`. When only one side has a source map, checks that need one (or answer differently with one) are left out, so a map alone never shows up as new problems.
+- `notes`: what the reader should know (different apps, an AAB vs an APK, different `--abi`/`--density`, old report format).
 
 ## Checks
 

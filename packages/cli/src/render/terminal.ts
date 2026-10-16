@@ -156,20 +156,20 @@ function labelFor(category: Report['breakdown'][number]['category'], report: Rep
   return CATEGORY_LABELS[category];
 }
 
-function icon(severity: Severity, c: ReturnType<typeof createColors>): string {
+export function icon(severity: Severity, c: ReturnType<typeof createColors>): string {
   if (severity === 'error') return c.red('✖');
   if (severity === 'warn') return c.yellow('⚠');
   return c.blue('ℹ');
 }
 
-function pad(s: string, w: number): string {
+export function pad(s: string, w: number): string {
   return s.length >= w ? `${s.slice(0, w - 1)}…` : s + ' '.repeat(w - s.length);
 }
 
-function padL(s: string, w: number): string {
+export function padL(s: string, w: number): string {
   return s.length >= w ? s : ' '.repeat(w - s.length) + s;
 }
 
-function shorten(s: string, w: number): string {
+export function shorten(s: string, w: number): string {
   return s.length <= w ? s : `…${s.slice(s.length - w + 1)}`;
 }

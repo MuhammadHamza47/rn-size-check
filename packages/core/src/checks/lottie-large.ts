@@ -14,6 +14,7 @@ export const lottieLarge: Check = {
   description:
     'Large Lottie animations: files in res/raw or assets, and (with a source map) JSON the code require()s into the JS bundle.',
   requires: 'build',
+  sharperWithSourcemap: true,
   run(ctx) {
     const heavy = ctx.lottie.filter((l) => l.uncompressed >= LARGE || l.embeddedImageBytes >= EMBEDDED_IMAGES);
     if (heavy.length === 0) return [];

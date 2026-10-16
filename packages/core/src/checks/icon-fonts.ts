@@ -19,6 +19,7 @@ export const iconFonts: Check = {
   description:
     'Icon fonts the app never uses. With a source map: fonts whose icon family is never imported; without: the full default set of react-native-vector-icons.',
   requires: 'build',
+  sharperWithSourcemap: true,
   run(ctx) {
     const fonts = ctx.delivered.filter((f) => f.category === 'font' && ICON_FONT_FILE.test(f.path));
     if (fonts.length === 0) return [];

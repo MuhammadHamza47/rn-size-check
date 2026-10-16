@@ -148,6 +148,7 @@ export async function analyzeBlob(blob: Blob, fileName: string, options: Analyze
       lottie,
       packages,
       largestFiles: [...delivered].sort((a, b) => b.compressed - a.compressed).slice(0, options.topFiles ?? 25),
+      files: delivered.map((f) => ({ path: f.path, category: f.category, compressed: f.compressed })),
       findings: checks.findings,
       totals: { savingsBytes: checks.savingsBytes },
       meta: { durationMs: Date.now() - started, warnings: [...warnings, ...checks.warnings] },

@@ -41,6 +41,13 @@ export interface FileEntry {
   crc32: number;
 }
 
+/** A delivered file as stored in the report (just what a comparison needs). */
+export interface ReportFile {
+  path: string;
+  category: Category;
+  compressed: number;
+}
+
 export type Severity = 'error' | 'warn' | 'info';
 
 export interface Finding {
@@ -194,6 +201,11 @@ export interface Report {
   packages: PackageReport | null;
   /** Largest delivered files (for the target ABI). */
   largestFiles: FileEntry[];
+  /**
+   * Every delivered file, small enough to keep in a saved report so two reports can be compared file
+   * by file. Added in 0.3; missing from reports saved by older versions.
+   */
+  files?: ReportFile[];
   findings: Finding[];
   totals: { savingsBytes: number };
   meta: { durationMs: number; warnings: string[] };
