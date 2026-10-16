@@ -95,6 +95,7 @@ describe('npm package breakdown', async () => {
     expect(weights.savings!.bytes).toBeLessThan(8 * 20 * KB + 1000);
     const icons = report.findings.find((f) => f.checkId === 'icon-fonts')!;
     expect(icons.files).toEqual(['assets/fonts/Ionicons.ttf']);
+    expect(icons.fix).toContain('iconFontNames: [ "Feather.ttf" ]');
     expect(report.findings.find((f) => f.checkId === 'font-name-case')?.title).toBe(
       "fontFamily 'Rubik-bold' doesn't match the font file Rubik-Bold.ttf",
     );

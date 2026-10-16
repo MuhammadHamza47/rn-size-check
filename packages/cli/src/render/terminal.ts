@@ -84,6 +84,9 @@ export function renderTerminal(report: Report, opts: RenderOptions): string {
     if (pk.unmappedCodeBytes > 0) row('JSON and other modules not in the map', pk.unmappedCodeBytes, 'e.g. require()d Lottie or emoji data');
     if (pk.dataBytes > 0) row('Strings and data tables', pk.dataBytes);
     if (pk.runtimeBytes > 0) row('Metro runtime and polyfills', pk.runtimeBytes);
+    line(`  ${rule(56)}`);
+    const js = report.breakdown.find((r) => r.category === 'js');
+    row('Total', pk.bundleBytes, js ? `${formatBytes(js.compressed)} in the download (compressed)` : '');
   }
 
   // Native libs per ABI (only interesting when there are several)

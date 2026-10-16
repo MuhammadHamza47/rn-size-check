@@ -1,6 +1,7 @@
 import { writeFile } from 'node:fs/promises';
 import { analyze, formatBytes, InvalidOptionError, UnsupportedArtifactError, ZipError } from '@rnsc/core/node';
 import { renderTerminal } from '../render/terminal.js';
+import { findReleaseBuild } from './find-build.js';
 
 export interface AnalyzeCliOptions {
   /** A folder, or `true` when --project is given without one (= the current folder). */
@@ -17,11 +18,26 @@ export interface AnalyzeCliOptions {
 
 export const EXIT = { ok: 0, failed: 1, badInput: 2, internal: 3 } as const;
 
-export async function runAnalyze(build: string, opts: AnalyzeCliOptions, version: string): Promise<number> {
+export async function runAnalyze(buildArg: string | undefined, opts: AnalyzeCliOptions, version: string): Promise<number> {
+  const project = opts.project === true ? process.cwd() : opts.project || undefined;
+  let build = buildArg;
+  if (!build) {
+    const found = await findReleaseBuild(project ?? process.cwd());
+    if (!found) {
+      return fail(
+        'No build given, and no release .aab or .apk found under android/app/build/outputs.\n' +
+          'Build one first (cd android && ./gradlew bundleRelease), or pass its path:\n' +
+          '  npx rn-size-check android/app/build/outputs/bundle/release/app-release.aab',
+        EXIT.badInput,
+      );
+    }
+    build = found;
+    if (opts.format !== 'json') process.stderr.write(`Using ${build} (newest release build)\n`);
+  }
   let report;
   try {
     report = await analyze(build, {
-      project: opts.project === true ? process.cwd() : opts.project || undefined,
+      project,
       sourcemap: opts.sourcemap,
       abi: opts.abi,
       density: opts.density,
@@ -31,11 +47,14 @@ export async function runAnalyze(build: string, opts: AnalyzeCliOptions, version
   } catch (err) {
     const e = err as NodeJS.ErrnoException;
     if (e.code === 'ENOENT') {
+      const found = await findReleaseBuild(project ?? process.cwd());
       return fail(
         `File not found: ${build}\n` +
-          'Pass the path to a release build, usually one of:\n' +
-          '  android/app/build/outputs/bundle/release/app-release.aab\n' +
-          '  android/app/build/outputs/apk/release/app-release.apk',
+          (found
+            ? `This project has a release build at ${found}\nUse that path, or leave the path out to use the newest release build.`
+            : 'Pass the path to a release build, usually one of:\n' +
+              '  android/app/build/outputs/bundle/release/app-release.aab\n' +
+              '  android/app/build/outputs/apk/release/app-release.apk'),
         EXIT.badInput,
       );
     }

@@ -40,6 +40,7 @@ export function reportToMarkdown(report: Report): string {
     if (pk.unmappedCodeBytes > 0) lines.push(`| *JSON and other modules not in the map* | ${formatBytes(pk.unmappedCodeBytes)} | ${pct(pk.unmappedCodeBytes)} |`);
     if (pk.dataBytes > 0) lines.push(`| *Strings and data tables* | ${formatBytes(pk.dataBytes)} | ${pct(pk.dataBytes)} |`);
     if (pk.runtimeBytes > 0) lines.push(`| *Metro runtime and polyfills* | ${formatBytes(pk.runtimeBytes)} | ${pct(pk.runtimeBytes)} |`);
+    lines.push(`| **Total** | **${formatBytes(pk.bundleBytes)}** | **100%** |`);
   }
 
   if (report.findings.length > 0) {

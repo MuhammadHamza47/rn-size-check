@@ -11,7 +11,7 @@ const program = new Command()
 program
   .command('analyze', { isDefault: true })
   .description('Analyze an Android .aab or .apk')
-  .argument('<build>', 'path to app-release.aab or .apk')
+  .argument('[build]', 'path to app-release.aab or .apk (default: the newest release build in android/app/build/outputs)')
   .option(
     '--project [dir]',
     'React Native project folder (default: the current folder): adds the npm package breakdown using the source maps from its release build',
@@ -24,7 +24,7 @@ program
   .option('--top <n>', 'rows to show in tables', '10')
   .option('--budget <MB>', 'exit with code 1 if the download size exceeds this many MB')
   .option('--ignore <ids>', 'comma-separated check ids to skip')
-  .action(async (build: string, opts) => {
+  .action(async (build: string | undefined, opts) => {
     process.exitCode = await runAnalyze(build, opts, pkg.version);
   });
 

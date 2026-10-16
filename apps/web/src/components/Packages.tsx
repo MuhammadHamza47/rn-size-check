@@ -11,12 +11,14 @@ export function Packages({ report }: { report: Report }) {
   const shown = open ? pk.items : pk.items.slice(0, COLLAPSED);
   const rest = pk.items.slice(shown.length);
   const unit = pk.kind === 'hermes' ? 'Hermes bytecode' : 'minified JS';
+  const js = report.breakdown.find((r) => r.category === 'js');
 
   return (
     <section>
       <h2>JS bundle by npm package</h2>
       <p className="muted small">
-        {formatBytes(pk.bundleBytes)} of {unit}, unpacked{pk.estimate ? ' (estimated)' : ''}. From {pk.maps.join(' and ')}.
+        {formatBytes(pk.bundleBytes)} of {unit}, unpacked{pk.estimate ? ' (estimated)' : ''}
+        {js ? `; ${formatBytes(js.compressed)} in the download` : ''}. From {pk.maps.join(' and ')}.
       </p>
       <table className="table">
         <tbody>

@@ -5,8 +5,13 @@ import type { Check } from './types.js';
 /** Without a source map: react-native-vector-icons ships ~19 fonts; a list this long means nobody trimmed it. */
 const FULL_SET_MIN = 12;
 
-const FIX =
-  'Ship only the fonts you use: in android/app/build.gradle set project.ext.vectoricons = [ iconFontNames: [ "MaterialIcons.ttf" ] ], or import per-family packages (@react-native-vector-icons/<family>).';
+/** The gradle fix, with the fonts the app uses when they are known. */
+function fix(keep: string[] = ['MaterialIcons.ttf']): string {
+  const names = keep.map((n) => `"${n}"`).join(', ');
+  return `Ship only the fonts you use: in android/app/build.gradle set project.ext.vectoricons = [ iconFontNames: [ ${names} ] ], or import per-family packages (@react-native-vector-icons/<family>).`;
+}
+
+const baseName = (path: string) => path.slice(path.lastIndexOf('/') + 1);
 
 export const iconFonts: Check = {
   id: 'icon-fonts',
@@ -30,7 +35,7 @@ export const iconFonts: Check = {
           title: `${unused.length} of ${fonts.length} icon fonts are bundled but never used (${formatBytes(total)})`,
           files: unused.map((f) => f.path),
           savingsByFile: Object.fromEntries(unused.map((f) => [f.path, f.compressed])),
-          fix: FIX,
+          fix: fix(fonts.filter((f) => usage.get(f.path) !== false).map((f) => baseName(f.path))),
         },
       ];
     }
@@ -43,7 +48,7 @@ export const iconFonts: Check = {
         severity: 'warn',
         title: `All ${fonts.length} icon fonts bundled (${formatBytes(total)}); most apps use 1–3`,
         files: fonts.map((f) => f.path),
-        fix: `${FIX} Run with --project to see exactly which ones are unused.`,
+        fix: `${fix()} Run with --project to see exactly which ones are unused.`,
       },
     ];
   },

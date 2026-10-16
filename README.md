@@ -10,7 +10,7 @@ Point it at your Android `.aab` or `.apk` and get one report for the whole app: 
 - 🔒 **Private:** runs on your machine; your build is never uploaded
 - 📱 **Realistic:** sizes for what *one phone* downloads from Google Play (one ABI, one screen density), not the size of the AAB file
 - 🧰 **Made for React Native:** Hermes, R8, vector-icon fonts, Lottie, Metro image assets, ABI splits
-- 📦 **Which npm package is big?** Add `--project .` to split the JS bundle by npm package, and find unused fonts and duplicate files exactly ([details](#which-npm-packages-make-the-js-bundle-big))
+- 📦 **Which npm package is big?** Add `--project` to split the JS bundle by npm package, and find unused fonts and duplicate files exactly ([details](#which-npm-packages-make-the-js-bundle-big))
 
 **🌐 Try it in your browser: [rn-size-check-web.vercel.app](https://rn-size-check-web.vercel.app)** (no install; your file is never uploaded)
 
@@ -60,14 +60,16 @@ RN Size Check · com.example.shop 1.0 (1)
 npx rn-size-check android/app/build/outputs/bundle/release/app-release.aab
 ```
 
+Run inside your project and you can leave the path out: it picks the newest release `.aab` or `.apk` in `android/app/build/outputs`.
+
 Analyze a **release** build. Debug builds bundle every ABI and unoptimized libraries and have no JS bundle, so their sizes are far from what users download (the tool warns you).
 
 ### Which npm packages make the JS bundle big?
 
-Point `--project` at the React Native project you built:
+Add `--project`, run inside the React Native project you built:
 
 ```bash
-npx rn-size-check android/app/build/outputs/apk/release/app-release.apk --project .
+npx rn-size-check --project
 ```
 
 ```
@@ -154,7 +156,7 @@ The build is a zip file. rn-size-check reads its directory, works out which file
 - [x] Android AAB/APK analysis, CLI with JSON and budgets
 - [x] Website that scans in the browser
 - [x] Published to npm
-- [x] `--project .`: which **npm packages** take the most space, require()d Lottie, exact unused fonts
+- [x] `--project`: which **npm packages** take the most space, require()d Lottie, exact unused fonts
 - [ ] Unused images (needs a scan of the project's source files)
 - [ ] Real names for resources renamed by `shrinkResources`
 - [ ] `compare old.aab new.aab`: what grew between two builds

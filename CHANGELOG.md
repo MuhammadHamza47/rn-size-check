@@ -2,6 +2,10 @@
 
 ## 0.2.1
 
+- **The build path is optional.** Run inside the project and it picks the newest release .aab or .apk in android/app/build/outputs (flavors too), so the whole command is `npx rn-size-check --project`.
+- A wrong build path now points to the release build the project does have (for example the .aab when you typed .apk).
+- The icon-fonts fix lists the icon fonts your code uses (for example `iconFontNames: [ "Ionicons.ttf", "MaterialCommunityIcons.ttf" ]`) instead of a fixed example.
+- The npm package table ends with a total, and shows how big the bundle is in the download, so the unpacked bytecode numbers don't look like they disagree with the breakdown.
 - `--project` works without a folder and then uses the current one, so `npx rn-size-check app-release.aab --project` run inside the project just works (it used to fail with "argument missing").
 
 ## 0.2.0
