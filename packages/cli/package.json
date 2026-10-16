@@ -1,6 +1,6 @@
 {
   "name": "rn-size-check",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Find out why your React Native app is big and how to shrink it.",
   "type": "module",
   "bin": {

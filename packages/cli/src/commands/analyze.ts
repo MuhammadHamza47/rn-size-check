@@ -3,7 +3,8 @@ import { analyze, formatBytes, InvalidOptionError, UnsupportedArtifactError, Zip
 import { renderTerminal } from '../render/terminal.js';
 
 export interface AnalyzeCliOptions {
-  project?: string;
+  /** A folder, or `true` when --project is given without one (= the current folder). */
+  project?: string | boolean;
   sourcemap?: string;
   abi?: string;
   density?: string;
@@ -20,7 +21,7 @@ export async function runAnalyze(build: string, opts: AnalyzeCliOptions, version
   let report;
   try {
     report = await analyze(build, {
-      project: opts.project,
+      project: opts.project === true ? process.cwd() : opts.project || undefined,
       sourcemap: opts.sourcemap,
       abi: opts.abi,
       density: opts.density,

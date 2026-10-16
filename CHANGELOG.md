@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+- `--project` works without a folder and then uses the current one, so `npx rn-size-check app-release.aab --project` run inside the project just works (it used to fail with "argument missing").
+
 ## 0.2.0
 
 **Which npm packages make the JS bundle big?** Point the tool at your React Native project, or drop the source maps on the website:

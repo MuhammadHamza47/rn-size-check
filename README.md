@@ -95,7 +95,7 @@ Expo: run a local release build (`npx expo prebuild`, then `./gradlew bundleRele
 
 | Option | Purpose |
 |---|---|
-| `--project <dir>` | React Native project folder: adds the npm package breakdown from its release build's source maps |
+| `--project [dir]` | React Native project folder (default: the current folder): adds the npm package breakdown from its release build's source maps |
 | `--sourcemap <file>` | A source map of the JS bundle (Hermes composed map or plain JS map) |
 | `--abi <abi>` | ABI for the estimate (default `arm64-v8a`) |
 | `--density <d>` | Screen density for AAB estimates: `mdpi`…`xxxhdpi` (default `xxhdpi`) |
