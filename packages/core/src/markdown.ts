@@ -31,9 +31,15 @@ export function reportToMarkdown(report: Report): string {
     const unit = pk.kind === 'hermes' ? 'Hermes bytecode' : 'minified JS';
     lines.push('', `**JS bundle by npm package** (${unit}, unpacked${pk.estimate ? ', est.' : ''})`, '', '| Package | Size | % |', '|---|---:|---:|');
     const pct = (n: number) => `${((n / pk.bundleBytes) * 100).toFixed(1)}%`;
-    for (const p of pk.items.slice(0, 8)) lines.push(`| ${p.name} | ${formatBytes(p.bytes)} | ${pct(p.bytes)} |`);
+    const top = pk.items.slice(0, 8);
+    for (const p of top) lines.push(`| ${p.name} | ${formatBytes(p.bytes)} | ${pct(p.bytes)} |`);
+    // Every row the terminal shows, so the table adds up to the whole bundle.
+    const rest = pk.items.slice(top.length).reduce((s, p) => s + p.bytes, 0);
+    if (rest > 0) lines.push(`| *${pk.items.length - top.length} more packages* | ${formatBytes(rest)} | ${pct(rest)} |`);
     lines.push(`| *Your app code* | ${formatBytes(pk.appCodeBytes)} | ${pct(pk.appCodeBytes)} |`);
     if (pk.unmappedCodeBytes > 0) lines.push(`| *JSON and other modules not in the map* | ${formatBytes(pk.unmappedCodeBytes)} | ${pct(pk.unmappedCodeBytes)} |`);
+    if (pk.dataBytes > 0) lines.push(`| *Strings and data tables* | ${formatBytes(pk.dataBytes)} | ${pct(pk.dataBytes)} |`);
+    if (pk.runtimeBytes > 0) lines.push(`| *Metro runtime and polyfills* | ${formatBytes(pk.runtimeBytes)} | ${pct(pk.runtimeBytes)} |`);
   }
 
   if (report.findings.length > 0) {
