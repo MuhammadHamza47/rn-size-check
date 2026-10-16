@@ -61,11 +61,18 @@ export function Dropzone({ busy, busyLabel, error, onFiles }: Props) {
           </>
         ) : (
           <>
-            <svg className="dz-icon" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M12 4v11m0 0-4-4m4 4 4-4M5 19h14" />
-            </svg>
+            <span className="dz-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M12 4v11m0 0-4-4m4 4 4-4M5 19h14" />
+              </svg>
+            </span>
             <strong>Drop your .aab or .apk here</strong>
             <span className="dz-hint">or click to choose a file</span>
+            <span className="dz-types">
+              <span>.aab</span>
+              <span>.apk</span>
+              <span>.map (optional)</span>
+            </span>
             <span className="dz-path">android/app/build/outputs/bundle/release/app-release.aab</span>
           </>
         )}

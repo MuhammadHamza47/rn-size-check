@@ -623,7 +623,7 @@
     "base/assets/fonts/SimpleLineIcons.ttf",
     "base/assets/fonts/Zocial.ttf"
    ],
-   "fix": "Ship only the fonts you use: in android/app/build.gradle set project.ext.vectoricons = [ iconFontNames: [ \"Ionicons.ttf\", \"MaterialCommunityIcons.ttf\" ] ], or import per-family packages (@react-native-vector-icons/<family>).",
+   "fix": "Ship only the fonts you use: in android/app/build.gradle set project.ext.vectoricons = [ iconFontNames: [ \"MaterialIcons.ttf\" ] ], or import per-family packages (@react-native-vector-icons/<family>). Run with --project to see exactly which ones are unused.",
    "items": [
     {
      "path": "base/assets/fonts/MaterialCommunityIcons.ttf",

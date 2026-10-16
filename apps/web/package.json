@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource-variable/inter": "^5.2.5",
+    "@fontsource-variable/jetbrains-mono": "^5.2.5",
     "@rnsc/core": "0.0.0",
     "buffer": "^6.0.3",
     "react": "^18.3.1",
