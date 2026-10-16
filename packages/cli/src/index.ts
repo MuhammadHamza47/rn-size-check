@@ -2,6 +2,7 @@ import { CHECKS } from '@rnsc/core';
 import { Command, Option } from 'commander';
 import pkg from '../package.json';
 import { EXIT, runAnalyze } from './commands/analyze.js';
+import { runCompare } from './commands/compare.js';
 
 const program = new Command()
   .name('rn-size-check')
@@ -26,6 +27,26 @@ program
   .option('--ignore <ids>', 'comma-separated check ids to skip')
   .action(async (build: string | undefined, opts) => {
     process.exitCode = await runAnalyze(build, opts, pkg.version);
+  });
+
+program
+  .command('compare')
+  .description('Compare two builds (or two reports saved with --json): what grew, what shrank, new and fixed problems')
+  .argument('<old>', 'the older build (.aab/.apk) or a report saved with --json')
+  .argument('<new>', 'the newer build (.aab/.apk) or a report saved with --json')
+  .option('--project [dir]', 'React Native project of the new build (default: the current folder): adds the npm package comparison')
+  .option('--sourcemap <file>', 'source map of the new build')
+  .option('--old-sourcemap <file>', 'source map of the old build')
+  .option('--abi <abi>', 'ABI for the download estimate (default: arm64-v8a if present)')
+  .option('--density <density>', 'screen density for AAB estimates: mdpi…xxxhdpi (default: xxhdpi)')
+  .option('--json <file>', 'also write the comparison as JSON')
+  .option('--markdown <file>', 'also write the comparison as Markdown, ready for a PR comment')
+  .addOption(new Option('--format <format>', 'stdout format').choices(['pretty', 'plain', 'json', 'markdown']).default('pretty'))
+  .option('--top <n>', 'rows to show in lists', '10')
+  .option('--max-growth <MB>', 'exit with code 1 if the download grew by more than this many MB')
+  .option('--ignore <ids>', 'comma-separated check ids to skip')
+  .action(async (oldBuild: string, newBuild: string, opts) => {
+    process.exitCode = await runCompare(oldBuild, newBuild, opts, pkg.version);
   });
 
 program

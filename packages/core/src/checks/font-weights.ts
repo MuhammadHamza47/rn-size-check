@@ -22,6 +22,7 @@ export const fontWeights: Check = {
   description:
     'Font files the app never uses. With a source map: the exact files no code references; without: families shipped with many weights.',
   requires: 'build',
+  sharperWithSourcemap: true,
   run(ctx) {
     const fonts = ctx.delivered.filter((f) => f.category === 'font' && !ICON_FONT_FILE.test(f.path));
     const usage = new Map((ctx.packages?.fontUsage ?? []).map((u) => [u.path, u.used]));

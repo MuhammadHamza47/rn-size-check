@@ -45,5 +45,7 @@ export interface Check {
   description: string;
   /** What the check needs: just the build, or also the project / source map (later milestones). */
   requires: 'build' | 'project' | 'sourcemap';
+  /** A build-only check that gives a different (exact) answer when a source map is there. */
+  sharperWithSourcemap?: boolean;
   run(ctx: CheckContext): CheckFinding[];
 }

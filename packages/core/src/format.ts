@@ -12,6 +12,12 @@ export function formatBytes(bytes: number): string {
   return `${bytes} B`;
 }
 
+/** A size change with its sign: "+2.7 MB", "−85 KB", "0 B". */
+export function formatDelta(bytes: number): string {
+  if (bytes === 0) return '0 B';
+  return `${bytes > 0 ? '+' : '−'}${formatBytes(Math.abs(bytes))}`;
+}
+
 /**
  * Short display name for a file inside the build. Resources and native libraries keep their folder,
  * because it carries the meaning (`drawable-night-xxhdpi-v8/logo.png` vs `drawable-xxhdpi-v4/logo.png`,
