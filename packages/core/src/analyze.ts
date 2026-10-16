@@ -9,6 +9,7 @@ import { ZipArchive } from './archive/zip.js';
 import { runChecks } from './checks/registry.js';
 import { InvalidOptionError } from './errors.js';
 import { detectBundleKind } from './js/hermes.js';
+import { analyzePackages } from './js/packages.js';
 import {
   CATEGORIES,
   type AnalyzeOptions,
@@ -19,6 +20,7 @@ import {
   type JsEngineInfo,
   type LottieInfo,
   type NativeLibInfo,
+  type PackageReport,
   type Report,
 } from './types.js';
 
@@ -107,7 +109,27 @@ export async function analyzeBlob(blob: Blob, fileName: string, options: Analyze
     const nativeLibs = await readNativeLibs(zip, delivered, abi, warnings);
     const lottie = await readLottie(zip, delivered, warnings);
 
-    const checks = runChecks({ artifact, abi, files, delivered, js, manifest, code, nativeLibs, lottie }, options.ignore);
+    let packages: PackageReport | null = null;
+    if (options.sourceMaps) {
+      const jsEntry = js ? files.find((f) => f.path === js.bundlePath) : undefined;
+      if (js && jsEntry) {
+        const result = analyzePackages(
+          options.sourceMaps,
+          js,
+          jsEntry.uncompressed,
+          jsEntry.compressed,
+          delivered.filter((f) => f.category === 'font').map((f) => f.path),
+          warnings,
+        );
+        packages = result.report;
+        lottie.push(...result.bundledLottie);
+        lottie.sort((x, y) => y.compressed - x.compressed);
+      } else {
+        warnings.push('A source map was given, but this build has no JS bundle to match it against.');
+      }
+    }
+
+    const checks = runChecks({ artifact, abi, files, delivered, js, manifest, code, nativeLibs, lottie, packages }, options.ignore);
 
     return {
       schemaVersion: 1,
@@ -124,6 +146,7 @@ export async function analyzeBlob(blob: Blob, fileName: string, options: Analyze
       nativeByAbi,
       nativeLibs: nativeLibs.sort((a, b) => b.compressed - a.compressed),
       lottie,
+      packages,
       largestFiles: [...delivered].sort((a, b) => b.compressed - a.compressed).slice(0, options.topFiles ?? 25),
       findings: checks.findings,
       totals: { savingsBytes: checks.savingsBytes },

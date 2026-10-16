@@ -63,6 +63,29 @@ export function renderTerminal(report: Report, opts: RenderOptions): string {
     );
   }
 
+  // JS bundle by npm package (only with a source map)
+  const pk = report.packages;
+  if (pk) {
+    line();
+    const unit = pk.kind === 'hermes' ? 'Hermes bytecode' : 'minified JS';
+    line(`  ${c.bold(pad('JS bundle by npm package', 38))}${padL('Size', 10)}${padL('%', 8)}  ${c.dim(`${unit}, unpacked${pk.estimate ? ', est.' : ''}`)}`);
+    line(`  ${rule(56)}`);
+    const pct = (n: number) => `${((n / pk.bundleBytes) * 100).toFixed(1)}%`;
+    const row = (name: string, bytes: number, note = '') =>
+      line(`  ${pad(name, 38)}${padL(formatBytes(bytes), 10)}${padL(pct(bytes), 8)}${note ? `  ${c.dim(note)}` : ''}`);
+    for (const p of pk.items.slice(0, opts.top)) {
+      row(p.name, p.bytes, p.installs > 1 ? `${p.installs} copies` : '');
+    }
+    if (pk.items.length > opts.top) {
+      const rest = pk.items.slice(opts.top).reduce((s, p) => s + p.bytes, 0);
+      row(`…${pk.items.length - opts.top} more packages`, rest);
+    }
+    row('Your app code', pk.appCodeBytes);
+    if (pk.unmappedCodeBytes > 0) row('JSON and other modules not in the map', pk.unmappedCodeBytes, 'e.g. require()d Lottie or emoji data');
+    if (pk.dataBytes > 0) row('Strings and data tables', pk.dataBytes);
+    if (pk.runtimeBytes > 0) row('Metro runtime and polyfills', pk.runtimeBytes);
+  }
+
   // Native libs per ABI (only interesting when there are several)
   if (report.nativeByAbi.length > 1) {
     line();

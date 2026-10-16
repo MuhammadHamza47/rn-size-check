@@ -812,3 +812,29 @@ main {
 .footer a {
   color: var(--muted);
 }
+
+.add-maps {
+  margin-top: 2.2rem;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+
+.add-maps h2 {
+  margin-top: 0;
+}
+
+.add-maps p {
+  margin: 0 0 10px;
+  color: var(--muted);
+}
+
+.add-maps ul {
+  margin: 0 0 14px;
+  padding-left: 18px;
+}
+
+.add-maps code {
+  overflow-wrap: anywhere;
+}

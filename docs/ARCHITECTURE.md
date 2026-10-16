@@ -29,7 +29,7 @@ import { analyze } from '@rnsc/core/node';       // Node only: (filePath, option
 import { reportToMarkdown } from '@rnsc/core';   // Report → Markdown summary
 ```
 
-Options: `abi` (default `arm64-v8a` if present), `density` (default `xxhdpi`), `ignore` (check ids), `topFiles`.
+Options: `abi` (default `arm64-v8a` if present), `density` (default `xxhdpi`), `ignore` (check ids), `topFiles`, `sourceMaps` (parsed maps for the npm package breakdown). The Node `analyze()` also takes `project` (finds the maps in a React Native project's Gradle output) and `sourcemap` (a map file).
 
 ## Analysis pipeline
 
@@ -49,6 +49,22 @@ All in `packages/core/src`.
 7. **Savings** (`checks/registry.ts`). Each check reports savings per file. The total counts every file once, at its biggest saving, so two checks flagging the same file don't double count.
 8. **Report** (`analyze.ts`). A versioned JSON object, the contract for every renderer.
 
+## Source maps and the npm package breakdown
+
+Optional, in `js/sourcemap.ts`, `js/packages.ts`, `js/font-usage.ts` and (Node only) `node-sourcemaps.ts`.
+
+React Native's Gradle build writes two maps per variant. The **composed map** (`generated/sourcemaps/react/<variant>/index.android.bundle.map`) has one generated line whose columns are **byte offsets in the Hermes bytecode file**, so the distance between two segments is real bytecode size. Three details matter:
+
+- **Short source-less segments** sit inside function bodies; they are given to the source before them.
+- **Long runs of source-less segments** (16 KB+) are whole modules the composed map leaves out, mostly `require()`d JSON (Lottie, emoji data) that Hermes compiled into code. They are reported as their own bucket instead of inflating the previous file.
+- Everything after the last segment is Hermes's **string and data tables**.
+
+The **packager map** (`intermediates/sourcemaps/react/<variant>/index.android.bundle.packager.map`) still lists JSON modules with their text in `sourcesContent`, which is used for Lottie detection and duplicate files. Both maps carry the app's own source text, used to see which font names the code references (Android matches `fontFamily` to font file names case-sensitively).
+
+Safety: in project mode the bundle next to the map must have the same size as the bundle inside the APK/AAB, and a Hermes map is refused for a plain JS bundle. Otherwise the breakdown is skipped with a warning rather than showing wrong numbers. Plain JS maps (no Hermes) are measured in JS text; with a Hermes bundle their shares are scaled and marked as estimates.
+
+Package name = the segment after the last `node_modules/` (scoped names, nested installs, pnpm and Windows paths handled). Different install folders of one package are reported as duplicate versions.
+
 ## The Report (schema v1)
 
 Defined in `packages/core/src/types.ts`. Main fields:
@@ -60,6 +76,8 @@ Defined in `packages/core/src/types.ts`. Main fields:
 | `sizes` | `file`, `download` (`bytes`, `estimate`, `abi`, `density`), `install`, `notDelivered` |
 | `breakdown` | Bytes per category for what the phone downloads |
 | `nativeByAbi`, `nativeLibs` | Native code per ABI; per-library details with `debugBytes` |
+| `lottie` | Lottie animations: files in res/raw or assets, and require()d ones from the packager map |
+| `packages` | npm package breakdown (`null` without a map): `items`, `appCodeBytes`, `unmappedCodeBytes`, `dataBytes`, `runtimeBytes`, `jsonModules`, `duplicateModules`, `fontUsage` |
 | `largestFiles` | Biggest delivered files |
 | `findings` | `checkId`, `severity` (`error`/`warn`/`info`), `title`, `savings`, `files`, `items` (display list with optional notes), `fix` |
 | `totals.savingsBytes` | De-duplicated savings |
@@ -78,10 +96,14 @@ Sizes are bytes. Display uses decimal units (`formatBytes`, 1 MB = 1,000,000 byt
 | `r8-off` | Java/Kotlin code not minified | ~35% of dex (est.) |
 | `hermes-off` | Plain JS bundle on JSC | — |
 | `image-large` | PNG/JPEG over 100 KB | ~40% via WebP (est.) |
-| `icon-fonts` | 12+ react-native-vector-icons fonts (the untrimmed default set) | — (needs project scan, planned) |
-| `font-weights` | 8+ files of one font family (weights and italics) | — (needs project scan, planned) |
-| `lottie-large` | Lottie files (res/raw, assets) over 100 KB unpacked or with embedded base64 images; warn with images, info for vector-only | — |
+| `icon-fonts` | Icon fonts whose family is never imported (with a map: glyph maps in the bundle); without a map, 12+ fonts | exact with a map |
+| `font-weights` | Font files no code references (with a map); without a map, 8+ files of one family | exact with a map |
+| `lottie-large` | Lottie over 100 KB unpacked or with embedded base64 images, in res/raw, assets, or require()d (with a map); warn with images or 300 KB+ in the JS bundle, else info | — |
 | `duplicate-files` | Identical content stored twice (zip CRC-32 + size) | extra copies |
+| `heavy-package` (map) | Packages from `data/package-suggestions.ts` over 30 KB | — |
+| `duplicate-packages` (map) | A package bundled from several node_modules folders | — |
+| `duplicate-modules` (map) | App files with identical text under different paths | — |
+| `font-name-case` (map) | A quoted font name that matches a font file only case-insensitively | — |
 
 `rn-size-check checks` prints the list.
 

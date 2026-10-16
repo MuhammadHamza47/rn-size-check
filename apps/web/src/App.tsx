@@ -11,7 +11,7 @@ import sampleReport from './sample-report.json';
 type State =
   | { status: 'idle'; error?: string }
   | { status: 'analyzing'; file: File }
-  | { status: 'done'; file: File; report: Report; options: AnalyzeOptions }
+  | { status: 'done'; file: File; maps: File[]; report: Report; options: AnalyzeOptions }
   | { status: 'sample' };
 
 const REPO = 'https://github.com/MuhammadHamza47/rn-size-check';
@@ -22,11 +22,11 @@ export function App() {
     window.location.hash === '#sample' ? { status: 'sample' } : { status: 'idle' },
   );
 
-  const run = useCallback(async (file: File, options: AnalyzeOptions = {}) => {
+  const run = useCallback(async (file: File, options: AnalyzeOptions = {}, maps: File[] = []) => {
     setState({ status: 'analyzing', file });
     try {
-      const report = await analyzeInWorker(file, options);
-      setState({ status: 'done', file, report, options });
+      const report = await analyzeInWorker(file, options, maps);
+      setState({ status: 'done', file, maps, report, options });
       window.scrollTo({ top: 0 });
     } catch (err) {
       setState({ status: 'idle', error: (err as Error).message });
@@ -64,7 +64,8 @@ export function App() {
           <ReportView
             report={state.report}
             options={state.options}
-            onOptionsChange={(options) => run(state.file, options)}
+            onOptionsChange={(options) => run(state.file, options, state.maps)}
+            onAddMaps={(maps) => run(state.file, state.options, maps)}
             onReset={reset}
           />
         )}
@@ -81,7 +82,7 @@ export function App() {
                 busy={state.status === 'analyzing'}
                 busyLabel={state.status === 'analyzing' ? `Reading ${state.file.name}…` : ''}
                 error={state.status === 'idle' ? state.error : undefined}
-                onFile={(file) => run(file)}
+                onFiles={(build, maps) => run(build, {}, maps)}
               />
               <p className="privacy">
                 The file stays on your computer. It's read by this page in your browser and never uploaded.{' '}

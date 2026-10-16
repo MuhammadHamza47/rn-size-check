@@ -102,13 +102,58 @@ export interface NativeLibInfo {
 
 export interface LottieInfo {
   path: string;
-  format: 'json' | 'dotlottie';
+  /** json/dotlottie: a file in res/raw or assets; bundled: a JSON file the JS code require()s. */
+  format: 'json' | 'dotlottie' | 'bundled';
   compressed: number;
   uncompressed: number;
   /** Raster images embedded as base64 (JSON only; 0 for .lottie files, which are not inspected). */
   embeddedImages: number;
   /** Decoded bytes of those embedded images. */
   embeddedImageBytes: number;
+}
+
+export interface FontUsageInfo {
+  path: string;
+  /** null when it can't be told (name built at runtime, obfuscated file name). */
+  used: boolean | null;
+  /** The code spells the name with different letter case than the file (Android is case-sensitive). */
+  writtenAs?: string;
+}
+
+export interface PackageSizeInfo {
+  name: string;
+  bytes: number;
+  files: number;
+  /** How many separate copies of the package are bundled (more than 1 = duplicate versions). */
+  installs: number;
+  /** Bytes in all copies except the largest one. */
+  duplicateBytes: number;
+}
+
+/** What the JS bundle is made of, from source maps (present only when a map was supplied). */
+export interface PackageReport {
+  /** hermes: sizes are bytecode bytes; js: sizes are bytes of minified JS. */
+  kind: 'hermes' | 'js';
+  estimate: boolean;
+  /** Unpacked size of the JS bundle file the map describes. */
+  bundleBytes: number;
+  appCodeBytes: number;
+  /** Metro's module system and polyfills. */
+  runtimeBytes: number;
+  /** Hermes string and data tables. */
+  dataBytes: number;
+  /** Hermes: bytecode of modules the source map leaves out, mostly JSON files (Lottie, emoji data) compiled into code. */
+  unmappedCodeBytes: number;
+  /** Biggest npm packages first. */
+  items: PackageSizeInfo[];
+  /** JSON modules (e.g. require()d Lottie files), from the packager map when available. */
+  jsonModules: { path: string; bytes: number; lottie: boolean }[];
+  /** App files with identical content bundled under different paths (each copy is bundled separately). */
+  duplicateModules: { paths: string[]; bytes: number }[];
+  /** Which font files in the build the app code references; null when the maps have no app source text. */
+  fontUsage: FontUsageInfo[] | null;
+  /** Map file names used (no local paths). */
+  maps: string[];
 }
 
 export interface Report {
@@ -141,8 +186,10 @@ export interface Report {
   nativeByAbi: { abi: string; compressed: number; uncompressed: number; count: number }[];
   /** Native libraries for the target ABI with ELF details, biggest first. */
   nativeLibs: NativeLibInfo[];
-  /** Lottie animations shipped as files (res/raw, assets), biggest first. */
+  /** Lottie animations shipped as files (res/raw, assets) or require()d into the JS bundle, biggest first. */
   lottie: LottieInfo[];
+  /** npm package breakdown of the JS bundle; null when no source map was given. */
+  packages: PackageReport | null;
   /** Largest delivered files (for the target ABI). */
   largestFiles: FileEntry[];
   findings: Finding[];
@@ -160,4 +207,19 @@ export interface AnalyzeOptions {
   /** Check ids to skip. */
   ignore?: string[];
   toolVersion?: string;
+  /** Source maps of the JS bundle, for the npm package breakdown (already parsed JSON). */
+  sourceMaps?: SourceMapInput;
+}
+
+export interface SourceMapInput {
+  /** The map of the shipped bundle: the composed Hermes map, or a plain JS map. */
+  main: unknown;
+  /** Metro's packager map (Hermes builds): adds JSON modules such as require()d Lottie files. */
+  packager?: unknown;
+  /** Plain JS maps only: the bundle text, for exact sizes. */
+  bundleText?: string;
+  /** Size of the bundle that sat next to the map, to detect a map from a different build. */
+  siblingBundleBytes?: number;
+  /** File names to show in the report (no local paths). */
+  names: string[];
 }

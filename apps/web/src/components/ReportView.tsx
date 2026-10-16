@@ -9,6 +9,7 @@ import {
 } from '@rnsc/core';
 import { useState } from 'react';
 import { CopyButton } from './CopyButton';
+import { AddMaps, Packages } from './Packages';
 
 const DENSITIES = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
 
@@ -18,10 +19,12 @@ interface Props {
   /** Omitted for the sample report, which cannot be re-analyzed. */
   onOptionsChange?: (options: AnalyzeOptions) => void;
   onReset: () => void;
+  /** Re-run the analysis with source maps for the npm package breakdown. */
+  onAddMaps?: (maps: File[]) => void;
   sample?: boolean;
 }
 
-export function ReportView({ report, options, onOptionsChange, onReset, sample }: Props) {
+export function ReportView({ report, options, onOptionsChange, onReset, onAddMaps, sample }: Props) {
   const { app, sizes } = report;
   const m = app.manifest;
   const debug = m.debuggable === true;
@@ -142,6 +145,8 @@ export function ReportView({ report, options, onOptionsChange, onReset, sample }
       </section>
 
       <Breakdown report={report} />
+
+      {report.packages ? <Packages report={report} /> : onAddMaps && report.app.js?.engine && <AddMaps onAddMaps={onAddMaps} />}
 
       {report.nativeByAbi.length > 1 && (
         <section>

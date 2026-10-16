@@ -14,7 +14,7 @@ export function prewarmWorker(): void {
 }
 
 /** Runs the analysis in a Web Worker. Each run gets a fresh worker so memory never piles up. */
-export function analyzeInWorker(file: File, options: AnalyzeOptions): Promise<Report> {
+export function analyzeInWorker(file: File, options: AnalyzeOptions, maps: File[] = []): Promise<Report> {
   const worker = ready ?? spawn();
   ready = null;
   return new Promise<Report>((resolve, reject) => {
@@ -23,7 +23,7 @@ export function analyzeInWorker(file: File, options: AnalyzeOptions): Promise<Re
       else reject(new Error(friendlyError(event.data.error)));
     };
     worker.onerror = (event) => reject(new Error(event.message || 'The analyzer crashed.'));
-    worker.postMessage({ file, options } satisfies WorkerRequest);
+    worker.postMessage({ file, options, maps } satisfies WorkerRequest);
   }).finally(() => {
     worker.terminate();
     prewarmWorker();

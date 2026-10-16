@@ -13,6 +13,9 @@ const CHECKS: [string, string][] = [
   ['Source maps in the build', '.map files are for crash reports, not for users’ phones.'],
   ['Hermes turned off', 'The bundle is plain JavaScript instead of precompiled Hermes bytecode.'],
   ['Debug build by mistake', 'Debug builds have no JS bundle and every CPU type, so the numbers mean nothing.'],
+  ['Heavy npm packages (with a source map)', 'Packages like moment or big icon libraries, with the lighter option to use instead.'],
+  ['Packages and files bundled twice (with a source map)', 'Two versions of one package, or the same JSON copied into two folders.'],
+  ['Font names in the wrong case (with a source map)', "fontFamily 'Rubik-bold' when the file is Rubik-Bold.ttf: Android won't find it."],
 ];
 
 const FAQ: [string, ReactNode][] = [
@@ -54,8 +57,10 @@ const FAQ: [string, ReactNode][] = [
   [
     'Can it tell me which npm package is the biggest?',
     <>
-      Not from the build alone: a release bundle doesn't say which package each byte came from. That needs your project's source
-      map, and it's the next feature for the command-line version.
+      Yes, if you add the source maps from the same release build: drop <code>index.android.bundle.map</code> (and the{' '}
+      <code>packager.map</code> next to it) together with the .aab or .apk, or run the CLI with <code>--project .</code>. The build
+      alone can't say which package each byte came from. With a map you also get require()d Lottie files, packages bundled twice,
+      and exactly which fonts are unused.
     </>,
   ],
 ];
@@ -110,6 +115,11 @@ export function Info() {
         <p className="muted small">
           Use a release build. A debug build has no JS bundle and includes every CPU type, so its size says little about what users
           download.
+        </p>
+        <p className="muted small">
+          For the npm package breakdown, also drop the source maps from the same build:{' '}
+          <code>android/app/build/generated/sourcemaps/react/&lt;variant&gt;/index.android.bundle.map</code> and{' '}
+          <code>android/app/build/intermediates/sourcemaps/react/&lt;variant&gt;/index.android.bundle.packager.map</code>.
         </p>
       </section>
 

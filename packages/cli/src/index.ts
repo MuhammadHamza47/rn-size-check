@@ -12,6 +12,8 @@ program
   .command('analyze', { isDefault: true })
   .description('Analyze an Android .aab or .apk')
   .argument('<build>', 'path to app-release.aab or .apk')
+  .option('--project <dir>', 'React Native project folder: adds the npm package breakdown using the source maps from its release build')
+  .option('--sourcemap <file>', 'source map of the JS bundle (composed Hermes map or JS map) for the npm package breakdown')
   .option('--abi <abi>', 'ABI for the download estimate (default: arm64-v8a if present)')
   .option('--density <density>', 'screen density for the AAB estimate: mdpi…xxxhdpi (default: xxhdpi)')
   .option('--json <file>', 'also write the full report as JSON')

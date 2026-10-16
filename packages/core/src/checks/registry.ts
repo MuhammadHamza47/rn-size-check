@@ -4,7 +4,11 @@ import { debuggable } from './debuggable.js';
 import { nativeDebugSymbols } from './native-debug-symbols.js';
 import { r8Off } from './r8-off.js';
 import { duplicateFiles } from './duplicate-files.js';
+import { duplicateModules } from './duplicate-modules.js';
+import { duplicatePackages } from './duplicate-packages.js';
+import { fontNameCase } from './font-name-case.js';
 import { fontWeights } from './font-weights.js';
+import { heavyPackage } from './heavy-package.js';
 import { hermesOff } from './hermes-off.js';
 import { iconFonts } from './icon-fonts.js';
 import { imageLarge } from './image-large.js';
@@ -24,6 +28,10 @@ export const CHECKS: readonly Check[] = [
   fontWeights,
   lottieLarge,
   duplicateFiles,
+  heavyPackage,
+  duplicatePackages,
+  duplicateModules,
+  fontNameCase,
 ];
 
 const SEVERITY_RANK: Record<Severity, number> = { error: 0, warn: 1, info: 2 };

@@ -61,8 +61,41 @@ npx rn-size-check android/app/build/outputs/bundle/release/app-release.aab
 
 Analyze a **release** build. Debug builds bundle every ABI and unoptimized libraries and have no JS bundle, so their sizes are far from what users download (the tool warns you).
 
+### Which npm packages make the JS bundle big?
+
+Point `--project` at the React Native project you built:
+
+```bash
+npx rn-size-check android/app/build/outputs/apk/release/app-release.apk --project .
+```
+
+```
+  JS bundle by npm package                    Size       %  Hermes bytecode, unpacked
+  ────────────────────────────────────────────────────────
+  react-native                              535 KB    7.7%
+  react-native-heroicons                    527 KB    7.6%
+  react-native-reanimated                   274 KB    3.9%
+  react-native-svg                          115 KB    1.7%
+  moment                                     48 KB    0.7%
+  …88 more packages                         638 KB    9.2%
+  Your app code                             515 KB    7.4%
+  JSON and other modules not in the map     2.7 MB   38.4%  e.g. require()d Lottie or emoji data
+  Strings and data tables                   1.4 MB   20.4%
+```
+
+It reads the source maps React Native's Gradle build already writes (`android/app/build/generated/sourcemaps/react/<variant>/index.android.bundle.map` and the `packager.map` next to it), checks they belong to the same build, and adds:
+
+- the JS bundle split by npm package, in real Hermes bytecode bytes
+- Lottie animations the code `require()`s, and files bundled twice under different paths
+- heavy packages with lighter options (moment, lodash, big icon libraries) and packages bundled in two versions
+- **exact** unused fonts and icon fonts, and `fontFamily` names with the wrong letter case
+
+Expo: run a local release build (`npx expo prebuild`, then `./gradlew bundleRelease` in `android/`), or pass a map with `--sourcemap`.
+
 | Option | Purpose |
 |---|---|
+| `--project <dir>` | React Native project folder: adds the npm package breakdown from its release build's source maps |
+| `--sourcemap <file>` | A source map of the JS bundle (Hermes composed map or plain JS map) |
 | `--abi <abi>` | ABI for the estimate (default `arm64-v8a`) |
 | `--density <d>` | Screen density for AAB estimates: `mdpi`…`xxxhdpi` (default `xxhdpi`) |
 | `--json <file>` | Also save the full report as JSON |
@@ -85,6 +118,8 @@ npx rn-size-check android/app/build/outputs/bundle/release/app-release.aab --bud
 
 No terminal needed: open **[rn-size-check-web.vercel.app](https://rn-size-check-web.vercel.app)** and drop your `.aab`/`.apk`. The file is scanned **inside your browser**, and nothing is uploaded. Read the report, then copy it as Markdown for a PR or Slack.
 
+Drop the two `.map` files from the same build along with it (or add them after) to get the npm package breakdown in the browser too.
+
 ## What it checks
 
 | Check | Finds |
@@ -96,23 +131,31 @@ No terminal needed: open **[rn-size-check-web.vercel.app](https://rn-size-check-
 | `r8-off` | Java/Kotlin code not shrunk by R8 (the React Native template default!) |
 | `hermes-off` | App running on JSC instead of Hermes |
 | `image-large` | Big PNG/JPEG images that would be much smaller as WebP |
-| `icon-fonts` | Every react-native-vector-icons font bundled when you use one or two |
-| `font-weights` | One font family shipped with many weights (e.g. 14 Rubik files) when the app uses a few |
-| `lottie-large` | Big Lottie animations in res/raw or assets, especially ones with images embedded inside |
+| `icon-fonts` | Icon fonts the app never uses (exact with a source map; otherwise flags the untrimmed default set) |
+| `font-weights` | Font files no code references (exact with a source map; otherwise flags families with many weights) |
+| `lottie-large` | Big Lottie animations, in res/raw, assets or (with a source map) require()d into the JS bundle |
 | `duplicate-files` | The same image or file stored more than once |
+| `heavy-package` * | npm packages with a much lighter option (moment, lodash, big icon libraries…) |
+| `duplicate-packages` * | The same npm package bundled in more than one version |
+| `duplicate-modules` * | The same file bundled twice in the JS under different paths |
+| `font-name-case` * | A `fontFamily` that differs from the font file only in letter case (Android won't find it) |
+
+\* needs `--project` or `--sourcemap`.
 
 Savings marked `~` are typical figures (e.g. WebP is usually ~40% smaller), not exact byte counts. A file flagged by two checks is only counted once in the total.
 
 ## How it works
 
-The build is a zip file. rn-size-check reads its directory, works out which files a phone would actually receive from Google Play, and reads just enough of each file to answer the questions: the manifest for app info, the bundle header for Hermes, class names for R8, ELF section tables for debug symbols. Details: [docs/ARCHITECTURE.md](https://github.com/MuhammadHamza47/rn-size-check/blob/main/docs/ARCHITECTURE.md).
+The build is a zip file. rn-size-check reads its directory, works out which files a phone would actually receive from Google Play, and reads just enough of each file to answer the questions: the manifest for app info, the bundle header for Hermes, class names for R8, ELF section tables for debug symbols. With `--project`, it also reads the Hermes source map, where each position is a byte offset in the bytecode, so package sizes are real bytecode bytes rather than guesses. Details: [docs/ARCHITECTURE.md](https://github.com/MuhammadHamza47/rn-size-check/blob/main/docs/ARCHITECTURE.md).
 
 ## Roadmap
 
-- [x] Android AAB/APK analysis, 11 checks, CLI with JSON and budgets
+- [x] Android AAB/APK analysis, CLI with JSON and budgets
 - [x] Website that scans in the browser
 - [x] Published to npm
-- [ ] `--project .`: which **npm packages** take the most space, plus unused images and fonts
+- [x] `--project .`: which **npm packages** take the most space, require()d Lottie, exact unused fonts
+- [ ] Unused images (needs a scan of the project's source files)
+- [ ] Real names for resources renamed by `shrinkResources`
 - [ ] `compare old.aab new.aab`: what grew between two builds
 - [ ] GitHub Action / EAS hook that comments size changes on pull requests
 - [ ] iOS (`.ipa`)

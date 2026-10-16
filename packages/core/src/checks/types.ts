@@ -6,6 +6,7 @@ import type {
   FindingItem,
   JsEngineInfo,
   LottieInfo,
+  PackageReport,
   ManifestInfo,
   NativeLibInfo,
 } from '../types.js';
@@ -25,6 +26,8 @@ export interface CheckContext {
   /** Files a device on `abi` downloads. */
   delivered: FileEntry[];
   js: JsEngineInfo | null;
+  /** npm package breakdown of the JS bundle, when a source map was given. */
+  packages: PackageReport | null;
 }
 
 /** A finding plus per-file savings, so totals can be counted once per file across checks. */

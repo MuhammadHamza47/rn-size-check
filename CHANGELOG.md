@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.0
+
+**Which npm packages make the JS bundle big?** Point the tool at your React Native project, or drop the source maps on the website:
+
+```bash
+npx rn-size-check app-release.apk --project .
+```
+
+- **npm package breakdown** of the JS bundle from React Native's own Gradle source maps, in real Hermes bytecode bytes (each position in the composed map is a byte offset in the bytecode). Also shows your app code, JSON compiled into the bundle, and Hermes's string and data tables.
+- The maps are checked against the build: a map from a different build, or a Hermes map with a plain JS bundle, is refused with a clear message instead of showing wrong numbers.
+- **Lottie animations the code require()s** are now found (from the packager map), with an estimate of their download cost.
+- **Exact unused fonts:** with a map, font-weights and icon-fonts report exactly which files no code references, with exact savings.
+- New checks (need a map): **heavy-package** (moment, lodash, big icon libraries), **duplicate-packages** (one package bundled in two versions), **duplicate-modules** (the same file bundled twice under different paths), **font-name-case** (a fontFamily that differs from the font file only in letter case, which Android won't find).
+- New flags: `--project <dir>` and `--sourcemap <file>`. The website accepts .map files dropped with the build, or added afterwards.
+- Markdown summary includes the top packages.
+
 ## 0.1.3
 
 - **New check `lottie-large`:** finds Lottie animations shipped in res/raw or assets that are over 100 KB unpacked or have images embedded inside (base64 PNG/JPG). Embedded images are flagged as a warning because they barely compress; big vector-only animations are flagged as info because they compress well but are still parsed at full size. Recognises both After Effects (Bodymovin) and LottieFiles exports. Suggested by a reader of the launch post.

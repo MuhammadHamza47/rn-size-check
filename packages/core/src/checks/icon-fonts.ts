@@ -1,21 +1,41 @@
 import { formatBytes } from '../format.js';
+import { ICON_FONT_FILE } from '../js/font-usage.js';
 import type { Check } from './types.js';
 
-/** Font files shipped by react-native-vector-icons / @expo/vector-icons. */
-const ICON_FONTS =
-  /(^|\/)(AntDesign|Entypo|EvilIcons|Feather|FontAwesome\d?(_\w+)?|FontAwesome5_\w+|FontAwesome6_\w+|Fontisto|Foundation|Ionicons|MaterialCommunityIcons|MaterialIcons|Octicons|SimpleLineIcons|Zocial)\.ttf$/i;
-
-/** react-native-vector-icons ships ~19 fonts; a list this long means nobody trimmed it. */
+/** Without a source map: react-native-vector-icons ships ~19 fonts; a list this long means nobody trimmed it. */
 const FULL_SET_MIN = 12;
+
+const FIX =
+  'Ship only the fonts you use: in android/app/build.gradle set project.ext.vectoricons = [ iconFontNames: [ "MaterialIcons.ttf" ] ], or import per-family packages (@react-native-vector-icons/<family>).';
 
 export const iconFonts: Check = {
   id: 'icon-fonts',
-  title: 'Many icon fonts bundled',
-  description: 'react-native-vector-icons ships all of its icon fonts by default; most apps use one to three.',
+  title: 'Unused icon fonts',
+  description:
+    'Icon fonts the app never uses. With a source map: fonts whose icon family is never imported; without: the full default set of react-native-vector-icons.',
   requires: 'build',
   run(ctx) {
-    const fonts = ctx.delivered.filter((f) => f.category === 'font' && ICON_FONTS.test(f.path));
-    // A trimmed list (iconFontNames) is a deliberate choice; only flag what looks like the full default set.
+    const fonts = ctx.delivered.filter((f) => f.category === 'font' && ICON_FONT_FILE.test(f.path));
+    if (fonts.length === 0) return [];
+    const usage = new Map((ctx.packages?.fontUsage ?? []).map((u) => [u.path, u.used]));
+
+    // Exact: an icon font is used when its family is imported (its glyph map is in the bundle).
+    if (fonts.some((f) => usage.has(f.path))) {
+      const unused = fonts.filter((f) => usage.get(f.path) === false);
+      if (unused.length === 0) return [];
+      const total = unused.reduce((s, f) => s + f.compressed, 0);
+      return [
+        {
+          severity: 'warn',
+          title: `${unused.length} of ${fonts.length} icon fonts are bundled but never used (${formatBytes(total)})`,
+          files: unused.map((f) => f.path),
+          savingsByFile: Object.fromEntries(unused.map((f) => [f.path, f.compressed])),
+          fix: FIX,
+        },
+      ];
+    }
+
+    // Estimate: only the untrimmed default set is a safe bet.
     if (fonts.length < FULL_SET_MIN) return [];
     const total = fonts.reduce((s, f) => s + f.compressed, 0);
     return [
@@ -23,7 +43,7 @@ export const iconFonts: Check = {
         severity: 'warn',
         title: `All ${fonts.length} icon fonts bundled (${formatBytes(total)}); most apps use 1–3`,
         files: fonts.map((f) => f.path),
-        fix: 'Ship only the fonts you use: in android/app/build.gradle set project.ext.vectoricons = [ iconFontNames: [ "MaterialIcons.ttf" ] ], or import per-family packages (@react-native-vector-icons/<family>).',
+        fix: `${FIX} Run with --project to see exactly which ones are unused.`,
       },
     ];
   },

@@ -3,6 +3,8 @@ import { analyze, formatBytes, InvalidOptionError, UnsupportedArtifactError, Zip
 import { renderTerminal } from '../render/terminal.js';
 
 export interface AnalyzeCliOptions {
+  project?: string;
+  sourcemap?: string;
   abi?: string;
   density?: string;
   json?: string;
@@ -18,6 +20,8 @@ export async function runAnalyze(build: string, opts: AnalyzeCliOptions, version
   let report;
   try {
     report = await analyze(build, {
+      project: opts.project,
+      sourcemap: opts.sourcemap,
       abi: opts.abi,
       density: opts.density,
       ignore: opts.ignore?.split(',').map((s) => s.trim()),

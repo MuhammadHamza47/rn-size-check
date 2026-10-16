@@ -4,26 +4,41 @@ interface Props {
   busy: boolean;
   busyLabel: string;
   error?: string;
-  onFile: (file: File) => void;
+  /** The build, plus any .map files dropped with it (for the npm package breakdown). */
+  onFiles: (build: File, maps: File[]) => void;
 }
 
-export function Dropzone({ busy, busyLabel, error, onFile }: Props) {
+/** Splits a drop into one build file and optional source maps; returns an error message if it can't. */
+export function pickFiles(files: File[]): { build: File; maps: File[] } | string {
+  const builds = files.filter((f) => /\.(aab|apk)$/i.test(f.name));
+  const maps = files.filter((f) => /\.map$/i.test(f.name));
+  if (files.some((f) => /\.ipa$/i.test(f.name))) return 'iOS .ipa files are coming soon. For now, drop an Android .aab or .apk.';
+  if (builds.length === 0) {
+    return maps.length > 0
+      ? 'Drop the .aab or .apk together with the source maps.'
+      : `"${files[0]?.name}" is not an .aab or .apk file.`;
+  }
+  if (builds.length > 1) return 'Drop one build at a time.';
+  return { build: builds[0]!, maps };
+}
+
+export function Dropzone({ busy, busyLabel, error, onFiles }: Props) {
   const input = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
   const [localError, setLocalError] = useState<string>();
 
-  const accept = (file: File | undefined) => {
-    if (!file) return;
-    if (/\.ipa$/i.test(file.name)) return setLocalError('iOS .ipa files are coming soon. For now, drop an Android .aab or .apk.');
-    if (!/\.(aab|apk)$/i.test(file.name)) return setLocalError(`"${file.name}" is not an .aab or .apk file.`);
+  const accept = (list: FileList | null | undefined) => {
+    if (!list || list.length === 0) return;
+    const picked = pickFiles([...list]);
+    if (typeof picked === 'string') return setLocalError(picked);
     setLocalError(undefined);
-    onFile(file);
+    onFiles(picked.build, picked.maps);
   };
 
   const onDrop = (e: DragEvent) => {
     e.preventDefault();
     setDragging(false);
-    if (!busy) accept(e.dataTransfer.files[0]);
+    if (!busy) accept(e.dataTransfer.files);
   };
 
   const shownError = localError ?? error;
@@ -58,10 +73,11 @@ export function Dropzone({ busy, busyLabel, error, onFile }: Props) {
       <input
         ref={input}
         type="file"
-        accept=".aab,.apk"
+        accept=".aab,.apk,.map"
+        multiple
         hidden
         onChange={(e) => {
-          accept(e.target.files?.[0]);
+          accept(e.target.files);
           e.target.value = '';
         }}
       />
