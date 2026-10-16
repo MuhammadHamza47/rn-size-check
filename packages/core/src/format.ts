@@ -20,7 +20,7 @@ export function formatBytes(bytes: number): string {
 export function shortPath(path: string): string {
   const parts = path.split('/');
   // Source files of the JS bundle (from a source map) also keep their folder: two copies of
-  // diceani.json are only told apart by it.
+  // confetti.json in different folders are only told apart by it.
   const sourceFile = parts.length > 2 && !/^(base|assets|res|lib|META-INF)$/.test(parts[0]!) && /\.(json|[jt]sx?)$/.test(path);
   return parts.includes('res') || parts.includes('lib') || sourceFile ? parts.slice(-2).join('/') : parts[parts.length - 1]!;
 }
