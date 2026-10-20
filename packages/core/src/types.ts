@@ -1,6 +1,6 @@
 import type { ManifestInfo } from './android/manifest.js';
 
-export type ArtifactType = 'apk' | 'aab';
+export type ArtifactType = 'apk' | 'aab' | 'ipa';
 
 export type Category = 'js' | 'native' | 'dex' | 'image' | 'font' | 'resources' | 'other';
 
@@ -170,7 +170,7 @@ export interface Report {
   tool: { name: string; version: string };
   createdAt: string;
   app: {
-    platform: 'android';
+    platform: 'android' | 'ios';
     artifact: ArtifactType;
     fileName: string;
     /** ABIs that contain native libraries. */

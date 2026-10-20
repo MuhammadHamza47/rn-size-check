@@ -31,7 +31,8 @@ export function renderTerminal(report: Report, opts: RenderOptions): string {
     ? `${m.packageName}${m.versionName ? ` ${m.versionName}` : ''}${m.versionCode !== undefined ? ` (${m.versionCode})` : ''}`
     : app.fileName;
   const r8 = app.code.minified === true ? 'R8 on' : app.code.minified === false ? 'R8 off' : '';
-  const details = [app.fileName, app.artifact.toUpperCase(), engine, r8, m.minSdk ? `minSdk ${m.minSdk}` : '']
+  const osLevel = m.minOsVersion ? `iOS ${m.minOsVersion}+` : m.minSdk ? `minSdk ${m.minSdk}` : '';
+  const details = [app.fileName, app.artifact.toUpperCase(), engine, r8, osLevel]
     .filter(Boolean)
     .join(' · ');
   line(`${c.bold('RN Size Check')} ${c.dim('·')} ${c.bold(appName)}`);
@@ -153,6 +154,10 @@ export function renderTerminal(report: Report, opts: RenderOptions): string {
 
 function labelFor(category: Report['breakdown'][number]['category'], report: Report): string {
   if (category === 'js' && report.app.js?.engine === 'hermes') return 'JS bundle (Hermes)';
+  if (report.app.platform === 'ios') {
+    if (category === 'native') return 'Native code';
+    if (category === 'resources') return 'App resources';
+  }
   return CATEGORY_LABELS[category];
 }
 

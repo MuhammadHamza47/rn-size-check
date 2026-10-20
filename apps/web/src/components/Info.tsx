@@ -71,7 +71,8 @@ const FAQ: [string, ReactNode][] = [
   [
     'What about iOS?',
     <>
-      Not yet. iOS (.ipa) support is on the roadmap.
+      Yes, in beta. Drop a <code>.ipa</code> for the same kind of breakdown. iOS sizes are estimates — the App Store re-compresses and
+      thins the app per device, so the real numbers differ.
     </>,
   ],
   [

@@ -309,9 +309,11 @@ describe('analyze: Lottie animations', () => {
 });
 
 describe('analyze: bad input', () => {
-  it('rejects an IPA with a clear message', async () => {
-    const path = await makeZip('app.ipa', { 'Payload/App.app/App': KB });
-    await expect(analyze(path)).rejects.toThrow(UnsupportedArtifactError);
+  it('analyzes an IPA as an iOS build', async () => {
+    const path = await makeZip('app.ipa', { 'Payload/App.app/App': KB, 'Payload/App.app/Info.plist': KB });
+    const r = await analyze(path);
+    expect(r.app.artifact).toBe('ipa');
+    expect(r.app.platform).toBe('ios');
   });
 
   it('warns when a debug APK has no JS bundle', async () => {

@@ -15,7 +15,7 @@ Point it at your Android `.aab` or `.apk` and get one report for the whole app: 
 
 **🌐 Try it in your browser: [rn-size-check-web.vercel.app](https://rn-size-check-web.vercel.app)** (no install; your file is never uploaded)
 
-> **Status:** v0.3. Android AAB/APK today; iOS is planned. Feedback very welcome!
+> **Status:** v0.6. Android AAB/APK, and iOS .ipa (beta). Feedback very welcome!
 
 ## Example
 
@@ -196,7 +196,7 @@ The build is a zip file. rn-size-check reads its directory, works out which file
 - [ ] Real names for resources renamed by `shrinkResources`
 - [x] `compare old.aab new.aab`: what grew between two builds
 - [ ] GitHub Action / EAS hook that comments size changes on pull requests
-- [ ] iOS (`.ipa`)
+- [x] iOS (`.ipa`) — size breakdown, Hermes, large images, npm packages
 
 Ideas and bug reports are welcome in [issues](https://github.com/MuhammadHamza47/rn-size-check/issues).
 

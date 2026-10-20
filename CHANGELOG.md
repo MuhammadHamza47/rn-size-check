@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0 (unreleased)
+
+**iOS .ipa support (beta).** Drop an .ipa (CLI or website) and get the same kind of report as Android:
+
+- Size breakdown by native code (the app binary, frameworks, .dylib), the JS bundle, images (incl. Assets.car), fonts and app resources.
+- Reads Info.plist (binary or XML) for the bundle id, version and minimum iOS.
+- Detects Hermes vs JSC, flags large loose images and shipped source maps, and splits the JS bundle by npm package with `--project` / `--sourcemap` (same as Android).
+- Sizes are estimates: the App Store re-compresses, encrypts and thins per device, so the real download/install differ (App Store Connect has the exact numbers).
+
 ## 0.3.0
 
 **What grew between two builds?**

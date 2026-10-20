@@ -25,7 +25,10 @@ export const imageLarge: Check = {
         files: big.map((f) => f.path),
         savingsByFile,
         estimate: true,
-        fix: 'Convert to WebP (Android Studio: right-click → Convert to WebP, or `cwebp -q 80`). Also check the image is not far larger than it is displayed.',
+        fix:
+          ctx.artifact === 'ipa'
+            ? 'Put the image in an asset catalog (.xcassets) so Xcode compresses it, or convert it to a smaller format (HEIC / WebP). Also check it is not far larger than it is displayed.'
+            : 'Convert to WebP (Android Studio: right-click → Convert to WebP, or `cwebp -q 80`). Also check the image is not far larger than it is displayed.',
       },
     ];
   },

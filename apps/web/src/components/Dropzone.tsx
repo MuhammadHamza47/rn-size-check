@@ -10,13 +10,12 @@ interface Props {
 
 /** Splits a drop into one build file and optional source maps; returns an error message if it can't. */
 export function pickFiles(files: File[]): { build: File; maps: File[] } | string {
-  const builds = files.filter((f) => /\.(aab|apk)$/i.test(f.name));
+  const builds = files.filter((f) => /\.(aab|apk|ipa)$/i.test(f.name));
   const maps = files.filter((f) => /\.map$/i.test(f.name));
-  if (files.some((f) => /\.ipa$/i.test(f.name))) return 'iOS .ipa files are coming soon. For now, drop an Android .aab or .apk.';
   if (builds.length === 0) {
     return maps.length > 0
-      ? 'Drop the .aab or .apk together with the source maps.'
-      : `"${files[0]?.name}" is not an .aab or .apk file.`;
+      ? 'Drop the .aab, .apk or .ipa together with the source maps.'
+      : `"${files[0]?.name}" is not an .aab, .apk or .ipa file.`;
   }
   if (builds.length > 1) return 'Drop one build at a time.';
   return { build: builds[0]!, maps };
@@ -80,7 +79,7 @@ export function Dropzone({ busy, busyLabel, error, onFiles }: Props) {
       <input
         ref={input}
         type="file"
-        accept=".aab,.apk,.map"
+        accept=".aab,.apk,.ipa,.map"
         multiple
         hidden
         onChange={(e) => {
