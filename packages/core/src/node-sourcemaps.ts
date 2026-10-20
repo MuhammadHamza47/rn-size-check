@@ -46,6 +46,34 @@ export async function loadExplicitMap(mapPath: string): Promise<LoadedMaps> {
  *   android/app/build/generated/assets/createBundle<Variant>JsAndAssets/index.android.bundle  (RN 0.71+)
  * The most recently built variant is used.
  */
+/**
+ * Expo's `expo export -p android --source-maps` writes the bundle and its map under
+ * dist/_expo/static/js/android/ (index-<hash>.hbc + .map, or .js + .map). Use the newest map there.
+ */
+async function loadExpoExportMap(projectDir: string): Promise<LoadedMaps | null> {
+  const dir = join(projectDir, 'dist', '_expo', 'static', 'js', 'android');
+  const entries = (await readdir(dir).catch(() => [] as string[])) as string[];
+  const maps: { path: string; mtime: number }[] = [];
+  for (const name of entries) {
+    if (!name.endsWith('.map')) continue;
+    const path = join(dir, name);
+    const info = await stat(path).catch(() => null);
+    if (info) maps.push({ path, mtime: info.mtimeMs });
+  }
+  if (maps.length === 0) return null;
+  const newest = maps.sort((a, b) => b.mtime - a.mtime)[0]!;
+  const bundlePath = newest.path.replace(/\.map$/i, '');
+  const bundle = await stat(bundlePath).catch(() => null);
+  return {
+    input: {
+      main: await readJson(newest.path),
+      siblingBundleBytes: bundle?.size,
+      names: [`dist/.../${basename(newest.path)}`],
+    },
+    notes: [],
+  };
+}
+
 export async function loadProjectMaps(projectDir: string): Promise<LoadedMaps> {
   const build = join(projectDir, 'android', 'app', 'build');
   const mapsDir = join(build, 'generated', 'sourcemaps', 'react');
@@ -59,11 +87,13 @@ export async function loadProjectMaps(projectDir: string): Promise<LoadedMaps> {
     if (info) candidates.push({ variant, path, mtime: info.mtimeMs });
   }
   if (candidates.length === 0) {
+    const expo = await loadExpoExportMap(projectDir);
+    if (expo) return expo;
     return {
       notes: [
         (await exists(join(projectDir, 'android')))
-          ? 'No source map found in android/app/build. Build a release first (cd android && ./gradlew bundleRelease), then run this again with --project.'
-          : 'No android folder in this project (Expo managed?). Run npx expo prebuild and a local release build, or pass a source map with --sourcemap.',
+          ? 'No source map found in android/app/build or dist/. Build a release (cd android && ./gradlew bundleRelease) or run npx expo export -p android --source-maps, then run --project again.'
+          : 'No source map found. For Expo, run `npx expo export -p android --source-maps` (its map lands in dist/_expo/static/js/android/), then run --project again — or pass one with --sourcemap.',
       ],
     };
   }

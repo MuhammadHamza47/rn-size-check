@@ -102,7 +102,8 @@ export function renderTerminal(report: Report, opts: RenderOptions): string {
   line();
   line(`  ${c.bold('Largest files')}`);
   for (const f of report.largestFiles.slice(0, opts.top)) {
-    line(`  ${padL(formatBytes(f.compressed), 9)}  ${c.dim(shorten(f.path, 70))}`);
+    const name = f.resourceName ? c.dim(` (${f.resourceName})`) : '';
+    line(`  ${padL(formatBytes(f.compressed), 9)}  ${c.dim(shorten(f.path, 70))}${name}`);
   }
 
   // Findings
@@ -122,7 +123,9 @@ export function renderTerminal(report: Report, opts: RenderOptions): string {
       }
       for (const item of f.items.slice(0, FINDING_ITEMS)) {
         const note = item.note ? c.dim(`  (${item.note.replace(/\S+\/\S+/g, fileName)})`) : '';
-        line(`    ${padL(formatBytes(item.bytes), 8)}  ${shorten(fileName(item.path), 60)}${note}`);
+        const rname = report.resourceNames?.[item.path];
+        const label = rname ? `${shorten(fileName(item.path), 40)} ${c.dim(`(${rname})`)}` : shorten(fileName(item.path), 60);
+        line(`    ${padL(formatBytes(item.bytes), 8)}  ${label}${note}`);
       }
       if (f.items.length > FINDING_ITEMS) {
         line(c.dim(`              …and ${f.items.length - FINDING_ITEMS} more (full list in --json)`));

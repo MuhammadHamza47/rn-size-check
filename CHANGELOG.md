@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0 (unreleased)
+
+- **New check `unused-images`:** with a source map, finds images Metro bundled into `res/drawable` that the app's own code never `require()`s or shows in an `<Image>`. Matches Metro's exact resource naming (so hyphens and path aliases line up) and only judges images in folders the code actually loads from, so library and native drawables are never flagged. Review before deleting — a path built at runtime can't be seen.
+- **Real resource names for shrunk APKs:** when R8 / `shrinkResources` renames files to `res/-B.png`, `res/qb.mp3`, the report now shows the real name next to them (`res/qb.mp3 (raw/notification_sound)`), read from `resources.arsc`. Shown in the largest-files list and in findings, in the CLI and the website.
+- **Expo:** `--project` now also finds the source map from `npx expo export -p android --source-maps` (in `dist/_expo/static/js/android/`), not just a Gradle build. The "no map found" message explains both.
+
 ## 0.3.0
 
 **What grew between two builds?**

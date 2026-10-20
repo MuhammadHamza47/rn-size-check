@@ -13,6 +13,7 @@ import { hermesOff } from './hermes-off.js';
 import { iconFonts } from './icon-fonts.js';
 import { imageLarge } from './image-large.js';
 import { lottieLarge } from './lottie-large.js';
+import { unusedImages } from './unused-images.js';
 import { sourcemapInBuild } from './sourcemap-in-build.js';
 import type { Check, CheckContext } from './types.js';
 
@@ -24,6 +25,7 @@ export const CHECKS: readonly Check[] = [
   r8Off,
   hermesOff,
   imageLarge,
+  unusedImages,
   iconFonts,
   fontWeights,
   lottieLarge,

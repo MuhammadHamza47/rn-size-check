@@ -39,6 +39,8 @@ export interface FileEntry {
   /** False for files the store never sends to devices (AAB metadata, debug symbols). */
   delivered: boolean;
   crc32: number;
+  /** Real resource name (e.g. drawable/ic_logo) when R8 shrank the file name to res/-B.png. */
+  resourceName?: string;
 }
 
 /** A delivered file as stored in the report (just what a comparison needs). */
@@ -46,6 +48,7 @@ export interface ReportFile {
   path: string;
   category: Category;
   compressed: number;
+  resourceName?: string;
 }
 
 export type Severity = 'error' | 'warn' | 'info';
@@ -127,6 +130,12 @@ export interface FontUsageInfo {
   writtenAs?: string;
 }
 
+export interface ImageUsageInfo {
+  path: string;
+  /** null when it can't be judged (library asset, native resource, or no app source text). */
+  used: boolean | null;
+}
+
 export interface PackageSizeInfo {
   name: string;
   bytes: number;
@@ -159,6 +168,8 @@ export interface PackageReport {
   duplicateModules: { paths: string[]; bytes: number }[];
   /** Which font files in the build the app code references; null when the maps have no app source text. */
   fontUsage: FontUsageInfo[] | null;
+  /** Which bundled drawable images the app code references; null when the maps have no app source text. */
+  imageUsage: ImageUsageInfo[] | null;
   /** npm packages the app's own code imports directly; null when the maps have no app source text. */
   directImports: string[] | null;
   /** Map file names used (no local paths). */
@@ -199,6 +210,8 @@ export interface Report {
   lottie: LottieInfo[];
   /** npm package breakdown of the JS bundle; null when no source map was given. */
   packages: PackageReport | null;
+  /** Real resource names for files R8 renamed to res/xx (path -> type/name); empty when not applicable. */
+  resourceNames?: Record<string, string>;
   /** Largest delivered files (for the target ABI). */
   largestFiles: FileEntry[];
   /**
