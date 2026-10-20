@@ -1,4 +1,5 @@
 import { classifyEntries, deliveredTo } from './android/classify.js';
+import { analyzeIpa } from './ios/analyze-ios.js';
 import { DEFAULT_DENSITY, DENSITIES } from './android/density.js';
 import { detectArtifact } from './android/detect.js';
 import { embeddedImages, looksLikeLottie } from './assets/lottie.js';
@@ -37,6 +38,7 @@ export async function analyzeBlob(blob: Blob, fileName: string, options: Analyze
   const zip = await ZipArchive.open(blob);
   try {
     const artifact = detectArtifact(zip.entries);
+    if (artifact === 'ipa') return await analyzeIpa(zip, fileName, options, started, fileSize);
     const files = classifyEntries(zip.entries, artifact);
     const warnings: string[] = [];
 
