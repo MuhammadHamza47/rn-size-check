@@ -119,6 +119,7 @@ export async function analyzeBlob(blob: Blob, fileName: string, options: Analyze
           jsEntry.uncompressed,
           jsEntry.compressed,
           delivered.filter((f) => f.category === 'font').map((f) => f.path),
+          delivered.filter((f) => f.category === 'image').map((f) => f.path),
           warnings,
         );
         packages = result.report;

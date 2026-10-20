@@ -13,6 +13,7 @@ const CHECKS: [string, string, Area, boolean?][] = [
   ['Unused font weights', 'One font family shipped in 14 weights and italics when the app uses four or five.', 'font'],
   ['Heavy Lottie animations', 'Big animation files, especially ones with PNG or JPG images embedded inside them.', 'image'],
   ['Duplicate files', 'The same image or sound stored twice under different names.', 'other'],
+  ['Unused images', 'Images Metro bundled that no require() or <Image> in your code points at.', 'image', true],
   ['Source maps in the build', '.map files are for crash reports, not for users’ phones.', 'js'],
   ['Hermes turned off', 'The bundle is plain JavaScript instead of precompiled Hermes bytecode.', 'js'],
   ['Debug build by mistake', 'Debug builds have no JS bundle and every CPU type, so the numbers mean nothing.', 'other'],

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0 (unreleased)
+
+- **New check `unused-images`:** with a source map, finds images Metro bundled into `res/drawable` that the app's own code never `require()`s or shows in an `<Image>`. Matches Metro's exact resource naming (so hyphens and path aliases line up) and only judges images in folders the code actually loads from, so library and native drawables are never flagged. Review before deleting — a path built at runtime can't be seen.
+
 ## 0.3.0
 
 **What grew between two builds?**
