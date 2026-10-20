@@ -94,7 +94,7 @@ It reads the source maps React Native's Gradle build already writes (`android/ap
 - heavy packages with lighter options (moment, lodash, big icon libraries) and packages bundled in two versions
 - **exact** unused fonts and icon fonts, and `fontFamily` names with the wrong letter case
 
-Expo: run a local release build (`npx expo prebuild`, then `./gradlew bundleRelease` in `android/`), or pass a map with `--sourcemap`.
+Expo: run `npx expo export -p android --source-maps` (the map lands in `dist/_expo/static/js/android/`), or a local release build (`npx expo prebuild`, then `./gradlew bundleRelease`), or pass a map with `--sourcemap`.
 
 | Option | Purpose |
 |---|---|
