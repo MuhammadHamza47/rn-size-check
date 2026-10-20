@@ -152,6 +152,28 @@ Fail the build when the app grows past a budget, and keep the report as an artif
 npx rn-size-check android/app/build/outputs/bundle/release/app-release.aab --budget 40 --json size-report.json --format plain
 ```
 
+### GitHub Action: size diff on every PR
+
+Comment the size change on each pull request and fail the build when it grows too much. Build your release in an earlier step, then:
+
+```yaml
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  size:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # ... build your release .aab/.apk ...
+      - uses: MuhammadHamza47/rn-size-check/packages/action@v0.4.0
+        with:
+          build: android/app/build/outputs/bundle/release/app-release.aab
+          max-growth: 1   # fail the PR if the download grew more than 1 MB
+```
+
+It compares each PR against the base branch's last build and posts one sticky comment. See [packages/action](packages/action/README.md).
+
 ### In the browser
 
 No terminal needed: open **[rn-size-check-web.vercel.app](https://rn-size-check-web.vercel.app)** and drop your `.aab`/`.apk`. The file is scanned **inside your browser**, and nothing is uploaded. Read the report, then copy it as Markdown for a PR or Slack.
@@ -195,7 +217,7 @@ The build is a zip file. rn-size-check reads its directory, works out which file
 - [ ] Unused images (needs a scan of the project's source files)
 - [ ] Real names for resources renamed by `shrinkResources`
 - [x] `compare old.aab new.aab`: what grew between two builds
-- [ ] GitHub Action / EAS hook that comments size changes on pull requests
+- [x] GitHub Action that comments size changes on pull requests
 - [ ] iOS (`.ipa`)
 
 Ideas and bug reports are welcome in [issues](https://github.com/MuhammadHamza47/rn-size-check/issues).

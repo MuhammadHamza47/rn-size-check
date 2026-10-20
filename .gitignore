@@ -23,3 +23,7 @@ packages/cli/LICENSE
 
 # Personal Claude Code notes for this project (private)
 CLAUDE.local.md
+
+# The GitHub Action runs its committed bundle, so this dist is tracked
+!packages/action/dist/
+!packages/action/dist/index.js
