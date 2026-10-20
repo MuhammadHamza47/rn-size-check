@@ -1,0 +1,56 @@
+name: 'rn-size-check'
+description: 'Comment the Android app size change on every pull request, and fail the build when it grows too much.'
+author: 'Muhammad Hamza'
+branding:
+  icon: 'bar-chart-2'
+  color: 'blue'
+
+inputs:
+  build:
+    description: 'Path to the release build to analyze (.aab or .apk).'
+    required: true
+  baseline:
+    description: 'What to compare against: a report saved with --json, or another build. If omitted, the action compares against the base branch build it cached on its last run there.'
+    required: false
+  project:
+    description: 'React Native project folder, to add the npm package breakdown from its source maps.'
+    required: false
+  sourcemap:
+    description: 'A source map of the JS bundle (instead of --project).'
+    required: false
+  abi:
+    description: 'ABI for the download estimate (default: arm64-v8a if present).'
+    required: false
+  density:
+    description: 'Screen density for AAB estimates: mdpi…xxxhdpi (default: xxhdpi).'
+    required: false
+  max-growth:
+    description: 'Fail the job if the download grew by more than this many MB (used when there is a baseline).'
+    required: false
+  budget:
+    description: 'Fail the job if the download is over this many MB (used when there is no baseline).'
+    required: false
+  comment:
+    description: 'Post / update a sticky comment on the pull request.'
+    required: false
+    default: 'true'
+  fail-on-growth:
+    description: 'Actually fail the job when over max-growth / budget (false = warn only).'
+    required: false
+    default: 'true'
+  github-token:
+    description: 'Token used to post the PR comment.'
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  download-bytes:
+    description: 'Estimated download size of the analyzed build, in bytes.'
+  download-change:
+    description: 'Change in download size vs the baseline, in bytes (empty when there is no baseline).'
+  markdown:
+    description: 'The report / comparison as Markdown.'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

@@ -9,7 +9,7 @@
   "scripts": {
     "build": "npm run build -w rn-size-check",
     "test": "vitest run",
-    "typecheck": "tsc -p packages/core --noEmit && tsc -p packages/cli --noEmit && tsc -p apps/web --noEmit",
+    "typecheck": "tsc -p packages/core --noEmit && tsc -p packages/cli --noEmit && tsc -p packages/action --noEmit && tsc -p apps/web --noEmit",
     "dev": "npm run build && node packages/cli/bin/rn-size-check.js",
     "web": "npm run dev -w @rnsc/web",
     "build:web": "npm run build -w @rnsc/web"

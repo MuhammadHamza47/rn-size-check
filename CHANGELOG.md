@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 (unreleased)
+
+**GitHub Action: size diff on every pull request.**
+
+- New action at `packages/action` (`MuhammadHamza47/rn-size-check/packages/action@v0.4.0`). On a PR it analyzes the release build, compares it against the base branch's last build (kept in the Actions cache), and posts one sticky comment with the size change.
+- `max-growth` fails the PR when the download grows too much; `budget` fails when it's over a size; `fail-on-growth: false` turns either into a warning.
+- `project` / `sourcemap` add the npm package comparison; `baseline` pins an explicit build or saved `--json` report instead of the cached one.
+- Outputs `download-bytes`, `download-change` and `markdown` for later steps.
+
 ## 0.3.0
 
 **What grew between two builds?**
