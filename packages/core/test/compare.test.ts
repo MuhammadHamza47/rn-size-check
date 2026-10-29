@@ -144,6 +144,7 @@ describe('compare: report details', () => {
     jsonModules: [],
     duplicateModules: [],
     fontUsage: null,
+    imageUsage: null,
     directImports: null,
     maps: ['index.android.bundle.map'],
   });

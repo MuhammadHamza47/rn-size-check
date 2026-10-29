@@ -139,7 +139,7 @@ export function ReportView({ report, options, onOptionsChange, onReset, onAddMap
         ) : (
           <div className="findings">
             {findings.map((f) => (
-              <FindingCard key={`${f.checkId}-${f.title}`} finding={f} />
+              <FindingCard key={`${f.checkId}-${f.title}`} finding={f} resourceNames={report.resourceNames} />
             ))}
           </div>
         )}
@@ -178,6 +178,7 @@ export function ReportView({ report, options, onOptionsChange, onReset, onAddMap
                 <td className="path" title={f.path}>
                   <span className={`dot cat-${f.category}`} />
                   {f.path}
+                  {f.resourceName && <span className="muted small"> ({f.resourceName})</span>}
                 </td>
                 <td className="num">{formatBytes(f.compressed)}</td>
               </tr>
@@ -201,7 +202,7 @@ function Stat({ label, value, note, primary, good }: { label: string; value: str
 
 const ITEMS_COLLAPSED = 4;
 
-function FindingCard({ finding: f }: { finding: Finding }) {
+function FindingCard({ finding: f, resourceNames }: { finding: Finding; resourceNames?: Record<string, string> }) {
   const [open, setOpen] = useState(false);
   const items = open ? f.items : f.items.slice(0, ITEMS_COLLAPSED);
   return (
@@ -220,7 +221,10 @@ function FindingCard({ finding: f }: { finding: Finding }) {
           {items.map((i) => (
             <li key={i.path} title={i.path}>
               <span className="num">{formatBytes(i.bytes)}</span>
-              <span className="path">{shortPath(i.path)}</span>
+              <span className="path">
+                {shortPath(i.path)}
+                {resourceNames?.[i.path] && <span className="muted small"> ({resourceNames[i.path]})</span>}
+              </span>
               {i.note && <span className="muted">{i.note.replace(/\S+\/\S+/g, shortPath)}</span>}
             </li>
           ))}

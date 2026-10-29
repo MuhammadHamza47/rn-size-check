@@ -206,7 +206,7 @@ describe('--project: finding the maps in a React Native project', () => {
     await mkdir(join(project, 'android'));
     const r = await analyze(await apk(), { project });
     expect(r.packages).toBeNull();
-    expect(r.meta.warnings[0]).toMatch(/Build a release first/);
+    expect(r.meta.warnings[0]).toMatch(/Build a release .*gradlew bundleRelease.*expo export/);
     await rm(project, { recursive: true, force: true });
   });
 });
