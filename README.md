@@ -15,7 +15,7 @@ Point it at your Android `.aab` or `.apk` and get one report for the whole app: 
 
 **🌐 Try it in your browser: [rn-size-check-web.vercel.app](https://rn-size-check-web.vercel.app)** (no install; your file is never uploaded)
 
-> **Status:** v0.3. Android AAB/APK today; iOS is planned. Feedback very welcome!
+> **Status:** v0.6. Android AAB/APK, and iOS .ipa (beta). Feedback very welcome!
 
 ## Example
 
@@ -94,7 +94,7 @@ It reads the source maps React Native's Gradle build already writes (`android/ap
 - heavy packages with lighter options (moment, lodash, big icon libraries) and packages bundled in two versions
 - **exact** unused fonts and icon fonts, and `fontFamily` names with the wrong letter case
 
-Expo: run a local release build (`npx expo prebuild`, then `./gradlew bundleRelease` in `android/`), or pass a map with `--sourcemap`.
+Expo: run `npx expo export -p android --source-maps` (the map lands in `dist/_expo/static/js/android/`), or a local release build (`npx expo prebuild`, then `./gradlew bundleRelease`), or pass a map with `--sourcemap`.
 
 | Option | Purpose |
 |---|---|
@@ -195,6 +195,7 @@ Drop the two `.map` files from the same build along with it (or add them after) 
 | `font-weights` | Font files no code references (exact with a source map; otherwise flags families with many weights) |
 | `lottie-large` | Big Lottie animations, in res/raw, assets or (with a source map) require()d into the JS bundle |
 | `duplicate-files` | The same image or file stored more than once |
+| `unused-images` * | Images Metro bundled that the app's code never references |
 | `heavy-package` * | npm packages with a much lighter option (moment, lodash, big icon libraries…) |
 | `duplicate-packages` * | The same npm package bundled in more than one version |
 | `duplicate-modules` * | The same file bundled twice in the JS under different paths |
@@ -214,11 +215,11 @@ The build is a zip file. rn-size-check reads its directory, works out which file
 - [x] Website that scans in the browser
 - [x] Published to npm
 - [x] `--project`: which **npm packages** take the most space, require()d Lottie, exact unused fonts
-- [ ] Unused images (needs a scan of the project's source files)
-- [ ] Real names for resources renamed by `shrinkResources`
+- [x] Unused images (with a source map)
+- [x] Real names for resources renamed by `shrinkResources`
 - [x] `compare old.aab new.aab`: what grew between two builds
 - [x] GitHub Action that comments size changes on pull requests
-- [ ] iOS (`.ipa`)
+- [x] iOS (`.ipa`) — size breakdown, Hermes, large images, npm packages (beta)
 
 Ideas and bug reports are welcome in [issues](https://github.com/MuhammadHamza47/rn-size-check/issues).
 

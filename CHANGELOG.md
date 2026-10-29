@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0 (unreleased)
+## 0.4.0
 
 **GitHub Action: size diff on every pull request.**
 
@@ -8,6 +8,21 @@
 - `max-growth` fails the PR when the download grows too much; `budget` fails when it's over a size; `fail-on-growth: false` turns either into a warning.
 - `project` / `sourcemap` add the npm package comparison; `baseline` pins an explicit build or saved `--json` report instead of the cached one.
 - Outputs `download-bytes`, `download-change` and `markdown` for later steps.
+
+## 0.6.0
+
+**iOS .ipa support (beta).** Drop an .ipa (CLI or website) and get the same kind of report as Android:
+
+- Size breakdown by native code (the app binary, frameworks, .dylib), the JS bundle, images (incl. Assets.car), fonts and app resources.
+- Reads Info.plist (binary or XML) for the bundle id, version and minimum iOS.
+- Detects Hermes vs JSC, flags large loose images and shipped source maps, and splits the JS bundle by npm package with `--project` / `--sourcemap` (same as Android).
+- Sizes are estimates: the App Store re-compresses, encrypts and thins per device, so the real download/install differ (App Store Connect has the exact numbers).
+
+## 0.5.0
+
+- **New check `unused-images`:** with a source map, finds images Metro bundled into `res/drawable` that the app's own code never `require()`s or shows in an `<Image>`. Matches Metro's exact resource naming (so hyphens and path aliases line up) and only judges images in folders the code actually loads from, so library and native drawables are never flagged. Review before deleting — a path built at runtime can't be seen.
+- **Real resource names for shrunk APKs:** when R8 / `shrinkResources` renames files to `res/-B.png`, `res/qb.mp3`, the report now shows the real name next to them (`res/qb.mp3 (raw/notification_sound)`), read from `resources.arsc`. Shown in the largest-files list and in findings, in the CLI and the website.
+- **Expo:** `--project` now also finds the source map from `npx expo export -p android --source-maps` (in `dist/_expo/static/js/android/`), not just a Gradle build. The "no map found" message explains both.
 
 ## 0.3.0
 

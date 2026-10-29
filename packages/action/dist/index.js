@@ -2519,7 +2519,7 @@ var require_parseParams = __commonJS({
     var STATE_VALUE = 1;
     var STATE_CHARSET = 2;
     var STATE_LANG = 3;
-    function parseParams(str) {
+    function parseParams(str2) {
       const res = [];
       let state = STATE_KEY;
       let charset = "";
@@ -2527,9 +2527,9 @@ var require_parseParams = __commonJS({
       let escaping = false;
       let p = 0;
       let tmp = "";
-      const len = str.length;
+      const len = str2.length;
       for (var i = 0; i < len; ++i) {
-        const char = str[i];
+        const char = str2[i];
         if (char === "\\" && inquote) {
           if (escaping) {
             escaping = false;
@@ -3058,29 +3058,29 @@ var require_Decoder = __commonJS({
     function Decoder() {
       this.buffer = void 0;
     }
-    Decoder.prototype.write = function(str) {
-      str = str.replace(RE_PLUS, " ");
+    Decoder.prototype.write = function(str2) {
+      str2 = str2.replace(RE_PLUS, " ");
       let res = "";
       let i = 0;
       let p = 0;
-      const len = str.length;
+      const len = str2.length;
       for (; i < len; ++i) {
         if (this.buffer !== void 0) {
-          if (!HEX[str.charCodeAt(i)]) {
+          if (!HEX[str2.charCodeAt(i)]) {
             res += "%" + this.buffer;
             this.buffer = void 0;
             --i;
           } else {
-            this.buffer += str[i];
+            this.buffer += str2[i];
             ++p;
             if (this.buffer.length === 2) {
               res += String.fromCharCode(parseInt(this.buffer, 16));
               this.buffer = void 0;
             }
           }
-        } else if (str[i] === "%") {
+        } else if (str2[i] === "%") {
           if (i > p) {
-            res += str.substring(p, i);
+            res += str2.substring(p, i);
             p = i;
           }
           this.buffer = "";
@@ -3088,7 +3088,7 @@ var require_Decoder = __commonJS({
         }
       }
       if (p < len && this.buffer === void 0) {
-        res += str.substring(p);
+        res += str2.substring(p);
       }
       return res;
     };
@@ -4875,30 +4875,30 @@ var require_dataURL = __commonJS({
     function isHTTPWhiteSpace(char) {
       return char === "\r" || char === "\n" || char === "	" || char === " ";
     }
-    function removeHTTPWhitespace(str, leading = true, trailing = true) {
+    function removeHTTPWhitespace(str2, leading = true, trailing = true) {
       let lead = 0;
-      let trail = str.length - 1;
+      let trail = str2.length - 1;
       if (leading) {
-        for (; lead < str.length && isHTTPWhiteSpace(str[lead]); lead++) ;
+        for (; lead < str2.length && isHTTPWhiteSpace(str2[lead]); lead++) ;
       }
       if (trailing) {
-        for (; trail > 0 && isHTTPWhiteSpace(str[trail]); trail--) ;
+        for (; trail > 0 && isHTTPWhiteSpace(str2[trail]); trail--) ;
       }
-      return str.slice(lead, trail + 1);
+      return str2.slice(lead, trail + 1);
     }
     function isASCIIWhitespace(char) {
       return char === "\r" || char === "\n" || char === "	" || char === "\f" || char === " ";
     }
-    function removeASCIIWhitespace(str, leading = true, trailing = true) {
+    function removeASCIIWhitespace(str2, leading = true, trailing = true) {
       let lead = 0;
-      let trail = str.length - 1;
+      let trail = str2.length - 1;
       if (leading) {
-        for (; lead < str.length && isASCIIWhitespace(str[lead]); lead++) ;
+        for (; lead < str2.length && isASCIIWhitespace(str2[lead]); lead++) ;
       }
       if (trailing) {
-        for (; trail > 0 && isASCIIWhitespace(str[trail]); trail--) ;
+        for (; trail > 0 && isASCIIWhitespace(str2[trail]); trail--) ;
       }
-      return str.slice(lead, trail + 1);
+      return str2.slice(lead, trail + 1);
     }
     module2.exports = {
       dataURLProcessor,
@@ -5332,7 +5332,7 @@ var require_body = __commonJS({
         const boundary = `----formdata-undici-0${`${random(1e11)}`.padStart(11, "0")}`;
         const prefix = `--${boundary}\r
 Content-Disposition: form-data`;
-        const escape2 = (str) => str.replace(/\n/g, "%0A").replace(/\r/g, "%0D").replace(/"/g, "%22");
+        const escape2 = (str2) => str2.replace(/\n/g, "%0A").replace(/\r/g, "%0D").replace(/"/g, "%22");
         const normalizeLinefeeds = (value) => value.replace(/\r?\n|\r/g, "\r\n");
         const blobParts = [];
         const rn = new Uint8Array([13, 10]);
@@ -15841,8 +15841,8 @@ var require_cookies = __commonJS({
       webidl.argumentLengthCheck(arguments, 2, { header: "setCookie" });
       webidl.brandCheck(headers, Headers, { strict: false });
       cookie = webidl.converters.Cookie(cookie);
-      const str = stringify(cookie);
-      if (str) {
+      const str2 = stringify(cookie);
+      if (str2) {
         headers.append("Set-Cookie", stringify(cookie));
       }
     }
@@ -19032,8 +19032,8 @@ var require_toolrunner = __commonJS({
         }
         return this.args;
       }
-      _endsWith(str, end) {
-        return str.endsWith(end);
+      _endsWith(str2, end) {
+        return str2.endsWith(end);
       }
       _isCmdFile() {
         const upperToolPath = this.toolPath.toUpperCase();
@@ -20135,38 +20135,38 @@ var require_balanced_match = __commonJS({
   "../../node_modules/balanced-match/index.js"(exports2, module2) {
     "use strict";
     module2.exports = balanced;
-    function balanced(a, b, str) {
-      if (a instanceof RegExp) a = maybeMatch(a, str);
-      if (b instanceof RegExp) b = maybeMatch(b, str);
-      var r = range(a, b, str);
+    function balanced(a, b, str2) {
+      if (a instanceof RegExp) a = maybeMatch(a, str2);
+      if (b instanceof RegExp) b = maybeMatch(b, str2);
+      var r = range(a, b, str2);
       return r && {
         start: r[0],
         end: r[1],
-        pre: str.slice(0, r[0]),
-        body: str.slice(r[0] + a.length, r[1]),
-        post: str.slice(r[1] + b.length)
+        pre: str2.slice(0, r[0]),
+        body: str2.slice(r[0] + a.length, r[1]),
+        post: str2.slice(r[1] + b.length)
       };
     }
-    function maybeMatch(reg, str) {
-      var m = str.match(reg);
+    function maybeMatch(reg, str2) {
+      var m = str2.match(reg);
       return m ? m[0] : null;
     }
     balanced.range = range;
-    function range(a, b, str) {
+    function range(a, b, str2) {
       var begs, beg, left, right, result;
-      var ai = str.indexOf(a);
-      var bi = str.indexOf(b, ai + 1);
+      var ai = str2.indexOf(a);
+      var bi = str2.indexOf(b, ai + 1);
       var i = ai;
       if (ai >= 0 && bi > 0) {
         if (a === b) {
           return [ai, bi];
         }
         begs = [];
-        left = str.length;
+        left = str2.length;
         while (i >= 0 && !result) {
           if (i == ai) {
             begs.push(i);
-            ai = str.indexOf(a, i + 1);
+            ai = str2.indexOf(a, i + 1);
           } else if (begs.length == 1) {
             result = [begs.pop(), bi];
           } else {
@@ -20175,7 +20175,7 @@ var require_balanced_match = __commonJS({
               left = beg;
               right = bi;
             }
-            bi = str.indexOf(b, i + 1);
+            bi = str2.indexOf(b, i + 1);
           }
           i = ai < bi && ai >= 0 ? ai : bi;
         }
@@ -20204,27 +20204,27 @@ var require_brace_expansion = __commonJS({
     var EXPANSION_MAX_LENGTH = 4e6;
     var EXPANSION_MAX_DEPTH = 1e3;
     var EXPANSION_MAX_REWRITES = 1e3;
-    function numeric(str) {
-      return parseInt(str, 10) == str ? parseInt(str, 10) : str.charCodeAt(0);
+    function numeric(str2) {
+      return parseInt(str2, 10) == str2 ? parseInt(str2, 10) : str2.charCodeAt(0);
     }
-    function escapeBraces(str) {
-      return str.split("\\\\").join(escSlash).split("\\{").join(escOpen).split("\\}").join(escClose).split("\\,").join(escComma).split("\\.").join(escPeriod);
+    function escapeBraces(str2) {
+      return str2.split("\\\\").join(escSlash).split("\\{").join(escOpen).split("\\}").join(escClose).split("\\,").join(escComma).split("\\.").join(escPeriod);
     }
-    function unescapeBraces(str) {
-      return str.split(escSlash).join("\\").split(escOpen).join("{").split(escClose).join("}").split(escComma).join(",").split(escPeriod).join(".");
+    function unescapeBraces(str2) {
+      return str2.split(escSlash).join("\\").split(escOpen).join("{").split(escClose).join("}").split(escComma).join(",").split(escPeriod).join(".");
     }
     function pushAll(target, items) {
       for (var i = 0; i < items.length; i++) {
         target.push(items[i]);
       }
     }
-    function parseCommaParts(str) {
+    function parseCommaParts(str2) {
       var parts = [];
       var carry = "";
       for (; ; ) {
-        var m = balanced("{", "}", str);
+        var m = balanced("{", "}", str2);
         if (!m) {
-          var tail = str.split(",");
+          var tail = str2.split(",");
           tail[0] = carry + tail[0];
           pushAll(parts, tail);
           return parts;
@@ -20241,24 +20241,24 @@ var require_brace_expansion = __commonJS({
         }
         carry = p.pop();
         pushAll(parts, p);
-        str = post;
+        str2 = post;
       }
     }
-    function expandTop(str, options) {
-      if (!str)
+    function expandTop(str2, options) {
+      if (!str2)
         return [];
       options = options || {};
       var max2 = options.max == null ? EXPANSION_MAX : options.max;
       var maxLength = options.maxLength == null ? EXPANSION_MAX_LENGTH : options.maxLength;
       var maxDepth = options.maxDepth == null ? EXPANSION_MAX_DEPTH : options.maxDepth;
       var maxRewrites = options.maxRewrites == null ? EXPANSION_MAX_REWRITES : options.maxRewrites;
-      if (str.substr(0, 2) === "{}") {
-        str = "\\{\\}" + str.substr(2);
+      if (str2.substr(0, 2) === "{}") {
+        str2 = "\\{\\}" + str2.substr(2);
       }
-      return expand2(escapeBraces(str), max2, maxLength, maxDepth, 0, maxRewrites, true).map(unescapeBraces);
+      return expand2(escapeBraces(str2), max2, maxLength, maxDepth, 0, maxRewrites, true).map(unescapeBraces);
     }
-    function embrace(str) {
-      return "{" + str + "}";
+    function embrace(str2) {
+      return "{" + str2 + "}";
     }
     function isPadded(el) {
       return /^-?0\d/.test(el);
@@ -20330,9 +20330,9 @@ var require_brace_expansion = __commonJS({
       }
       return N;
     }
-    function expand2(str, max2, maxLength, maxDepth, depth, maxRewrites, isTop) {
+    function expand2(str2, max2, maxLength, maxDepth, depth, maxRewrites, isTop) {
       if (depth > maxDepth) {
-        return [str];
+        return [str2];
       }
       var acc = [""];
       var accBase = [0];
@@ -20341,13 +20341,13 @@ var require_brace_expansion = __commonJS({
       var firstGroup = true;
       var nextBase;
       for (; ; ) {
-        var m = balanced("{", "}", str);
+        var m = balanced("{", "}", str2);
         if (!m) {
-          return combine(acc, accBase, str, [""], max2, maxLength, dropEmpties, []);
+          return combine(acc, accBase, str2, [""], max2, maxLength, dropEmpties, []);
         }
         var pre = m.pre;
         if (/\$$/.test(pre)) {
-          return combine(acc, accBase, str, [""], max2, maxLength, dropEmpties, []);
+          return combine(acc, accBase, str2, [""], max2, maxLength, dropEmpties, []);
         }
         var isNumericSequence = /^-?\d+\.\.-?\d+(?:\.\.-?\d+)?$/.test(m.body);
         var isAlphaSequence = /^[a-zA-Z]\.\.[a-zA-Z](?:\.\.-?\d+)?$/.test(m.body);
@@ -20356,7 +20356,7 @@ var require_brace_expansion = __commonJS({
         if (!isSequence && !isOptions) {
           if (rewrites < maxRewrites && m.post.match(/,(?!,).*\}/)) {
             rewrites++;
-            str = m.pre + "{" + m.body + escClose + m.post;
+            str2 = m.pre + "{" + m.body + escClose + m.post;
             isTop = true;
             firstGroup = true;
             dropEmpties = false;
@@ -20402,7 +20402,7 @@ var require_brace_expansion = __commonJS({
               );
               accBase = nextBase;
               if (!m.post.length) break;
-              str = m.post;
+              str2 = m.post;
               continue;
             }
           }
@@ -20440,7 +20440,7 @@ var require_brace_expansion = __commonJS({
         );
         accBase = nextBase;
         if (!m.post.length) break;
-        str = m.post;
+        str2 = m.post;
       }
       return acc;
     }
@@ -25827,13 +25827,13 @@ var require_ms = __commonJS({
         "val is not a non-empty string or a valid number. val=" + JSON.stringify(val)
       );
     };
-    function parse4(str) {
-      str = String(str);
-      if (str.length > 100) {
+    function parse4(str2) {
+      str2 = String(str2);
+      if (str2.length > 100) {
         return;
       }
       var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(
-        str
+        str2
       );
       if (!match) {
         return;
@@ -26437,7 +26437,7 @@ var require_node = __commonJS({
     var { formatters } = module2.exports;
     formatters.o = function(v) {
       this.inspectOpts.colors = this.useColors;
-      return util.inspect(v, this.inspectOpts).split("\n").map((str) => str.trim()).join(" ");
+      return util.inspect(v, this.inspectOpts).split("\n").map((str2) => str2.trim()).join(" ");
     };
     formatters.O = function(v) {
       this.inspectOpts.colors = this.useColors;
@@ -26505,12 +26505,12 @@ var require_helpers2 = __commonJS({
     exports2.toBuffer = toBuffer;
     async function json(stream) {
       const buf = await toBuffer(stream);
-      const str = buf.toString("utf8");
+      const str2 = buf.toString("utf8");
       try {
-        return JSON.parse(str);
+        return JSON.parse(str2);
       } catch (_err) {
         const err2 = _err;
-        err2.message += ` (input: ${str})`;
+        err2.message += ` (input: ${str2})`;
         throw err2;
       }
     }
@@ -32953,12 +32953,12 @@ var require_serializer = __commonJS({
     function createSerializer(modelMappers = {}, isXML = false) {
       return new SerializerImpl(modelMappers, isXML);
     }
-    function trimEnd(str, ch) {
-      let len = str.length;
-      while (len - 1 >= 0 && str[len - 1] === ch) {
+    function trimEnd(str2, ch) {
+      let len = str2.length;
+      while (len - 1 >= 0 && str2[len - 1] === ch) {
         --len;
       }
-      return str.substr(0, len);
+      return str2.substr(0, len);
     }
     function bufferToBase64Url(buffer) {
       if (!buffer) {
@@ -32967,18 +32967,18 @@ var require_serializer = __commonJS({
       if (!(buffer instanceof Uint8Array)) {
         throw new Error(`Please provide an input of type Uint8Array for converting to Base64Url.`);
       }
-      const str = base64.encodeByteArray(buffer);
-      return trimEnd(str, "=").replace(/\+/g, "-").replace(/\//g, "_");
+      const str2 = base64.encodeByteArray(buffer);
+      return trimEnd(str2, "=").replace(/\+/g, "-").replace(/\//g, "_");
     }
-    function base64UrlToByteArray(str) {
-      if (!str) {
+    function base64UrlToByteArray(str2) {
+      if (!str2) {
         return void 0;
       }
-      if (str && typeof str.valueOf() !== "string") {
+      if (str2 && typeof str2.valueOf() !== "string") {
         throw new Error("Please provide an input of type string for converting to Uint8Array");
       }
-      str = str.replace(/-/g, "+").replace(/_/g, "/");
-      return base64.decodeString(str);
+      str2 = str2.replace(/-/g, "+").replace(/_/g, "/");
+      return base64.decodeString(str2);
     }
     function splitSerializeName(prop) {
       const classes = [];
@@ -37012,16 +37012,16 @@ var require_xml = __commonJS({
       const xmlData = j2x.build(node);
       return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>${xmlData}`.replace(/\n/g, "");
     }
-    async function parseXML2(str, opts = {}) {
-      if (!str) {
+    async function parseXML2(str2, opts = {}) {
+      if (!str2) {
         throw new Error("Document is empty");
       }
-      const validation = import_fast_xml_parser.XMLValidator.validate(str);
+      const validation = import_fast_xml_parser.XMLValidator.validate(str2);
       if (validation !== true) {
         throw validation;
       }
       const parser = new import_fast_xml_parser.XMLParser(getParserOptions(opts));
-      const parsedXml = parser.parse(str);
+      const parsedXml = parser.parse(str2);
       if (parsedXml["?xml"]) {
         delete parsedXml["?xml"];
       }
@@ -38056,16 +38056,16 @@ var require_crc64 = __commonJS({
           if (endPtr - idx > 16 && heapOrArray.buffer && UTF8Decoder) {
             return UTF8Decoder.decode(heapOrArray.subarray(idx, endPtr));
           }
-          var str = "";
+          var str2 = "";
           while (idx < endPtr) {
             var u0 = heapOrArray[idx++];
             if (!(u0 & 128)) {
-              str += String.fromCharCode(u0);
+              str2 += String.fromCharCode(u0);
               continue;
             }
             var u1 = heapOrArray[idx++] & 63;
             if ((u0 & 224) == 192) {
-              str += String.fromCharCode((u0 & 31) << 6 | u1);
+              str2 += String.fromCharCode((u0 & 31) << 6 | u1);
               continue;
             }
             var u2 = heapOrArray[idx++] & 63;
@@ -38076,26 +38076,26 @@ var require_crc64 = __commonJS({
               u0 = (u0 & 7) << 18 | u1 << 12 | u2 << 6 | heapOrArray[idx++] & 63;
             }
             if (u0 < 65536) {
-              str += String.fromCharCode(u0);
+              str2 += String.fromCharCode(u0);
             } else {
               var ch = u0 - 65536;
-              str += String.fromCharCode(55296 | ch >> 10, 56320 | ch & 1023);
+              str2 += String.fromCharCode(55296 | ch >> 10, 56320 | ch & 1023);
             }
           }
-          return str;
+          return str2;
         }
         function UTF8ToString(ptr, maxBytesToRead) {
           return ptr ? UTF8ArrayToString(HEAPU8, ptr, maxBytesToRead) : "";
         }
-        function stringToUTF8Array(str, heap, outIdx, maxBytesToWrite) {
+        function stringToUTF8Array(str2, heap, outIdx, maxBytesToWrite) {
           if (!(maxBytesToWrite > 0))
             return 0;
           var startIdx = outIdx;
           var endIdx = outIdx + maxBytesToWrite - 1;
-          for (var i = 0; i < str.length; ++i) {
-            var u = str.charCodeAt(i);
+          for (var i = 0; i < str2.length; ++i) {
+            var u = str2.charCodeAt(i);
             if (u >= 55296 && u <= 57343) {
-              var u1 = str.charCodeAt(++i);
+              var u1 = str2.charCodeAt(++i);
               u = 65536 + ((u & 1023) << 10) | u1 & 1023;
             }
             if (u <= 127) {
@@ -38122,14 +38122,14 @@ var require_crc64 = __commonJS({
           heap[outIdx] = 0;
           return outIdx - startIdx;
         }
-        function stringToUTF8(str, outPtr, maxBytesToWrite) {
+        function stringToUTF8(str2, outPtr, maxBytesToWrite) {
           assert(typeof maxBytesToWrite == "number", "stringToUTF8(str, outPtr, maxBytesToWrite) is missing the third parameter that specifies the length of the output buffer!");
-          return stringToUTF8Array(str, HEAPU8, outPtr, maxBytesToWrite);
+          return stringToUTF8Array(str2, HEAPU8, outPtr, maxBytesToWrite);
         }
-        function lengthBytesUTF8(str) {
+        function lengthBytesUTF8(str2) {
           var len = 0;
-          for (var i = 0; i < str.length; ++i) {
-            var c = str.charCodeAt(i);
+          for (var i = 0; i < str2.length; ++i) {
+            var c = str2.charCodeAt(i);
             if (c <= 127) {
               len++;
             } else if (c <= 2047) {
@@ -67852,8 +67852,8 @@ var require_BatchUtils = __commonJS({
       buffer = buffer.slice(0, responseLength);
       return buffer.toString();
     }
-    function utf8ByteLength(str) {
-      return Buffer.byteLength(str);
+    function utf8ByteLength(str2) {
+      return Buffer.byteLength(str2);
     }
   }
 });
@@ -73465,16 +73465,16 @@ var init_omit = __esm({
 });
 
 // ../../node_modules/@octokit/endpoint/dist-src/util/url-template.js
-function encodeReserved(str) {
-  return str.split(/(%[0-9A-Fa-f]{2})/g).map(function(part) {
+function encodeReserved(str2) {
+  return str2.split(/(%[0-9A-Fa-f]{2})/g).map(function(part) {
     if (!/%[0-9A-Fa-f]/.test(part)) {
       part = encodeURI(part).replace(/%5B/g, "[").replace(/%5D/g, "]");
     }
     return part;
   }).join("");
 }
-function encodeUnreserved(str) {
-  return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+function encodeUnreserved(str2) {
+  return encodeURIComponent(str2).replace(/[!'()*]/g, function(c) {
     return "%" + c.charCodeAt(0).toString(16).toUpperCase();
   });
 }
@@ -77082,6 +77082,130 @@ var import_node_fs = require("fs");
 var import_promises2 = require("fs/promises");
 var import_node_path2 = require("path");
 
+// ../core/src/android/arsc.ts
+var RES_STRING_POOL = 1;
+var RES_TABLE_PACKAGE = 512;
+var RES_TABLE_TYPE = 513;
+var UTF8_FLAG = 1 << 8;
+var NO_ENTRY = 4294967295;
+var FLAG_SPARSE = 1;
+var FLAG_OFFSET16 = 2;
+var ENTRY_FLAG_COMPLEX = 1;
+var TYPE_STRING = 3;
+function readLen(buf, pos, wide) {
+  if (wide) {
+    const first2 = buf.readUInt16LE(pos);
+    if (first2 & 32768) return { value: (first2 & 32767) << 16 | buf.readUInt16LE(pos + 2), next: pos + 4 };
+    return { value: first2, next: pos + 2 };
+  }
+  const first = buf[pos];
+  if (first & 128) return { value: (first & 127) << 8 | buf[pos + 1], next: pos + 2 };
+  return { value: first, next: pos + 1 };
+}
+function parseStringPool(buf, off) {
+  const count = buf.readUInt32LE(off + 8);
+  const flags = buf.readUInt32LE(off + 16);
+  const stringsStart = buf.readUInt32LE(off + 20);
+  const utf8 = (flags & UTF8_FLAG) !== 0;
+  const offsetsAt = off + 28;
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    const strOff = off + stringsStart + buf.readUInt32LE(offsetsAt + i * 4);
+    try {
+      if (utf8) {
+        const chars2 = readLen(buf, strOff, false);
+        const bytes = readLen(buf, chars2.next, false);
+        out.push(buf.toString("utf8", bytes.next, bytes.next + bytes.value));
+      } else {
+        const chars2 = readLen(buf, strOff, true);
+        out.push(buf.toString("utf16le", chars2.next, chars2.next + chars2.value * 2));
+      }
+    } catch {
+      out.push("");
+    }
+  }
+  return out;
+}
+function readEntryOffsets(buf, at, count, flags) {
+  const offsets = /* @__PURE__ */ new Map();
+  if (flags & FLAG_SPARSE) {
+    for (let i = 0; i < count; i++) {
+      const idx = buf.readUInt16LE(at + i * 4);
+      offsets.set(idx, buf.readUInt16LE(at + i * 4 + 2) * 4);
+    }
+  } else if (flags & FLAG_OFFSET16) {
+    for (let i = 0; i < count; i++) {
+      const v = buf.readUInt16LE(at + i * 2);
+      if (v !== 65535) offsets.set(i, v * 4);
+    }
+  } else {
+    for (let i = 0; i < count; i++) {
+      const v = buf.readUInt32LE(at + i * 4);
+      if (v !== NO_ENTRY) offsets.set(i, v);
+    }
+  }
+  return offsets;
+}
+function readResourceNames(buf) {
+  const names = /* @__PURE__ */ new Map();
+  try {
+    if (buf.length < 12 || buf.readUInt16LE(0) !== 2) return names;
+    const tableHeaderSize = buf.readUInt16LE(2);
+    let pos = tableHeaderSize;
+    if (buf.readUInt16LE(pos) !== RES_STRING_POOL) return names;
+    const valueStrings = parseStringPool(buf, pos);
+    pos += buf.readUInt32LE(pos + 4);
+    while (pos + 8 <= buf.length) {
+      const type = buf.readUInt16LE(pos);
+      const size = buf.readUInt32LE(pos + 4);
+      if (size < 8) break;
+      if (type === RES_TABLE_PACKAGE) parsePackage(buf, pos, size, valueStrings, names);
+      pos += size;
+    }
+  } catch {
+  }
+  return names;
+}
+function parsePackage(buf, pkgOff, pkgSize, valueStrings, out) {
+  const headerSize = buf.readUInt16LE(pkgOff + 2);
+  const typeStringsOff = buf.readUInt32LE(pkgOff + 268);
+  const keyStringsOff = buf.readUInt32LE(pkgOff + 276);
+  const typeNames = typeStringsOff ? parseStringPool(buf, pkgOff + typeStringsOff) : [];
+  const keyNames = keyStringsOff ? parseStringPool(buf, pkgOff + keyStringsOff) : [];
+  let pos = pkgOff + headerSize;
+  const end = pkgOff + pkgSize;
+  while (pos + 8 <= end) {
+    const type = buf.readUInt16LE(pos);
+    const hSize = buf.readUInt16LE(pos + 2);
+    const size = buf.readUInt32LE(pos + 4);
+    if (size < 8) break;
+    if (type === RES_TABLE_TYPE) {
+      const typeId = buf[pos + 8];
+      const flags = buf[pos + 9];
+      const entryCount = buf.readUInt32LE(pos + 12);
+      const entriesStart = buf.readUInt32LE(pos + 16);
+      const typeName = typeNames[typeId - 1] ?? `type${typeId}`;
+      const offsets = readEntryOffsets(buf, pos + hSize, entryCount, flags);
+      for (const [, entryOff] of offsets) {
+        const e = pos + entriesStart + entryOff;
+        if (e + 8 > end) continue;
+        const entrySize = buf.readUInt16LE(e);
+        const entryFlags = buf.readUInt16LE(e + 2);
+        const key = buf.readUInt32LE(e + 4);
+        if (entryFlags & ENTRY_FLAG_COMPLEX) continue;
+        const vOff = e + entrySize;
+        if (vOff + 8 > end) continue;
+        const dataType = buf[vOff + 3];
+        if (dataType !== TYPE_STRING) continue;
+        const path = valueStrings[buf.readUInt32LE(vOff + 4)];
+        const name = keyNames[key];
+        if (path && name && path.startsWith("res/")) out.set(path, `${typeName}/${name}`);
+      }
+    }
+    pos += size;
+  }
+}
+
 // ../core/src/android/density.ts
 var DENSITIES = {
   ldpi: 120,
@@ -77195,281 +77319,645 @@ function deliveredTo(files, artifact, abi, density) {
   return selectDensity(base, density);
 }
 
-// ../core/src/android/detect.ts
-var UnsupportedArtifactError = class extends Error {
+// ../core/src/format.ts
+var MB = 1e6;
+var KB = 1e3;
+function formatBytes(bytes) {
+  const abs = Math.abs(bytes);
+  if (abs >= MB) return `${(bytes / MB).toFixed(1)} MB`;
+  if (abs >= KB) return `${Math.round(bytes / KB)} KB`;
+  return `${bytes} B`;
+}
+function formatDelta(bytes) {
+  if (bytes === 0) return "0 B";
+  return `${bytes > 0 ? "+" : "\u2212"}${formatBytes(Math.abs(bytes))}`;
+}
+function shortPath(path) {
+  const parts = path.split("/");
+  const sourceFile = parts.length > 2 && !/^(base|assets|res|lib|META-INF)$/.test(parts[0]) && /\.(json|[jt]sx?)$/.test(path);
+  return parts.includes("res") || parts.includes("lib") || sourceFile ? parts.slice(-2).join("/") : parts[parts.length - 1];
+}
+
+// ../core/src/checks/abi-universal.ts
+var abiUniversal = {
+  id: "abi-universal",
+  title: "Universal APK with several ABIs",
+  description: "An APK that bundles native libraries for more than one CPU architecture makes every user download all of them.",
+  requires: "build",
+  run(ctx) {
+    if (ctx.artifact !== "apk") return [];
+    const abis = [...new Set(ctx.files.filter((f) => f.abi).map((f) => f.abi))];
+    if (abis.length < 2) return [];
+    const others = ctx.files.filter((f) => f.abi && f.abi !== ctx.abi);
+    const savingsByFile = Object.fromEntries(others.map((f) => [f.path, f.compressed]));
+    const bytes = others.reduce((s, f) => s + f.compressed, 0);
+    return [
+      {
+        severity: "error",
+        title: `APK ships ${abis.length} ABIs (${abis.join(", ")}): every phone downloads ${formatBytes(bytes)} of native code it can't use`,
+        files: others.map((f) => f.path),
+        savingsByFile,
+        fix: "Don't delete an ABI: older 32-bit phones still need armeabi-v7a. Give each phone only its own instead: upload an AAB to Google Play (it splits by ABI automatically), or for APKs you share directly, enable ABI splits: splits { abi { enable true; universalApk false } } in android/app/build.gradle."
+      }
+    ];
+  }
 };
-function detectArtifact(entries) {
-  const paths = new Set(entries.map((e) => e.path));
-  if (paths.has("BundleConfig.pb") && paths.has("base/manifest/AndroidManifest.xml")) return "aab";
-  if (paths.has("AndroidManifest.xml") && entries.some((e) => /^classes\d*\.dex$/.test(e.path))) return "apk";
-  if (entries.some((e) => /^Payload\/[^/]+\.app\//.test(e.path))) {
-    throw new UnsupportedArtifactError("iOS .ipa files are not supported yet (planned for v1.2).");
-  }
-  throw new UnsupportedArtifactError("Not an Android APK or AAB (no AndroidManifest.xml found).");
-}
 
-// ../core/src/assets/lottie.ts
-function looksLikeLottie(head) {
-  const start = head.trimStart();
-  if (!start.startsWith("{")) return false;
-  const bodymovinHeader = /"v"\s*:\s*"\d+\.\d+/.test(start) && /"(fr|ip|op|layers)"\s*:/.test(start);
-  const layersFirst = /"layers"\s*:\s*\[/.test(start) && (/"ddd"\s*:/.test(start) || /"ks"\s*:/.test(start) && /"ty"\s*:/.test(start));
-  return bodymovinHeader || layersFirst;
-}
-function embeddedImages(json) {
-  const pattern = /"p"\s*:\s*"data:image\/[a-z+]+;base64,([A-Za-z0-9+/=\\]+)"/g;
-  let count = 0;
-  let bytes = 0;
-  for (const match of json.matchAll(pattern)) {
-    const base64 = match[1].replace(/\\\//g, "/");
-    count++;
-    bytes += Math.floor(base64.replace(/=+$/, "").length * 3 / 4);
+// ../core/src/checks/debuggable.ts
+var debuggable = {
+  id: "debuggable",
+  title: "Debug build",
+  description: 'The manifest has android:debuggable="true", so sizes do not reflect what users download.',
+  requires: "build",
+  run(ctx) {
+    if (!ctx.manifest.debuggable) return [];
+    return [
+      {
+        severity: "error",
+        title: "This is a debug build: sizes are not what users download",
+        files: [],
+        fix: "Analyze a release build: cd android && ./gradlew bundleRelease (or assembleRelease), or an EAS production build."
+      }
+    ];
   }
-  return { count, bytes };
-}
-
-// ../core/src/android/dex.ts
-function readDexClassNames(buf) {
-  if (buf.length < 112 || buf.toString("latin1", 0, 4) !== "dex\n") return [];
-  const stringIdsOff = buf.readUInt32LE(60);
-  const typeIdsOff = buf.readUInt32LE(68);
-  const classDefsSize = buf.readUInt32LE(96);
-  const classDefsOff = buf.readUInt32LE(100);
-  const names = [];
-  for (let i = 0; i < classDefsSize; i++) {
-    const typeIdx = buf.readUInt32LE(classDefsOff + i * 32);
-    const descriptorIdx = buf.readUInt32LE(typeIdsOff + typeIdx * 4);
-    let p = buf.readUInt32LE(stringIdsOff + descriptorIdx * 4);
-    while (buf[p] & 128) p++;
-    p++;
-    const end = buf.indexOf(0, p);
-    names.push(buf.toString("latin1", p, end));
-  }
-  return names;
-}
-function obfuscatedShare(classNames) {
-  if (classNames.length === 0) return 0;
-  let short = 0;
-  for (const descriptor of classNames) {
-    const simple = descriptor.slice(descriptor.lastIndexOf("/") + 1, -1).split("$").pop() ?? "";
-    if (/^[a-zA-Z]{1,2}\d?$/.test(simple)) short++;
-  }
-  return short / classNames.length;
-}
-
-// ../core/src/android/elf.ts
-var SHF_ALLOC = 2;
-var SHT_NOBITS = 8;
-var TINY_SECTION = 4 * 1024;
-function readElfHeader(head) {
-  if (head.length < 64 || head.readUInt32BE(0) !== 2135247942) return null;
-  const is64 = head[4] === 2;
-  if (head[5] !== 1) return null;
-  return is64 ? { is64, shoff: Number(head.readBigUInt64LE(40)), shentsize: head.readUInt16LE(58), shnum: head.readUInt16LE(60) } : { is64, shoff: head.readUInt32LE(32), shentsize: head.readUInt16LE(46), shnum: head.readUInt16LE(48) };
-}
-function debugSectionBytes(header, table) {
-  let total = 0;
-  for (let i = 0; i < header.shnum; i++) {
-    const s = i * header.shentsize;
-    if (s + header.shentsize > table.length) break;
-    const type = table.readUInt32LE(s + 4);
-    const flags = header.is64 ? Number(table.readBigUInt64LE(s + 8)) : table.readUInt32LE(s + 8);
-    const size = header.is64 ? Number(table.readBigUInt64LE(s + 32)) : table.readUInt32LE(s + 20);
-    if (type === 0 || type === SHT_NOBITS || (flags & SHF_ALLOC) !== 0 || size < TINY_SECTION) continue;
-    total += size;
-  }
-  return total;
-}
-
-// ../core/src/android/manifest.ts
-var ATTR_IDS = {
-  16843291: "versionCode",
-  16843292: "versionName",
-  16843276: "minSdkVersion",
-  16843376: "targetSdkVersion",
-  16842767: "debuggable",
-  16844010: "extractNativeLibs"
 };
-function collect(element, attrs, out) {
-  const str = (k) => {
-    const v = attrs.get(k);
-    return v === void 0 ? void 0 : String(v);
-  };
-  const num = (k) => {
-    const v = attrs.get(k);
-    const n = typeof v === "number" ? v : Number(v);
-    return v === void 0 || Number.isNaN(n) ? void 0 : n;
-  };
-  const bool = (k) => {
-    const v = attrs.get(k);
-    return v === void 0 ? void 0 : v === true || v === "true";
-  };
-  if (element === "manifest") {
-    out.packageName = str("package");
-    out.versionName = str("versionName");
-    out.versionCode = num("versionCode");
-  } else if (element === "uses-sdk") {
-    out.minSdk = num("minSdkVersion");
-    out.targetSdk = num("targetSdkVersion");
-  } else if (element === "application") {
-    out.debuggable = bool("debuggable");
-    out.extractNativeLibs = bool("extractNativeLibs");
+
+// ../core/src/checks/native-debug-symbols.ts
+var MIN_DEBUG_BYTES = 256 * 1024;
+var MIN_DEBUG_SHARE = 0.2;
+var nativeDebugSymbols = {
+  id: "native-debug-symbols",
+  title: "Native libraries not stripped",
+  description: "Native .so files still contain debug info or full symbol tables that users never need.",
+  requires: "build",
+  run(ctx) {
+    const libs = ctx.nativeLibs.filter(
+      (l) => l.debugBytes >= MIN_DEBUG_BYTES && l.debugBytes / l.uncompressed >= MIN_DEBUG_SHARE
+    );
+    if (libs.length === 0) return [];
+    const savingsByFile = Object.fromEntries(
+      libs.map((l) => [l.path, Math.round(l.compressed * (l.debugBytes / l.uncompressed))])
+    );
+    const debugTotal = libs.reduce((s, l) => s + l.debugBytes, 0);
+    return [
+      {
+        severity: "error",
+        title: `${libs.length} native librar${libs.length === 1 ? "y" : "ies"} not stripped (${formatBytes(debugTotal)} of debug symbols)`,
+        files: libs.map((l) => l.path),
+        items: libs.map((l) => ({ path: l.path, bytes: savingsByFile[l.path], note: `${formatBytes(l.debugBytes)} debug data` })).sort((a, b) => b.bytes - a.bytes),
+        savingsByFile,
+        estimate: true,
+        fix: 'Install the NDK version your project uses so Gradle can strip libraries (look for "Unable to strip the following libraries" in the build log), and remove doNotStrip / keepDebugSymbols from packagingOptions. Upload symbols to your crash reporter instead.'
+      }
+    ];
   }
-}
-var RES_STRING_POOL = 1;
-var RES_XML_RESOURCE_MAP = 384;
-var RES_XML_START_ELEMENT = 258;
-var TYPE_STRING = 3;
-var TYPE_INT_DEC = 16;
-var TYPE_INT_HEX = 17;
-var TYPE_BOOLEAN = 18;
-function parseBinaryManifest(buf) {
-  const out = {};
-  let strings = [];
-  let resourceIds = [];
-  let offset = buf.readUInt16LE(2);
-  while (offset + 8 <= buf.length) {
-    const type = buf.readUInt16LE(offset);
-    const headerSize = buf.readUInt16LE(offset + 2);
-    const size = buf.readUInt32LE(offset + 4);
-    if (size < 8) break;
-    if (type === RES_STRING_POOL) {
-      strings = readStringPool(buf, offset);
-    } else if (type === RES_XML_RESOURCE_MAP) {
-      const count = (size - headerSize) / 4;
-      resourceIds = Array.from({ length: count }, (_, i) => buf.readUInt32LE(offset + headerSize + i * 4));
-    } else if (type === RES_XML_START_ELEMENT) {
-      const ext = offset + headerSize;
-      const name = strings[buf.readUInt32LE(ext + 4)] ?? "";
-      if (name === "manifest" || name === "uses-sdk" || name === "application") {
-        const attrStart = buf.readUInt16LE(ext + 8);
-        const attrSize = buf.readUInt16LE(ext + 10);
-        const attrCount = buf.readUInt16LE(ext + 12);
-        const attrs = /* @__PURE__ */ new Map();
-        for (let i = 0; i < attrCount; i++) {
-          const a = ext + attrStart + i * attrSize;
-          const nameIdx = buf.readUInt32LE(a + 4);
-          const attrName = ATTR_IDS[resourceIds[nameIdx] ?? -1] ?? strings[nameIdx] ?? "";
-          const rawIdx = buf.readInt32LE(a + 8);
-          const dataType = buf.readUInt8(a + 15);
-          const data = buf.readUInt32LE(a + 16);
-          let value;
-          if (dataType === TYPE_STRING) value = strings[data] ?? "";
-          else if (dataType === TYPE_INT_DEC || dataType === TYPE_INT_HEX) value = data | 0;
-          else if (dataType === TYPE_BOOLEAN) value = data !== 0;
-          else if (rawIdx >= 0) value = strings[rawIdx] ?? "";
-          else continue;
-          attrs.set(attrName, value);
-        }
-        collect(name, attrs, out);
+};
+
+// ../core/src/checks/r8-off.ts
+var R8_SAVING = 0.35;
+var r8Off = {
+  id: "r8-off",
+  title: "R8 minification is off",
+  description: "Java/Kotlin code is not shrunk or minified by R8 (the React Native template ships with it disabled).",
+  requires: "build",
+  run(ctx) {
+    if (ctx.code.minified !== false || ctx.manifest.debuggable) return [];
+    const dex = ctx.delivered.filter((f) => f.category === "dex");
+    const total = dex.reduce((s, f) => s + f.compressed, 0);
+    if (total === 0) return [];
+    return [
+      {
+        severity: "warn",
+        title: `R8 is off: ${formatBytes(total)} of Java/Kotlin code is not shrunk`,
+        files: dex.map((f) => f.path),
+        savingsByFile: Object.fromEntries(dex.map((f) => [f.path, Math.round(f.compressed * R8_SAVING)])),
+        estimate: true,
+        fix: "Set enableProguardInReleaseBuilds = true in android/app/build.gradle. On Expo, turn on minification for Android release builds in the expo-build-properties plugin. Test the release build afterwards; some libraries need keep rules in proguard-rules.pro."
+      }
+    ];
+  }
+};
+
+// ../core/src/checks/duplicate-files.ts
+var MIN_SIZE = 8 * 1024;
+var duplicateFiles = {
+  id: "duplicate-files",
+  title: "Duplicate files",
+  description: "The same file content is stored more than once (e.g. one image copied into several folders).",
+  requires: "build",
+  run(ctx) {
+    const groups = /* @__PURE__ */ new Map();
+    for (const f of ctx.delivered) {
+      if (f.uncompressed < MIN_SIZE || f.category === "native" || f.category === "dex") continue;
+      const key = `${f.crc32}:${f.uncompressed}`;
+      const group = groups.get(key);
+      if (group) group.push(f);
+      else groups.set(key, [f]);
+    }
+    const dupes = [...groups.values()].filter((g) => g.length > 1);
+    if (dupes.length === 0) return [];
+    const savingsByFile = {};
+    const items = [];
+    for (const [keep, ...extras] of dupes) {
+      for (const extra of extras) {
+        savingsByFile[extra.path] = extra.compressed;
+        items.push({ path: extra.path, bytes: extra.compressed, note: `same as ${keep.path}` });
       }
     }
-    offset += size;
+    items.sort((a, b) => b.bytes - a.bytes);
+    const total = Object.values(savingsByFile).reduce((s, b) => s + b, 0);
+    const copies = Object.keys(savingsByFile).length;
+    return [
+      {
+        severity: total > 512 * 1024 ? "warn" : "info",
+        title: `${dupes.length} file${dupes.length === 1 ? "" : "s"} stored more than once (${copies} extra cop${copies === 1 ? "y" : "ies"}, ${formatBytes(total)})`,
+        files: dupes.flat().map((f) => f.path),
+        items,
+        savingsByFile,
+        fix: "Keep one copy. For RN images, require() the same file instead of copying it; for Android resources, move it to one drawable folder."
+      }
+    ];
   }
-  return out;
+};
+
+// ../core/src/checks/duplicate-modules.ts
+var duplicateModules = {
+  id: "duplicate-modules",
+  title: "Same file bundled twice in the JS",
+  description: "App files with identical content under different paths; Metro bundles each path as its own module.",
+  requires: "sourcemap",
+  run(ctx) {
+    const groups = ctx.packages?.duplicateModules ?? [];
+    if (groups.length === 0) return [];
+    const extraCopies = groups.reduce((s, g) => s + g.paths.length - 1, 0);
+    const extraBytes = groups.reduce((s, g) => s + g.bytes * (g.paths.length - 1), 0);
+    return [
+      {
+        severity: extraBytes >= 5e4 ? "warn" : "info",
+        title: `${extraCopies} file${extraCopies === 1 ? " is" : "s are"} bundled twice in the JS (${formatBytes(extraBytes)} of duplicate source)`,
+        files: groups.flatMap((g) => g.paths),
+        items: groups.flatMap(
+          (g) => g.paths.slice(1).map((path) => ({ path, bytes: g.bytes, note: `same as ${g.paths[0]}` }))
+        ),
+        fix: "Keep one copy and require() it from both places. Each path is a separate module to Metro, so identical files are bundled (and for Hermes, compiled) twice."
+      }
+    ];
+  }
+};
+
+// ../core/src/checks/duplicate-packages.ts
+var MIN_DUPLICATE_BYTES = 1e4;
+var duplicatePackages = {
+  id: "duplicate-packages",
+  title: "npm packages bundled in more than one copy",
+  description: "The same npm package bundled from several node_modules folders, usually two versions.",
+  requires: "sourcemap",
+  run(ctx) {
+    const pk = ctx.packages;
+    if (!pk) return [];
+    const dupes = pk.items.filter((p) => p.installs > 1 && p.duplicateBytes >= MIN_DUPLICATE_BYTES);
+    if (dupes.length === 0) return [];
+    const total = dupes.reduce((s, p) => s + p.duplicateBytes, 0);
+    return [
+      {
+        severity: total >= 5e4 ? "warn" : "info",
+        title: `${dupes.length} npm package${dupes.length === 1 ? " is" : "s are"} bundled more than once (${formatBytes(total)} of extra copies)`,
+        files: [],
+        items: dupes.map((p) => ({ path: p.name, bytes: p.duplicateBytes, note: `${p.installs} copies` })),
+        fix: 'Run npm ls <package> (or yarn why) to see which dependencies pull in each version, then align them, or force one version with "overrides" (npm) or "resolutions" (yarn).'
+      }
+    ];
+  }
+};
+
+// ../core/src/checks/font-name-case.ts
+var fontNameCase = {
+  id: "font-name-case",
+  title: "Font name with the wrong letter case",
+  description: "A fontFamily in the code differs from the font file name only in letter case; Android won't find it.",
+  requires: "sourcemap",
+  run(ctx) {
+    const wrong = (ctx.packages?.fontUsage ?? []).filter((u) => u.writtenAs);
+    if (wrong.length === 0) return [];
+    const fileName = (path) => path.slice(path.lastIndexOf("/") + 1);
+    return [
+      {
+        severity: "warn",
+        title: wrong.length === 1 ? `fontFamily '${wrong[0].writtenAs}' doesn't match the font file ${fileName(wrong[0].path)}` : `${wrong.length} fontFamily names don't match their font files' letter case`,
+        files: wrong.map((u) => u.path),
+        items: wrong.map((u) => ({ path: u.path, bytes: 0, note: `written as '${u.writtenAs}'` })),
+        fix: "Android looks up font files case-sensitively, so text using this name falls back to the default font. Use the exact file name in fontFamily. (Not a size issue, but easy to miss.)"
+      }
+    ];
+  }
+};
+
+// ../core/src/js/font-usage.ts
+var ICON_FONT_FILE = /(^|\/)(AntDesign|Entypo|EvilIcons|Feather|FontAwesome\d?(_\w+)?|FontAwesome5_\w+|FontAwesome6_\w+|Fontisto|Foundation|Ionicons|MaterialCommunityIcons|MaterialIcons|Octicons|SimpleLineIcons|Zocial)\.ttf$/i;
+var escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+var baseName = (path) => path.slice(path.lastIndexOf("/") + 1).replace(/\.(ttf|otf|ttc)$/i, "");
+var iconFamilyKey = (s) => s.replace(/_(solid|regular|brands|light|duotone|thin)$/i, "").replace(/(free|pro)(_meta)?$/i, "").replace(/[-_\s]/g, "").toLowerCase();
+function iconFamiliesIn(sources) {
+  const families = /* @__PURE__ */ new Set();
+  for (const raw of sources) {
+    const s = raw.split("\\").join("/");
+    const m = /\/react-native-vector-icons\/([A-Za-z0-9]+)\.js$/.exec(s) ?? /\/@expo\/vector-icons\/build\/([A-Za-z0-9]+)\.js$/.exec(s) ?? /\/@react-native-vector-icons\/([a-z0-9-]+)\//.exec(s) ?? /\/glyphmaps\/([A-Za-z0-9_]+)\.json$/.exec(s);
+    if (m) families.add(iconFamilyKey(m[1]));
+  }
+  return families;
 }
-function readStringPool(buf, chunk) {
-  const count = buf.readUInt32LE(chunk + 8);
-  const flags = buf.readUInt32LE(chunk + 16);
-  const stringsStart = buf.readUInt32LE(chunk + 20);
-  const utf8 = (flags & 1 << 8) !== 0;
-  const offsetsAt = chunk + buf.readUInt16LE(chunk + 2);
-  const base = chunk + stringsStart;
-  const result = [];
-  for (let i = 0; i < count; i++) {
-    let p = base + buf.readUInt32LE(offsetsAt + i * 4);
-    if (utf8) {
-      p += (buf[p] & 128) !== 0 ? 2 : 1;
-      let len = buf[p];
-      if ((len & 128) !== 0) {
-        len = (len & 127) << 8 | buf[p + 1];
-        p += 2;
-      } else p += 1;
-      result.push(buf.toString("utf8", p, p + len));
-    } else {
-      let len = buf.readUInt16LE(p);
-      if ((len & 32768) !== 0) {
-        len = (len & 32767) << 16 | buf.readUInt16LE(p + 2);
-        p += 4;
-      } else p += 2;
-      result.push(buf.toString("utf16le", p, p + len * 2));
+function fontUsage(fontPaths, appText, iconFamilies) {
+  return fontPaths.map((path) => {
+    const name = baseName(path);
+    if (ICON_FONT_FILE.test(path)) {
+      return { path, used: iconFamilies.has(iconFamilyKey(name)) };
+    }
+    if (!/(^|\/)assets\/fonts\//.test(path) || name.length < 3) return { path, used: null };
+    let writtenAs;
+    for (const m of appText.matchAll(new RegExp(`(['"\`])(${escape(name)})\\1`, "gi"))) {
+      if (m[2] !== name) {
+        writtenAs = m[2];
+        break;
+      }
+    }
+    const withCase = (u) => writtenAs ? { ...u, writtenAs } : u;
+    if (new RegExp(`(['"\`])${escape(name)}\\1`).test(appText)) return withCase({ path, used: true });
+    const family2 = escape(name.split(/[-_]/)[0]);
+    if (new RegExp(`(['"\`])${family2}[-_]?(\\$\\{|\\1\\s*\\+)`).test(appText)) return withCase({ path, used: null });
+    return withCase({ path, used: false });
+  });
+}
+
+// ../core/src/checks/font-weights.ts
+var MANY_WEIGHTS = 8;
+function family(path) {
+  const name = path.slice(path.lastIndexOf("/") + 1).replace(/\.(ttf|otf|ttc)$/i, "");
+  const [first] = name.split(/[-_]/);
+  return first && first.length >= 3 ? first.toLowerCase() : null;
+}
+var displayFamily = (f) => f.path.slice(f.path.lastIndexOf("/") + 1).split(/[-_]/)[0];
+var fontWeights = {
+  id: "font-weights",
+  title: "Unused font weights",
+  description: "Font files the app never uses. With a source map: the exact files no code references; without: families shipped with many weights.",
+  requires: "build",
+  sharperWithSourcemap: true,
+  run(ctx) {
+    const fonts = ctx.delivered.filter((f) => f.category === "font" && !ICON_FONT_FILE.test(f.path));
+    const usage = new Map((ctx.packages?.fontUsage ?? []).map((u) => [u.path, u.used]));
+    const unused = fonts.filter((f) => usage.get(f.path) === false);
+    if (unused.length > 0) {
+      const families = [...new Set(unused.map(displayFamily))];
+      const total = unused.reduce((s, f) => s + f.compressed, 0);
+      const shipped = fonts.filter((f) => families.includes(displayFamily(f))).length;
+      return [
+        {
+          severity: "warn",
+          title: families.length === 1 ? `${unused.length} of ${shipped} ${families[0]} font files are never used (${formatBytes(total)})` : `${unused.length} font files are never used (${formatBytes(total)})`,
+          files: unused.map((f) => f.path),
+          savingsByFile: Object.fromEntries(unused.map((f) => [f.path, f.compressed])),
+          fix: "No code references these font names. Delete the files from your fonts folder (and from android/app/src/main/assets/fonts if they were copied there), then rebuild."
+        }
+      ];
+    }
+    if (fonts.some((f) => usage.get(f.path) === true)) return [];
+    const groups = /* @__PURE__ */ new Map();
+    for (const f of fonts) {
+      const key = family(f.path);
+      if (!key) continue;
+      groups.set(key, [...groups.get(key) ?? [], f]);
+    }
+    return [...groups.values()].filter((files) => files.length >= MANY_WEIGHTS).map((files) => {
+      const name = displayFamily(files[0]);
+      const total = files.reduce((s, f) => s + f.compressed, 0);
+      return {
+        severity: "warn",
+        title: `${files.length} ${name} font files bundled (${formatBytes(total)}); apps usually use 3\u20135 weights`,
+        files: files.map((f) => f.path),
+        fix: `Search your code for the ${name} names you actually use (fontFamily: '${name}-\u2026'). Delete the other files from your fonts folder and from android/app/src/main/assets/fonts if they were copied there. Run with --project to see exactly which files are unused.`
+      };
+    });
+  }
+};
+
+// ../core/src/data/package-suggestions.ts
+var ICON_LIBRARY_ADVICE = () => "Metro bundles every icon the library's index file exports, not only the ones you use. If the library has one file per icon, import from those files; otherwise copy the few SVG icons you need into the app.";
+var PACKAGE_SUGGESTIONS = [
+  {
+    match: "moment",
+    advice: (bundled) => {
+      const other = ["date-fns", "dayjs", "luxon"].find((p) => bundled.has(p));
+      return other ? `The bundle already includes ${other}: move the code that still uses moment to ${other} and remove moment.` : "Replace with dayjs (about 7 KB, similar API) or date-fns. moment is large and cannot be split.";
+    }
+  },
+  {
+    // Importing from the package root pulls in every function; a whole date-fns is well over 100 KB.
+    match: "date-fns",
+    minBytes: 1e5,
+    advice: () => "Imports from 'date-fns' pull in the whole library because Metro doesn't tree-shake. Import each function from its own path instead (for example date-fns/format)."
+  },
+  {
+    match: "lodash",
+    advice: () => "Import single functions (import debounce from 'lodash/debounce') instead of the whole library; Metro does not tree-shake."
+  },
+  {
+    match: "ramda",
+    minBytes: 5e4,
+    advice: () => "Imports from 'ramda' pull in the whole library. Import single functions (ramda/src/map) or use plain JS for the few you need."
+  },
+  { match: "aws-sdk", advice: () => "Use the modular v3 clients (@aws-sdk/client-s3 and so on) instead of the whole v2 SDK." },
+  {
+    match: /^(react-native-heroicons|lucide-react-native|phosphor-react-native|@tabler\/icons-react-native)$/,
+    advice: ICON_LIBRARY_ADVICE
+  }
+];
+var DEFAULT_MIN_BYTES = 3e4;
+function suggestionFor(name) {
+  return PACKAGE_SUGGESTIONS.find((s) => typeof s.match === "string" ? s.match === name : s.match.test(name));
+}
+
+// ../core/src/checks/heavy-package.ts
+var heavyPackage = {
+  id: "heavy-package",
+  title: "Heavy npm packages with lighter options",
+  description: "npm packages known to be large in a React Native bundle, with a lighter alternative or import style.",
+  requires: "sourcemap",
+  run(ctx) {
+    const pk = ctx.packages;
+    if (!pk) return [];
+    const unit = pk.kind === "hermes" ? "bytecode" : "JS";
+    const bundled = new Set(pk.items.map((p) => p.name));
+    return pk.items.flatMap((p) => {
+      const suggestion = suggestionFor(p.name);
+      if (!suggestion || p.bytes < (suggestion.minBytes ?? DEFAULT_MIN_BYTES)) return [];
+      const transitive = pk.directImports !== null && !pk.directImports.includes(p.name);
+      return [
+        {
+          severity: transitive ? "info" : "warn",
+          title: `${p.name} adds ${formatBytes(p.bytes)} of ${unit} to the JS bundle${transitive ? " (pulled in by another package)" : ""}`,
+          files: [],
+          items: [],
+          fix: transitive ? `Your code doesn't import ${p.name}; another dependency does. Run npm ls ${p.name} (or yarn why ${p.name}) to see which one, and if that library is easy to replace, consider a lighter one.` : suggestion.advice(bundled)
+        }
+      ];
+    });
+  }
+};
+
+// ../core/src/checks/hermes-off.ts
+var hermesOff = {
+  id: "hermes-off",
+  title: "Hermes is disabled",
+  description: "The JS bundle is plain JavaScript run by JSC instead of precompiled Hermes bytecode.",
+  requires: "build",
+  run(ctx) {
+    if (ctx.js?.engine !== "jsc") return [];
+    const jsc = ctx.delivered.filter((f) => /\/libjsc\.so$/.test(f.path));
+    return [
+      {
+        severity: "warn",
+        title: "Hermes is disabled (app runs on JSC)",
+        files: [ctx.js.bundlePath, ...jsc.map((f) => f.path)],
+        fix: 'Enable Hermes (hermesEnabled=true in android/gradle.properties, or "jsEngine": "hermes" in app.json). Faster startup, lower memory, and libjsc.so is no longer shipped.'
+      }
+    ];
+  }
+};
+
+// ../core/src/checks/icon-fonts.ts
+var FULL_SET_MIN = 12;
+function fix(keep = ["MaterialIcons.ttf"]) {
+  const names = keep.map((n) => `"${n}"`).join(", ");
+  return `Ship only the fonts you use: in android/app/build.gradle set project.ext.vectoricons = [ iconFontNames: [ ${names} ] ], or import per-family packages (@react-native-vector-icons/<family>).`;
+}
+var baseName2 = (path) => path.slice(path.lastIndexOf("/") + 1);
+var iconFonts = {
+  id: "icon-fonts",
+  title: "Unused icon fonts",
+  description: "Icon fonts the app never uses. With a source map: fonts whose icon family is never imported; without: the full default set of react-native-vector-icons.",
+  requires: "build",
+  sharperWithSourcemap: true,
+  run(ctx) {
+    const fonts = ctx.delivered.filter((f) => f.category === "font" && ICON_FONT_FILE.test(f.path));
+    if (fonts.length === 0) return [];
+    const usage = new Map((ctx.packages?.fontUsage ?? []).map((u) => [u.path, u.used]));
+    if (fonts.some((f) => usage.has(f.path))) {
+      const unused = fonts.filter((f) => usage.get(f.path) === false);
+      if (unused.length === 0) return [];
+      const total2 = unused.reduce((s, f) => s + f.compressed, 0);
+      return [
+        {
+          severity: "warn",
+          title: `${unused.length} of ${fonts.length} icon fonts are bundled but never used (${formatBytes(total2)})`,
+          files: unused.map((f) => f.path),
+          savingsByFile: Object.fromEntries(unused.map((f) => [f.path, f.compressed])),
+          fix: fix(fonts.filter((f) => usage.get(f.path) !== false).map((f) => baseName2(f.path)))
+        }
+      ];
+    }
+    if (fonts.length < FULL_SET_MIN) return [];
+    const total = fonts.reduce((s, f) => s + f.compressed, 0);
+    return [
+      {
+        severity: "warn",
+        title: `All ${fonts.length} icon fonts bundled (${formatBytes(total)}); most apps use 1\u20133`,
+        files: fonts.map((f) => f.path),
+        fix: `${fix()} Run with --project to see exactly which ones are unused.`
+      }
+    ];
+  }
+};
+
+// ../core/src/checks/image-large.ts
+var THRESHOLD = 1e5;
+var WEBP_SAVING = 0.4;
+var imageLarge = {
+  id: "image-large",
+  title: "Large PNG/JPEG images",
+  description: `PNG or JPEG files over ${THRESHOLD / 1e3} KB that would usually be much smaller as WebP.`,
+  requires: "build",
+  run(ctx) {
+    const big = ctx.delivered.filter((f) => f.category === "image" && /\.(png|jpe?g)$/i.test(f.path) && !/\.9\.png$/i.test(f.path)).filter((f) => f.uncompressed >= THRESHOLD).sort((a, b) => b.compressed - a.compressed);
+    if (big.length === 0) return [];
+    const total = big.reduce((s, f) => s + f.compressed, 0);
+    const savingsByFile = Object.fromEntries(big.map((f) => [f.path, Math.round(f.compressed * WEBP_SAVING)]));
+    return [
+      {
+        severity: "warn",
+        title: `${big.length} PNG/JPEG image${big.length === 1 ? "" : "s"} over ${THRESHOLD / 1e3} KB (${formatBytes(total)})`,
+        files: big.map((f) => f.path),
+        savingsByFile,
+        estimate: true,
+        fix: ctx.artifact === "ipa" ? "Put the image in an asset catalog (.xcassets) so Xcode compresses it, or convert it to a smaller format (HEIC / WebP). Also check it is not far larger than it is displayed." : "Convert to WebP (Android Studio: right-click \u2192 Convert to WebP, or `cwebp -q 80`). Also check the image is not far larger than it is displayed."
+      }
+    ];
+  }
+};
+
+// ../core/src/checks/lottie-large.ts
+var LARGE = 1e5;
+var EMBEDDED_IMAGES = 2e4;
+var BUNDLED_WARN = 3e5;
+var lottieLarge = {
+  id: "lottie-large",
+  title: "Large Lottie animations",
+  description: "Large Lottie animations: files in res/raw or assets, and (with a source map) JSON the code require()s into the JS bundle.",
+  requires: "build",
+  sharperWithSourcemap: true,
+  run(ctx) {
+    const heavy = ctx.lottie.filter((l) => l.uncompressed >= LARGE || l.embeddedImageBytes >= EMBEDDED_IMAGES);
+    if (heavy.length === 0) return [];
+    const total = heavy.reduce((s, l) => s + l.compressed, 0);
+    const unpacked = heavy.reduce((s, l) => s + l.uncompressed, 0);
+    const withImages = heavy.filter((l) => l.embeddedImages > 0).length;
+    const bundled = heavy.filter((l) => l.format === "bundled");
+    const bundledDownload = bundled.reduce((s, l) => s + l.compressed, 0);
+    const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+    const fixes = [];
+    if (withImages > 0) {
+      fixes.push(
+        "Embedded images (base64 PNG/JPG inside the JSON) barely compress: shrink them or swap them for vector shapes in After Effects / LottieFiles, or use dotLottie with WebP images."
+      );
+    }
+    if (bundled.length > 0) {
+      fixes.push(
+        "Animations you require() are compiled into the JS bundle, so every user downloads and loads them at startup. Load the big ones from a URL or from native assets instead (lottie-react-native's source also accepts a {uri}), and remove copies of the same file."
+      );
+    }
+    fixes.push("Trim unused layers and frames on the biggest animations, especially ones that loop or play on startup.");
+    return [
+      {
+        // Vector-only JSON files compress very well, so on their own they mostly cost parse time and
+        // memory. Embedded images, or a lot of animation compiled into the JS bundle, cost real download.
+        severity: withImages > 0 || bundledDownload >= BUNDLED_WARN ? "warn" : "info",
+        title: `${plural(heavy.length, "Lottie animation")}${bundled.length === heavy.length ? " in the JS bundle" : ""} ${heavy.length === 1 ? "takes" : "take"} ~${formatBytes(total)} (${formatBytes(unpacked)} unpacked)` + (withImages > 0 ? `; ${withImages} ${withImages === 1 ? "has" : "have"} images embedded inside` : "") + (bundled.length > 0 && bundled.length < heavy.length ? `; ${bundled.length} ${bundled.length === 1 ? "is" : "are"} inside the JS bundle` : ""),
+        files: heavy.map((l) => l.path),
+        items: heavy.map((l) => ({
+          path: l.path,
+          bytes: l.compressed,
+          note: [
+            l.format === "bundled" ? "require()d, in the JS bundle" : l.format === "dotlottie" ? "dotLottie file" : "",
+            l.embeddedImages > 0 ? `${plural(l.embeddedImages, "embedded image")}, ${formatBytes(l.embeddedImageBytes)}` : ""
+          ].filter(Boolean).join("; ") || void 0
+        })),
+        fix: fixes.join(" ")
+      }
+    ];
+  }
+};
+
+// ../core/src/checks/unused-images.ts
+var unusedImages = {
+  id: "unused-images",
+  title: "Unused images",
+  description: "Images bundled by Metro that no app code references (needs a source map).",
+  requires: "sourcemap",
+  run(ctx) {
+    const usage = ctx.packages?.imageUsage;
+    if (!usage) return [];
+    const unused = usage.filter((u) => u.used === false).map((u) => u.path);
+    const delivered = new Map(ctx.delivered.map((f) => [f.path, f.compressed]));
+    const files = unused.filter((p) => delivered.has(p));
+    if (files.length === 0) return [];
+    const total = files.reduce((s, p) => s + (delivered.get(p) ?? 0), 0);
+    return [
+      {
+        severity: "warn",
+        title: `${files.length} bundled image${files.length === 1 ? "" : "s"} the app never uses (${formatBytes(total)})`,
+        files,
+        savingsByFile: Object.fromEntries(files.map((p) => [p, delivered.get(p) ?? 0])),
+        fix: "No require() or <Image> in your code references these. Remove the image files (and the dead require() if any), then rebuild. If one is loaded by a path built at runtime, keep it \u2014 this check can\u2019t see those."
+      }
+    ];
+  }
+};
+
+// ../core/src/checks/sourcemap-in-build.ts
+var sourcemapInBuild = {
+  id: "sourcemap-in-build",
+  title: "Source maps shipped in the build",
+  description: "Source map files are only needed for crash symbolication and should not be shipped to users.",
+  requires: "build",
+  run(ctx) {
+    const maps = ctx.delivered.filter((f) => /\.map$/i.test(f.path));
+    if (maps.length === 0) return [];
+    const total = maps.reduce((s, f) => s + f.compressed, 0);
+    return [
+      {
+        severity: "error",
+        title: `${maps.length} source map file${maps.length === 1 ? "" : "s"} shipped to users (${formatBytes(total)})`,
+        files: maps.map((f) => f.path),
+        savingsByFile: Object.fromEntries(maps.map((f) => [f.path, f.compressed])),
+        fix: "Remove .map files from android/app/src/main/assets and upload them to your crash reporter (Sentry, Crashlytics) instead."
+      }
+    ];
+  }
+};
+
+// ../core/src/checks/registry.ts
+var CHECKS = [
+  debuggable,
+  abiUniversal,
+  nativeDebugSymbols,
+  sourcemapInBuild,
+  r8Off,
+  hermesOff,
+  imageLarge,
+  unusedImages,
+  iconFonts,
+  fontWeights,
+  lottieLarge,
+  duplicateFiles,
+  heavyPackage,
+  duplicatePackages,
+  duplicateModules,
+  fontNameCase
+];
+var SEVERITY_RANK = { error: 0, warn: 1, info: 2 };
+function runChecks(ctx, ignore = []) {
+  const findings = [];
+  const bestByFile = /* @__PURE__ */ new Map();
+  const warnings = [];
+  const sizes = new Map(ctx.files.map((f) => [f.path, f.compressed]));
+  for (const check of CHECKS) {
+    if (ignore.includes(check.id)) continue;
+    let results;
+    try {
+      results = check.run(ctx);
+    } catch (err2) {
+      warnings.push(`Check "${check.id}" failed: ${err2.message}`);
+      continue;
+    }
+    for (const { savingsByFile, estimate, items, ...rest } of results) {
+      const finding = { checkId: check.id, ...rest, items: items ?? itemsFor(rest.files, sizes) };
+      if (savingsByFile) {
+        const bytes = Object.values(savingsByFile).reduce((s, b) => s + b, 0);
+        finding.savings = { bytes, estimate: estimate ?? false };
+        for (const [path, b] of Object.entries(savingsByFile)) {
+          bestByFile.set(path, Math.max(bestByFile.get(path) ?? 0, b));
+        }
+      }
+      findings.push(finding);
     }
   }
-  return result;
+  const rank2 = (f) => f.checkId === "debuggable" ? -1 : SEVERITY_RANK[f.severity];
+  findings.sort((a, b) => rank2(a) - rank2(b) || (b.savings?.bytes ?? 0) - (a.savings?.bytes ?? 0));
+  const savingsBytes = [...bestByFile.values()].reduce((s, b) => s + b, 0);
+  return { findings, savingsBytes, warnings };
 }
-function* fields(buf) {
-  let p = 0;
-  const varint = () => {
-    let result = 0;
-    let shift = 0;
-    for (; ; ) {
-      const b = buf[p++];
-      result += (b & 127) * 2 ** shift;
-      if ((b & 128) === 0) return result;
-      shift += 7;
-    }
-  };
-  while (p < buf.length) {
-    const key = varint();
-    const num = Math.floor(key / 8);
-    const wire = key & 7;
-    if (wire === 0) yield { num, wire, varint: varint() };
-    else if (wire === 2) {
-      const len = varint();
-      yield { num, wire, bytes: buf.subarray(p, p + len) };
-      p += len;
-    } else if (wire === 5) p += 4;
-    else if (wire === 1) p += 8;
-    else return;
+function itemsFor(paths, sizes) {
+  return paths.map((path) => ({ path, bytes: sizes.get(path) ?? 0 })).sort((a, b) => b.bytes - a.bytes);
+}
+
+// ../core/src/js/hermes.ts
+var HERMES_MAGIC = Buffer.from([198, 31, 188, 3, 193, 3, 25, 31]);
+function detectBundleKind(head) {
+  if (head.length >= 12 && head.subarray(0, 8).equals(HERMES_MAGIC)) {
+    return { engine: "hermes", hermesBytecodeVersion: head.readUInt32LE(8) };
   }
-}
-function parseProtoManifest(buf) {
-  const out = {};
-  walkProtoNode(buf, out);
-  return out;
-}
-function walkProtoNode(node, out) {
-  for (const f of fields(node)) {
-    if (f.num === 1 && f.bytes) walkProtoElement(f.bytes, out);
-  }
-}
-function walkProtoElement(el, out) {
-  let name = "";
-  const attrs = /* @__PURE__ */ new Map();
-  const children = [];
-  for (const f of fields(el)) {
-    if (f.num === 3 && f.bytes) name = f.bytes.toString("utf8");
-    else if (f.num === 4 && f.bytes) {
-      const [k, v] = protoAttribute(f.bytes);
-      if (k) attrs.set(k, v);
-    } else if (f.num === 5 && f.bytes) children.push(f.bytes);
-  }
-  collect(name, attrs, out);
-  for (const child of children) walkProtoNode(child, out);
-}
-function protoAttribute(attr) {
-  let name = "";
-  let value = "";
-  let resourceId;
-  let compiled;
-  for (const f of fields(attr)) {
-    if (f.num === 2 && f.bytes) name = f.bytes.toString("utf8");
-    else if (f.num === 3 && f.bytes) value = f.bytes.toString("utf8");
-    else if (f.num === 5 && f.varint !== void 0) resourceId = f.varint;
-    else if (f.num === 6 && f.bytes) compiled = protoPrimitive(f.bytes);
-  }
-  if (resourceId !== void 0 && ATTR_IDS[resourceId]) name = ATTR_IDS[resourceId];
-  return [name, value === "" && compiled !== void 0 ? compiled : value];
-}
-function protoPrimitive(item) {
-  for (const f of fields(item)) {
-    if (f.num !== 7 || !f.bytes) continue;
-    for (const p of fields(f.bytes)) {
-      if ((p.num === 6 || p.num === 7) && p.varint !== void 0) return p.varint | 0;
-      if (p.num === 8 && p.varint !== void 0) return p.varint !== 0;
-    }
-  }
-  return void 0;
+  const text = head.toString("utf8").trimStart();
+  if (/^(var |__d\(|\(function|!function|"use strict"|'use strict')/.test(text)) return { engine: "jsc" };
+  return { engine: "unknown" };
 }
 
 // ../../node_modules/fflate/esm/index.mjs
@@ -78200,782 +78688,66 @@ try {
 } catch (e) {
 }
 
-// ../core/src/archive/zip.ts
-var EOCD_SIG = 101010256;
-var ZIP64_LOCATOR_SIG = 117853008;
-var ZIP64_EOCD_SIG = 101075792;
-var CENTRAL_SIG = 33639248;
-var LOCAL_SIG = 67324752;
-var MAX_COMMENT = 65535;
-var CHUNK = 1024 * 1024;
-var ZipError = class extends Error {
-};
-var ZipArchive = class _ZipArchive {
-  constructor(blob, byPath, entries) {
-    this.blob = blob;
-    this.byPath = byPath;
-    this.entries = entries;
-  }
-  blob;
-  byPath;
-  entries;
-  static async open(blob) {
-    const { cdOffset, cdSize, count } = await readEndOfCentralDirectory(blob);
-    const cd = await slice(blob, cdOffset, cdSize);
-    const view = new DataView(cd.buffer, cd.byteOffset, cd.byteLength);
-    const byPath = /* @__PURE__ */ new Map();
-    const entries = [];
-    let p = 0;
-    for (let i = 0; i < count; i++) {
-      if (p + 46 > cd.length || view.getUint32(p, true) !== CENTRAL_SIG) {
-        throw new ZipError("Corrupt zip: bad central directory entry");
-      }
-      const method = view.getUint16(p + 10, true);
-      const crc32 = view.getUint32(p + 16, true);
-      let compressedSize = view.getUint32(p + 20, true);
-      let uncompressedSize = view.getUint32(p + 24, true);
-      const nameLen = view.getUint16(p + 28, true);
-      const extraLen = view.getUint16(p + 30, true);
-      const commentLen = view.getUint16(p + 32, true);
-      let localHeaderOffset = view.getUint32(p + 42, true);
-      const path = cd.toString("utf8", p + 46, p + 46 + nameLen);
-      if (uncompressedSize === 4294967295 || compressedSize === 4294967295 || localHeaderOffset === 4294967295) {
-        let e = p + 46 + nameLen;
-        const end = e + extraLen;
-        while (e + 4 <= end) {
-          const id = view.getUint16(e, true);
-          const size = view.getUint16(e + 2, true);
-          if (id === 1) {
-            let f = e + 4;
-            if (uncompressedSize === 4294967295) uncompressedSize = readU64(view, f), f += 8;
-            if (compressedSize === 4294967295) compressedSize = readU64(view, f), f += 8;
-            if (localHeaderOffset === 4294967295) localHeaderOffset = readU64(view, f);
-            break;
-          }
-          e += 4 + size;
-        }
-      }
-      if (!path.endsWith("/")) {
-        const entry = {
-          path,
-          compressedSize,
-          uncompressedSize,
-          compressionMethod: method,
-          crc32,
-          localHeaderOffset
-        };
-        byPath.set(path, entry);
-        entries.push({ path, compressedSize, uncompressedSize, compressionMethod: method, crc32 });
-      }
-      p += 46 + nameLen + extraLen + commentLen;
-    }
-    return new _ZipArchive(blob, byPath, entries);
-  }
-  has(path) {
-    return this.byPath.has(path);
-  }
-  /** Read an entry's (decompressed) bytes. `limit` stops early, e.g. to read only a header. */
-  async read(path, limit = Infinity) {
-    const chunks = [];
-    let total = 0;
-    await this.stream(path, (chunk) => {
-      chunks.push(chunk);
-      total += chunk.length;
-      return total < limit;
-    });
-    const buf = Buffer.concat(chunks);
-    return limit === Infinity ? buf : buf.subarray(0, limit);
-  }
-  /**
-   * Read the (decompressed) bytes from `start` to the end of an entry, keeping only that range in
-   * memory. Used for trailers such as ELF section tables at the end of large native libraries.
-   */
-  async readFrom(path, start) {
-    const chunks = [];
-    let pos = 0;
-    await this.stream(path, (chunk) => {
-      const end = pos + chunk.length;
-      if (end > start) chunks.push(pos >= start ? chunk : chunk.subarray(start - pos));
-      pos = end;
-      return true;
-    });
-    return Buffer.concat(chunks);
-  }
-  /** Nothing to release: Blob reads are stateless. Kept so callers don't depend on the backing store. */
-  close() {
-  }
-  /** Feeds decompressed chunks to `onData` until it returns false or the entry ends. */
-  async stream(path, onData) {
-    const entry = this.byPath.get(path);
-    if (!entry) throw new ZipError(`Entry not found: ${path}`);
-    if (entry.compressionMethod !== 0 && entry.compressionMethod !== 8) {
-      throw new ZipError(`Unsupported compression method ${entry.compressionMethod} for ${path}`);
-    }
-    const local = await slice(this.blob, entry.localHeaderOffset, 30);
-    if (local.readUInt32LE(0) !== LOCAL_SIG) throw new ZipError(`Corrupt zip: bad local header for ${path}`);
-    const dataStart = entry.localHeaderOffset + 30 + local.readUInt16LE(26) + local.readUInt16LE(28);
-    const dataEnd = dataStart + entry.compressedSize;
-    let more = true;
-    const inflate = entry.compressionMethod === 8 ? new Inflate((chunk) => {
-      if (more) more = onData(chunk);
-    }) : null;
-    for (let off = dataStart; off < dataEnd && more; off += CHUNK) {
-      const len = Math.min(CHUNK, dataEnd - off);
-      const raw = await slice(this.blob, off, len);
-      if (inflate) inflate.push(raw, off + len >= dataEnd);
-      else more = onData(raw);
-    }
-  }
-};
-async function slice(blob, offset, length) {
-  return Buffer.from(await blob.slice(offset, offset + length).arrayBuffer());
+// ../core/src/assets/lottie.ts
+function looksLikeLottie(head) {
+  const start = head.trimStart();
+  if (!start.startsWith("{")) return false;
+  const bodymovinHeader = /"v"\s*:\s*"\d+\.\d+/.test(start) && /"(fr|ip|op|layers)"\s*:/.test(start);
+  const layersFirst = /"layers"\s*:\s*\[/.test(start) && (/"ddd"\s*:/.test(start) || /"ks"\s*:/.test(start) && /"ty"\s*:/.test(start));
+  return bodymovinHeader || layersFirst;
 }
-function readU64(view, offset) {
-  return Number(view.getBigUint64(offset, true));
-}
-async function readEndOfCentralDirectory(blob) {
-  const tailSize = Math.min(blob.size, 22 + MAX_COMMENT + 20);
-  const tailStart = blob.size - tailSize;
-  const tail = await slice(blob, tailStart, tailSize);
-  let eocd = -1;
-  for (let i = tail.length - 22; i >= 0; i--) {
-    if (tail.readUInt32LE(i) === EOCD_SIG) {
-      eocd = i;
-      break;
-    }
+function embeddedImages(json) {
+  const pattern = /"p"\s*:\s*"data:image\/[a-z+]+;base64,([A-Za-z0-9+/=\\]+)"/g;
+  let count = 0;
+  let bytes = 0;
+  for (const match of json.matchAll(pattern)) {
+    const base64 = match[1].replace(/\\\//g, "/");
+    count++;
+    bytes += Math.floor(base64.replace(/=+$/, "").length * 3 / 4);
   }
-  if (eocd === -1) throw new ZipError("Not a zip file (end of central directory not found)");
-  let count = tail.readUInt16LE(eocd + 10);
-  let cdSize = tail.readUInt32LE(eocd + 12);
-  let cdOffset = tail.readUInt32LE(eocd + 16);
-  if (count === 65535 || cdSize === 4294967295 || cdOffset === 4294967295) {
-    const loc = eocd - 20;
-    if (loc < 0 || tail.readUInt32LE(loc) !== ZIP64_LOCATOR_SIG) throw new ZipError("Corrupt zip64 locator");
-    const z64 = await slice(blob, Number(tail.readBigUInt64LE(loc + 8)), 56);
-    if (z64.readUInt32LE(0) !== ZIP64_EOCD_SIG) throw new ZipError("Corrupt zip64 end of central directory");
-    count = Number(z64.readBigUInt64LE(32));
-    cdSize = Number(z64.readBigUInt64LE(40));
-    cdOffset = Number(z64.readBigUInt64LE(48));
-  }
-  return { cdOffset, cdSize, count };
+  return { count, bytes };
 }
 
-// ../core/src/format.ts
-var MB = 1e6;
-var KB = 1e3;
-function formatBytes(bytes) {
-  const abs = Math.abs(bytes);
-  if (abs >= MB) return `${(bytes / MB).toFixed(1)} MB`;
-  if (abs >= KB) return `${Math.round(bytes / KB)} KB`;
-  return `${bytes} B`;
+// ../core/src/js/image-usage.ts
+var IMAGE_EXT2 = /\.(png|jpe?g|gif|webp|bmp)$/i;
+var STRIP_EXT = /\.(png|jpe?g|gif|webp|bmp)$/i;
+var flattenSeg = (s) => s.toLowerCase().replace(/@\d+(\.\d+)?x$/i, "").replace(/[^a-z0-9]/g, "");
+function lastTwo(segs) {
+  const flat = segs.map((s, i) => flattenSeg(i === segs.length - 1 ? s.replace(STRIP_EXT, "") : s)).filter(Boolean);
+  if (flat.length < 2) return null;
+  const parent = flat[flat.length - 2];
+  return { key: `${parent}_${flat[flat.length - 1]}`, parent };
 }
-function formatDelta(bytes) {
-  if (bytes === 0) return "0 B";
-  return `${bytes > 0 ? "+" : "\u2212"}${formatBytes(Math.abs(bytes))}`;
+function referenced(files) {
+  const keys = /* @__PURE__ */ new Set();
+  const parents = /* @__PURE__ */ new Set();
+  for (const file of files) {
+    for (const m of file.text.matchAll(/['"`]([^'"`]+\.(?:png|jpe?g|gif|webp|bmp))['"`]/gi)) {
+      const raw = m[1].replace(/[?#].*$/, "");
+      if (/^[a-z][a-z0-9+.-]*:\/\//i.test(raw)) continue;
+      const lt = lastTwo(raw.split(/[\\/]+/).filter((s) => s && s !== "." && s !== ".."));
+      if (!lt) continue;
+      keys.add(lt.key);
+      parents.add(lt.parent);
+    }
+  }
+  return { keys, parents };
 }
-function shortPath(path) {
-  const parts = path.split("/");
-  const sourceFile = parts.length > 2 && !/^(base|assets|res|lib|META-INF)$/.test(parts[0]) && /\.(json|[jt]sx?)$/.test(path);
-  return parts.includes("res") || parts.includes("lib") || sourceFile ? parts.slice(-2).join("/") : parts[parts.length - 1];
-}
-
-// ../core/src/checks/abi-universal.ts
-var abiUniversal = {
-  id: "abi-universal",
-  title: "Universal APK with several ABIs",
-  description: "An APK that bundles native libraries for more than one CPU architecture makes every user download all of them.",
-  requires: "build",
-  run(ctx) {
-    if (ctx.artifact !== "apk") return [];
-    const abis = [...new Set(ctx.files.filter((f) => f.abi).map((f) => f.abi))];
-    if (abis.length < 2) return [];
-    const others = ctx.files.filter((f) => f.abi && f.abi !== ctx.abi);
-    const savingsByFile = Object.fromEntries(others.map((f) => [f.path, f.compressed]));
-    const bytes = others.reduce((s, f) => s + f.compressed, 0);
-    return [
-      {
-        severity: "error",
-        title: `APK ships ${abis.length} ABIs (${abis.join(", ")}): every phone downloads ${formatBytes(bytes)} of native code it can't use`,
-        files: others.map((f) => f.path),
-        savingsByFile,
-        fix: "Don't delete an ABI: older 32-bit phones still need armeabi-v7a. Give each phone only its own instead: upload an AAB to Google Play (it splits by ABI automatically), or for APKs you share directly, enable ABI splits: splits { abi { enable true; universalApk false } } in android/app/build.gradle."
-      }
-    ];
-  }
-};
-
-// ../core/src/checks/debuggable.ts
-var debuggable = {
-  id: "debuggable",
-  title: "Debug build",
-  description: 'The manifest has android:debuggable="true", so sizes do not reflect what users download.',
-  requires: "build",
-  run(ctx) {
-    if (!ctx.manifest.debuggable) return [];
-    return [
-      {
-        severity: "error",
-        title: "This is a debug build: sizes are not what users download",
-        files: [],
-        fix: "Analyze a release build: cd android && ./gradlew bundleRelease (or assembleRelease), or an EAS production build."
-      }
-    ];
-  }
-};
-
-// ../core/src/checks/native-debug-symbols.ts
-var MIN_DEBUG_BYTES = 256 * 1024;
-var MIN_DEBUG_SHARE = 0.2;
-var nativeDebugSymbols = {
-  id: "native-debug-symbols",
-  title: "Native libraries not stripped",
-  description: "Native .so files still contain debug info or full symbol tables that users never need.",
-  requires: "build",
-  run(ctx) {
-    const libs = ctx.nativeLibs.filter(
-      (l) => l.debugBytes >= MIN_DEBUG_BYTES && l.debugBytes / l.uncompressed >= MIN_DEBUG_SHARE
-    );
-    if (libs.length === 0) return [];
-    const savingsByFile = Object.fromEntries(
-      libs.map((l) => [l.path, Math.round(l.compressed * (l.debugBytes / l.uncompressed))])
-    );
-    const debugTotal = libs.reduce((s, l) => s + l.debugBytes, 0);
-    return [
-      {
-        severity: "error",
-        title: `${libs.length} native librar${libs.length === 1 ? "y" : "ies"} not stripped (${formatBytes(debugTotal)} of debug symbols)`,
-        files: libs.map((l) => l.path),
-        items: libs.map((l) => ({ path: l.path, bytes: savingsByFile[l.path], note: `${formatBytes(l.debugBytes)} debug data` })).sort((a, b) => b.bytes - a.bytes),
-        savingsByFile,
-        estimate: true,
-        fix: 'Install the NDK version your project uses so Gradle can strip libraries (look for "Unable to strip the following libraries" in the build log), and remove doNotStrip / keepDebugSymbols from packagingOptions. Upload symbols to your crash reporter instead.'
-      }
-    ];
-  }
-};
-
-// ../core/src/checks/r8-off.ts
-var R8_SAVING = 0.35;
-var r8Off = {
-  id: "r8-off",
-  title: "R8 minification is off",
-  description: "Java/Kotlin code is not shrunk or minified by R8 (the React Native template ships with it disabled).",
-  requires: "build",
-  run(ctx) {
-    if (ctx.code.minified !== false || ctx.manifest.debuggable) return [];
-    const dex = ctx.delivered.filter((f) => f.category === "dex");
-    const total = dex.reduce((s, f) => s + f.compressed, 0);
-    if (total === 0) return [];
-    return [
-      {
-        severity: "warn",
-        title: `R8 is off: ${formatBytes(total)} of Java/Kotlin code is not shrunk`,
-        files: dex.map((f) => f.path),
-        savingsByFile: Object.fromEntries(dex.map((f) => [f.path, Math.round(f.compressed * R8_SAVING)])),
-        estimate: true,
-        fix: "Set enableProguardInReleaseBuilds = true in android/app/build.gradle. On Expo, turn on minification for Android release builds in the expo-build-properties plugin. Test the release build afterwards; some libraries need keep rules in proguard-rules.pro."
-      }
-    ];
-  }
-};
-
-// ../core/src/checks/duplicate-files.ts
-var MIN_SIZE = 8 * 1024;
-var duplicateFiles = {
-  id: "duplicate-files",
-  title: "Duplicate files",
-  description: "The same file content is stored more than once (e.g. one image copied into several folders).",
-  requires: "build",
-  run(ctx) {
-    const groups = /* @__PURE__ */ new Map();
-    for (const f of ctx.delivered) {
-      if (f.uncompressed < MIN_SIZE || f.category === "native" || f.category === "dex") continue;
-      const key = `${f.crc32}:${f.uncompressed}`;
-      const group = groups.get(key);
-      if (group) group.push(f);
-      else groups.set(key, [f]);
-    }
-    const dupes = [...groups.values()].filter((g) => g.length > 1);
-    if (dupes.length === 0) return [];
-    const savingsByFile = {};
-    const items = [];
-    for (const [keep, ...extras] of dupes) {
-      for (const extra of extras) {
-        savingsByFile[extra.path] = extra.compressed;
-        items.push({ path: extra.path, bytes: extra.compressed, note: `same as ${keep.path}` });
-      }
-    }
-    items.sort((a, b) => b.bytes - a.bytes);
-    const total = Object.values(savingsByFile).reduce((s, b) => s + b, 0);
-    const copies = Object.keys(savingsByFile).length;
-    return [
-      {
-        severity: total > 512 * 1024 ? "warn" : "info",
-        title: `${dupes.length} file${dupes.length === 1 ? "" : "s"} stored more than once (${copies} extra cop${copies === 1 ? "y" : "ies"}, ${formatBytes(total)})`,
-        files: dupes.flat().map((f) => f.path),
-        items,
-        savingsByFile,
-        fix: "Keep one copy. For RN images, require() the same file instead of copying it; for Android resources, move it to one drawable folder."
-      }
-    ];
-  }
-};
-
-// ../core/src/checks/duplicate-modules.ts
-var duplicateModules = {
-  id: "duplicate-modules",
-  title: "Same file bundled twice in the JS",
-  description: "App files with identical content under different paths; Metro bundles each path as its own module.",
-  requires: "sourcemap",
-  run(ctx) {
-    const groups = ctx.packages?.duplicateModules ?? [];
-    if (groups.length === 0) return [];
-    const extraCopies = groups.reduce((s, g) => s + g.paths.length - 1, 0);
-    const extraBytes = groups.reduce((s, g) => s + g.bytes * (g.paths.length - 1), 0);
-    return [
-      {
-        severity: extraBytes >= 5e4 ? "warn" : "info",
-        title: `${extraCopies} file${extraCopies === 1 ? " is" : "s are"} bundled twice in the JS (${formatBytes(extraBytes)} of duplicate source)`,
-        files: groups.flatMap((g) => g.paths),
-        items: groups.flatMap(
-          (g) => g.paths.slice(1).map((path) => ({ path, bytes: g.bytes, note: `same as ${g.paths[0]}` }))
-        ),
-        fix: "Keep one copy and require() it from both places. Each path is a separate module to Metro, so identical files are bundled (and for Hermes, compiled) twice."
-      }
-    ];
-  }
-};
-
-// ../core/src/checks/duplicate-packages.ts
-var MIN_DUPLICATE_BYTES = 1e4;
-var duplicatePackages = {
-  id: "duplicate-packages",
-  title: "npm packages bundled in more than one copy",
-  description: "The same npm package bundled from several node_modules folders, usually two versions.",
-  requires: "sourcemap",
-  run(ctx) {
-    const pk = ctx.packages;
-    if (!pk) return [];
-    const dupes = pk.items.filter((p) => p.installs > 1 && p.duplicateBytes >= MIN_DUPLICATE_BYTES);
-    if (dupes.length === 0) return [];
-    const total = dupes.reduce((s, p) => s + p.duplicateBytes, 0);
-    return [
-      {
-        severity: total >= 5e4 ? "warn" : "info",
-        title: `${dupes.length} npm package${dupes.length === 1 ? " is" : "s are"} bundled more than once (${formatBytes(total)} of extra copies)`,
-        files: [],
-        items: dupes.map((p) => ({ path: p.name, bytes: p.duplicateBytes, note: `${p.installs} copies` })),
-        fix: 'Run npm ls <package> (or yarn why) to see which dependencies pull in each version, then align them, or force one version with "overrides" (npm) or "resolutions" (yarn).'
-      }
-    ];
-  }
-};
-
-// ../core/src/checks/font-name-case.ts
-var fontNameCase = {
-  id: "font-name-case",
-  title: "Font name with the wrong letter case",
-  description: "A fontFamily in the code differs from the font file name only in letter case; Android won't find it.",
-  requires: "sourcemap",
-  run(ctx) {
-    const wrong = (ctx.packages?.fontUsage ?? []).filter((u) => u.writtenAs);
-    if (wrong.length === 0) return [];
-    const fileName = (path) => path.slice(path.lastIndexOf("/") + 1);
-    return [
-      {
-        severity: "warn",
-        title: wrong.length === 1 ? `fontFamily '${wrong[0].writtenAs}' doesn't match the font file ${fileName(wrong[0].path)}` : `${wrong.length} fontFamily names don't match their font files' letter case`,
-        files: wrong.map((u) => u.path),
-        items: wrong.map((u) => ({ path: u.path, bytes: 0, note: `written as '${u.writtenAs}'` })),
-        fix: "Android looks up font files case-sensitively, so text using this name falls back to the default font. Use the exact file name in fontFamily. (Not a size issue, but easy to miss.)"
-      }
-    ];
-  }
-};
-
-// ../core/src/js/font-usage.ts
-var ICON_FONT_FILE = /(^|\/)(AntDesign|Entypo|EvilIcons|Feather|FontAwesome\d?(_\w+)?|FontAwesome5_\w+|FontAwesome6_\w+|Fontisto|Foundation|Ionicons|MaterialCommunityIcons|MaterialIcons|Octicons|SimpleLineIcons|Zocial)\.ttf$/i;
-var escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-var baseName = (path) => path.slice(path.lastIndexOf("/") + 1).replace(/\.(ttf|otf|ttc)$/i, "");
-var iconFamilyKey = (s) => s.replace(/_(solid|regular|brands|light|duotone|thin)$/i, "").replace(/(free|pro)(_meta)?$/i, "").replace(/[-_\s]/g, "").toLowerCase();
-function iconFamiliesIn(sources) {
-  const families = /* @__PURE__ */ new Set();
-  for (const raw of sources) {
-    const s = raw.split("\\").join("/");
-    const m = /\/react-native-vector-icons\/([A-Za-z0-9]+)\.js$/.exec(s) ?? /\/@expo\/vector-icons\/build\/([A-Za-z0-9]+)\.js$/.exec(s) ?? /\/@react-native-vector-icons\/([a-z0-9-]+)\//.exec(s) ?? /\/glyphmaps\/([A-Za-z0-9_]+)\.json$/.exec(s);
-    if (m) families.add(iconFamilyKey(m[1]));
-  }
-  return families;
-}
-function fontUsage(fontPaths, appText, iconFamilies) {
-  return fontPaths.map((path) => {
-    const name = baseName(path);
-    if (ICON_FONT_FILE.test(path)) {
-      return { path, used: iconFamilies.has(iconFamilyKey(name)) };
-    }
-    if (!/(^|\/)assets\/fonts\//.test(path) || name.length < 3) return { path, used: null };
-    let writtenAs;
-    for (const m of appText.matchAll(new RegExp(`(['"\`])(${escape(name)})\\1`, "gi"))) {
-      if (m[2] !== name) {
-        writtenAs = m[2];
-        break;
-      }
-    }
-    const withCase = (u) => writtenAs ? { ...u, writtenAs } : u;
-    if (new RegExp(`(['"\`])${escape(name)}\\1`).test(appText)) return withCase({ path, used: true });
-    const family2 = escape(name.split(/[-_]/)[0]);
-    if (new RegExp(`(['"\`])${family2}[-_]?(\\$\\{|\\1\\s*\\+)`).test(appText)) return withCase({ path, used: null });
-    return withCase({ path, used: false });
+var resourceName = (path) => (path.split(/[\\/]/).pop() ?? path).replace(STRIP_EXT, "").toLowerCase();
+var isDrawable = (p) => /(^|[\\/])res[\\/]drawable[^\\/]*[\\/]/.test(p) && IMAGE_EXT2.test(p);
+function imageUsage(imagePaths, sources) {
+  if (sources === null) return null;
+  const { keys, parents } = referenced(sources);
+  return imagePaths.map((path) => {
+    if (!isDrawable(path)) return { path, used: null };
+    const name = resourceName(path);
+    if (name.includes("node_modules")) return { path, used: null };
+    const lt = lastTwo(name.split("_"));
+    if (!lt) return { path, used: null };
+    if (keys.has(lt.key)) return { path, used: true };
+    if (parents.has(lt.parent)) return { path, used: false };
+    return { path, used: null };
   });
-}
-
-// ../core/src/checks/font-weights.ts
-var MANY_WEIGHTS = 8;
-function family(path) {
-  const name = path.slice(path.lastIndexOf("/") + 1).replace(/\.(ttf|otf|ttc)$/i, "");
-  const [first] = name.split(/[-_]/);
-  return first && first.length >= 3 ? first.toLowerCase() : null;
-}
-var displayFamily = (f) => f.path.slice(f.path.lastIndexOf("/") + 1).split(/[-_]/)[0];
-var fontWeights = {
-  id: "font-weights",
-  title: "Unused font weights",
-  description: "Font files the app never uses. With a source map: the exact files no code references; without: families shipped with many weights.",
-  requires: "build",
-  sharperWithSourcemap: true,
-  run(ctx) {
-    const fonts = ctx.delivered.filter((f) => f.category === "font" && !ICON_FONT_FILE.test(f.path));
-    const usage = new Map((ctx.packages?.fontUsage ?? []).map((u) => [u.path, u.used]));
-    const unused = fonts.filter((f) => usage.get(f.path) === false);
-    if (unused.length > 0) {
-      const families = [...new Set(unused.map(displayFamily))];
-      const total = unused.reduce((s, f) => s + f.compressed, 0);
-      const shipped = fonts.filter((f) => families.includes(displayFamily(f))).length;
-      return [
-        {
-          severity: "warn",
-          title: families.length === 1 ? `${unused.length} of ${shipped} ${families[0]} font files are never used (${formatBytes(total)})` : `${unused.length} font files are never used (${formatBytes(total)})`,
-          files: unused.map((f) => f.path),
-          savingsByFile: Object.fromEntries(unused.map((f) => [f.path, f.compressed])),
-          fix: "No code references these font names. Delete the files from your fonts folder (and from android/app/src/main/assets/fonts if they were copied there), then rebuild."
-        }
-      ];
-    }
-    if (fonts.some((f) => usage.get(f.path) === true)) return [];
-    const groups = /* @__PURE__ */ new Map();
-    for (const f of fonts) {
-      const key = family(f.path);
-      if (!key) continue;
-      groups.set(key, [...groups.get(key) ?? [], f]);
-    }
-    return [...groups.values()].filter((files) => files.length >= MANY_WEIGHTS).map((files) => {
-      const name = displayFamily(files[0]);
-      const total = files.reduce((s, f) => s + f.compressed, 0);
-      return {
-        severity: "warn",
-        title: `${files.length} ${name} font files bundled (${formatBytes(total)}); apps usually use 3\u20135 weights`,
-        files: files.map((f) => f.path),
-        fix: `Search your code for the ${name} names you actually use (fontFamily: '${name}-\u2026'). Delete the other files from your fonts folder and from android/app/src/main/assets/fonts if they were copied there. Run with --project to see exactly which files are unused.`
-      };
-    });
-  }
-};
-
-// ../core/src/data/package-suggestions.ts
-var ICON_LIBRARY_ADVICE = () => "Metro bundles every icon the library's index file exports, not only the ones you use. If the library has one file per icon, import from those files; otherwise copy the few SVG icons you need into the app.";
-var PACKAGE_SUGGESTIONS = [
-  {
-    match: "moment",
-    advice: (bundled) => {
-      const other = ["date-fns", "dayjs", "luxon"].find((p) => bundled.has(p));
-      return other ? `The bundle already includes ${other}: move the code that still uses moment to ${other} and remove moment.` : "Replace with dayjs (about 7 KB, similar API) or date-fns. moment is large and cannot be split.";
-    }
-  },
-  {
-    // Importing from the package root pulls in every function; a whole date-fns is well over 100 KB.
-    match: "date-fns",
-    minBytes: 1e5,
-    advice: () => "Imports from 'date-fns' pull in the whole library because Metro doesn't tree-shake. Import each function from its own path instead (for example date-fns/format)."
-  },
-  {
-    match: "lodash",
-    advice: () => "Import single functions (import debounce from 'lodash/debounce') instead of the whole library; Metro does not tree-shake."
-  },
-  {
-    match: "ramda",
-    minBytes: 5e4,
-    advice: () => "Imports from 'ramda' pull in the whole library. Import single functions (ramda/src/map) or use plain JS for the few you need."
-  },
-  { match: "aws-sdk", advice: () => "Use the modular v3 clients (@aws-sdk/client-s3 and so on) instead of the whole v2 SDK." },
-  {
-    match: /^(react-native-heroicons|lucide-react-native|phosphor-react-native|@tabler\/icons-react-native)$/,
-    advice: ICON_LIBRARY_ADVICE
-  }
-];
-var DEFAULT_MIN_BYTES = 3e4;
-function suggestionFor(name) {
-  return PACKAGE_SUGGESTIONS.find((s) => typeof s.match === "string" ? s.match === name : s.match.test(name));
-}
-
-// ../core/src/checks/heavy-package.ts
-var heavyPackage = {
-  id: "heavy-package",
-  title: "Heavy npm packages with lighter options",
-  description: "npm packages known to be large in a React Native bundle, with a lighter alternative or import style.",
-  requires: "sourcemap",
-  run(ctx) {
-    const pk = ctx.packages;
-    if (!pk) return [];
-    const unit = pk.kind === "hermes" ? "bytecode" : "JS";
-    const bundled = new Set(pk.items.map((p) => p.name));
-    return pk.items.flatMap((p) => {
-      const suggestion = suggestionFor(p.name);
-      if (!suggestion || p.bytes < (suggestion.minBytes ?? DEFAULT_MIN_BYTES)) return [];
-      const transitive = pk.directImports !== null && !pk.directImports.includes(p.name);
-      return [
-        {
-          severity: transitive ? "info" : "warn",
-          title: `${p.name} adds ${formatBytes(p.bytes)} of ${unit} to the JS bundle${transitive ? " (pulled in by another package)" : ""}`,
-          files: [],
-          items: [],
-          fix: transitive ? `Your code doesn't import ${p.name}; another dependency does. Run npm ls ${p.name} (or yarn why ${p.name}) to see which one, and if that library is easy to replace, consider a lighter one.` : suggestion.advice(bundled)
-        }
-      ];
-    });
-  }
-};
-
-// ../core/src/checks/hermes-off.ts
-var hermesOff = {
-  id: "hermes-off",
-  title: "Hermes is disabled",
-  description: "The JS bundle is plain JavaScript run by JSC instead of precompiled Hermes bytecode.",
-  requires: "build",
-  run(ctx) {
-    if (ctx.js?.engine !== "jsc") return [];
-    const jsc = ctx.delivered.filter((f) => /\/libjsc\.so$/.test(f.path));
-    return [
-      {
-        severity: "warn",
-        title: "Hermes is disabled (app runs on JSC)",
-        files: [ctx.js.bundlePath, ...jsc.map((f) => f.path)],
-        fix: 'Enable Hermes (hermesEnabled=true in android/gradle.properties, or "jsEngine": "hermes" in app.json). Faster startup, lower memory, and libjsc.so is no longer shipped.'
-      }
-    ];
-  }
-};
-
-// ../core/src/checks/icon-fonts.ts
-var FULL_SET_MIN = 12;
-function fix(keep = ["MaterialIcons.ttf"]) {
-  const names = keep.map((n) => `"${n}"`).join(", ");
-  return `Ship only the fonts you use: in android/app/build.gradle set project.ext.vectoricons = [ iconFontNames: [ ${names} ] ], or import per-family packages (@react-native-vector-icons/<family>).`;
-}
-var baseName2 = (path) => path.slice(path.lastIndexOf("/") + 1);
-var iconFonts = {
-  id: "icon-fonts",
-  title: "Unused icon fonts",
-  description: "Icon fonts the app never uses. With a source map: fonts whose icon family is never imported; without: the full default set of react-native-vector-icons.",
-  requires: "build",
-  sharperWithSourcemap: true,
-  run(ctx) {
-    const fonts = ctx.delivered.filter((f) => f.category === "font" && ICON_FONT_FILE.test(f.path));
-    if (fonts.length === 0) return [];
-    const usage = new Map((ctx.packages?.fontUsage ?? []).map((u) => [u.path, u.used]));
-    if (fonts.some((f) => usage.has(f.path))) {
-      const unused = fonts.filter((f) => usage.get(f.path) === false);
-      if (unused.length === 0) return [];
-      const total2 = unused.reduce((s, f) => s + f.compressed, 0);
-      return [
-        {
-          severity: "warn",
-          title: `${unused.length} of ${fonts.length} icon fonts are bundled but never used (${formatBytes(total2)})`,
-          files: unused.map((f) => f.path),
-          savingsByFile: Object.fromEntries(unused.map((f) => [f.path, f.compressed])),
-          fix: fix(fonts.filter((f) => usage.get(f.path) !== false).map((f) => baseName2(f.path)))
-        }
-      ];
-    }
-    if (fonts.length < FULL_SET_MIN) return [];
-    const total = fonts.reduce((s, f) => s + f.compressed, 0);
-    return [
-      {
-        severity: "warn",
-        title: `All ${fonts.length} icon fonts bundled (${formatBytes(total)}); most apps use 1\u20133`,
-        files: fonts.map((f) => f.path),
-        fix: `${fix()} Run with --project to see exactly which ones are unused.`
-      }
-    ];
-  }
-};
-
-// ../core/src/checks/image-large.ts
-var THRESHOLD = 1e5;
-var WEBP_SAVING = 0.4;
-var imageLarge = {
-  id: "image-large",
-  title: "Large PNG/JPEG images",
-  description: `PNG or JPEG files over ${THRESHOLD / 1e3} KB that would usually be much smaller as WebP.`,
-  requires: "build",
-  run(ctx) {
-    const big = ctx.delivered.filter((f) => f.category === "image" && /\.(png|jpe?g)$/i.test(f.path) && !/\.9\.png$/i.test(f.path)).filter((f) => f.uncompressed >= THRESHOLD).sort((a, b) => b.compressed - a.compressed);
-    if (big.length === 0) return [];
-    const total = big.reduce((s, f) => s + f.compressed, 0);
-    const savingsByFile = Object.fromEntries(big.map((f) => [f.path, Math.round(f.compressed * WEBP_SAVING)]));
-    return [
-      {
-        severity: "warn",
-        title: `${big.length} PNG/JPEG image${big.length === 1 ? "" : "s"} over ${THRESHOLD / 1e3} KB (${formatBytes(total)})`,
-        files: big.map((f) => f.path),
-        savingsByFile,
-        estimate: true,
-        fix: "Convert to WebP (Android Studio: right-click \u2192 Convert to WebP, or `cwebp -q 80`). Also check the image is not far larger than it is displayed."
-      }
-    ];
-  }
-};
-
-// ../core/src/checks/lottie-large.ts
-var LARGE = 1e5;
-var EMBEDDED_IMAGES = 2e4;
-var BUNDLED_WARN = 3e5;
-var lottieLarge = {
-  id: "lottie-large",
-  title: "Large Lottie animations",
-  description: "Large Lottie animations: files in res/raw or assets, and (with a source map) JSON the code require()s into the JS bundle.",
-  requires: "build",
-  sharperWithSourcemap: true,
-  run(ctx) {
-    const heavy = ctx.lottie.filter((l) => l.uncompressed >= LARGE || l.embeddedImageBytes >= EMBEDDED_IMAGES);
-    if (heavy.length === 0) return [];
-    const total = heavy.reduce((s, l) => s + l.compressed, 0);
-    const unpacked = heavy.reduce((s, l) => s + l.uncompressed, 0);
-    const withImages = heavy.filter((l) => l.embeddedImages > 0).length;
-    const bundled = heavy.filter((l) => l.format === "bundled");
-    const bundledDownload = bundled.reduce((s, l) => s + l.compressed, 0);
-    const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
-    const fixes = [];
-    if (withImages > 0) {
-      fixes.push(
-        "Embedded images (base64 PNG/JPG inside the JSON) barely compress: shrink them or swap them for vector shapes in After Effects / LottieFiles, or use dotLottie with WebP images."
-      );
-    }
-    if (bundled.length > 0) {
-      fixes.push(
-        "Animations you require() are compiled into the JS bundle, so every user downloads and loads them at startup. Load the big ones from a URL or from native assets instead (lottie-react-native's source also accepts a {uri}), and remove copies of the same file."
-      );
-    }
-    fixes.push("Trim unused layers and frames on the biggest animations, especially ones that loop or play on startup.");
-    return [
-      {
-        // Vector-only JSON files compress very well, so on their own they mostly cost parse time and
-        // memory. Embedded images, or a lot of animation compiled into the JS bundle, cost real download.
-        severity: withImages > 0 || bundledDownload >= BUNDLED_WARN ? "warn" : "info",
-        title: `${plural(heavy.length, "Lottie animation")}${bundled.length === heavy.length ? " in the JS bundle" : ""} ${heavy.length === 1 ? "takes" : "take"} ~${formatBytes(total)} (${formatBytes(unpacked)} unpacked)` + (withImages > 0 ? `; ${withImages} ${withImages === 1 ? "has" : "have"} images embedded inside` : "") + (bundled.length > 0 && bundled.length < heavy.length ? `; ${bundled.length} ${bundled.length === 1 ? "is" : "are"} inside the JS bundle` : ""),
-        files: heavy.map((l) => l.path),
-        items: heavy.map((l) => ({
-          path: l.path,
-          bytes: l.compressed,
-          note: [
-            l.format === "bundled" ? "require()d, in the JS bundle" : l.format === "dotlottie" ? "dotLottie file" : "",
-            l.embeddedImages > 0 ? `${plural(l.embeddedImages, "embedded image")}, ${formatBytes(l.embeddedImageBytes)}` : ""
-          ].filter(Boolean).join("; ") || void 0
-        })),
-        fix: fixes.join(" ")
-      }
-    ];
-  }
-};
-
-// ../core/src/checks/sourcemap-in-build.ts
-var sourcemapInBuild = {
-  id: "sourcemap-in-build",
-  title: "Source maps shipped in the build",
-  description: "Source map files are only needed for crash symbolication and should not be shipped to users.",
-  requires: "build",
-  run(ctx) {
-    const maps = ctx.delivered.filter((f) => /\.map$/i.test(f.path));
-    if (maps.length === 0) return [];
-    const total = maps.reduce((s, f) => s + f.compressed, 0);
-    return [
-      {
-        severity: "error",
-        title: `${maps.length} source map file${maps.length === 1 ? "" : "s"} shipped to users (${formatBytes(total)})`,
-        files: maps.map((f) => f.path),
-        savingsByFile: Object.fromEntries(maps.map((f) => [f.path, f.compressed])),
-        fix: "Remove .map files from android/app/src/main/assets and upload them to your crash reporter (Sentry, Crashlytics) instead."
-      }
-    ];
-  }
-};
-
-// ../core/src/checks/registry.ts
-var CHECKS = [
-  debuggable,
-  abiUniversal,
-  nativeDebugSymbols,
-  sourcemapInBuild,
-  r8Off,
-  hermesOff,
-  imageLarge,
-  iconFonts,
-  fontWeights,
-  lottieLarge,
-  duplicateFiles,
-  heavyPackage,
-  duplicatePackages,
-  duplicateModules,
-  fontNameCase
-];
-var SEVERITY_RANK = { error: 0, warn: 1, info: 2 };
-function runChecks(ctx, ignore = []) {
-  const findings = [];
-  const bestByFile = /* @__PURE__ */ new Map();
-  const warnings = [];
-  const sizes = new Map(ctx.files.map((f) => [f.path, f.compressed]));
-  for (const check of CHECKS) {
-    if (ignore.includes(check.id)) continue;
-    let results;
-    try {
-      results = check.run(ctx);
-    } catch (err2) {
-      warnings.push(`Check "${check.id}" failed: ${err2.message}`);
-      continue;
-    }
-    for (const { savingsByFile, estimate, items, ...rest } of results) {
-      const finding = { checkId: check.id, ...rest, items: items ?? itemsFor(rest.files, sizes) };
-      if (savingsByFile) {
-        const bytes = Object.values(savingsByFile).reduce((s, b) => s + b, 0);
-        finding.savings = { bytes, estimate: estimate ?? false };
-        for (const [path, b] of Object.entries(savingsByFile)) {
-          bestByFile.set(path, Math.max(bestByFile.get(path) ?? 0, b));
-        }
-      }
-      findings.push(finding);
-    }
-  }
-  const rank2 = (f) => f.checkId === "debuggable" ? -1 : SEVERITY_RANK[f.severity];
-  findings.sort((a, b) => rank2(a) - rank2(b) || (b.savings?.bytes ?? 0) - (a.savings?.bytes ?? 0));
-  const savingsBytes = [...bestByFile.values()].reduce((s, b) => s + b, 0);
-  return { findings, savingsBytes, warnings };
-}
-function itemsFor(paths, sizes) {
-  return paths.map((path) => ({ path, bytes: sizes.get(path) ?? 0 })).sort((a, b) => b.bytes - a.bytes);
-}
-
-// ../core/src/errors.ts
-var InvalidOptionError = class extends Error {
-};
-
-// ../core/src/js/hermes.ts
-var HERMES_MAGIC = Buffer.from([198, 31, 188, 3, 193, 3, 25, 31]);
-function detectBundleKind(head) {
-  if (head.length >= 12 && head.subarray(0, 8).equals(HERMES_MAGIC)) {
-    return { engine: "hermes", hermesBytecodeVersion: head.readUInt32LE(8) };
-  }
-  const text = head.toString("utf8").trimStart();
-  if (/^(var |__d\(|\(function|!function|"use strict"|'use strict')/.test(text)) return { engine: "jsc" };
-  return { engine: "unknown" };
 }
 
 // ../../node_modules/@jridgewell/sourcemap-codec/dist/sourcemap-codec.mjs
@@ -79480,7 +79252,7 @@ function appRelative(source) {
 // ../core/src/js/packages.ts
 var MAX_PACKAGES = 100;
 var JSON_MIN_BYTES = 1e4;
-function analyzePackages(input, js, bundleBytes, bundleCompressed, fontPaths, warnings) {
+function analyzePackages(input, js, bundleBytes, bundleCompressed, fontPaths, imagePaths, warnings) {
   const none = { report: null, bundledLottie: [] };
   if (input.siblingBundleBytes !== void 0 && input.siblingBundleBytes !== bundleBytes) {
     warnings.push(
@@ -79546,11 +79318,25 @@ function analyzePackages(input, js, bundleBytes, bundleCompressed, fontPaths, wa
       jsonModules: jsonInfo.filter((m) => m.bytes >= JSON_MIN_BYTES).sort((a, b) => b.bytes - a.bytes).map((m) => ({ path: m.path, bytes: m.bytes, lottie: m.lottie })),
       duplicateModules: findDuplicateModules(maps, encoder),
       fontUsage: fontUsageFromMaps(maps, appText, fontPaths),
+      imageUsage: imageUsage(imagePaths, appSourceFiles(maps)),
       directImports: appText === null ? null : directImports(appText),
       maps: input.names
     },
     bundledLottie
   };
+}
+function appSourceFiles(maps) {
+  const files = [];
+  for (const map of maps) {
+    const contents = map.sourcesContent ?? [];
+    map.sources.forEach((source, i) => {
+      const text = contents[i];
+      if (source && typeof text === "string" && !/(^|[\\/])node_modules[\\/]/.test(source) && !/\.json$/i.test(source)) {
+        files.push({ path: source, text });
+      }
+    });
+  }
+  return files.length > 0 ? files : null;
 }
 function appSourceText(maps) {
   const appSources = [];
@@ -79616,15 +79402,668 @@ var CATEGORY_LABELS = {
   other: "Other"
 };
 
+// ../core/src/ios/classify.ts
+var IMAGE_EXT3 = /\.(png|jpe?g|gif|webp|bmp|heic|tiff?)$/i;
+var FONT_EXT2 = /\.(ttf|otf|ttc)$/i;
+var JS_BUNDLE2 = /\.(jsbundle|hbc|bundle)$/i;
+var NATIVE_EXT = /\.(dylib|a)$/i;
+var RESOURCE_EXT = /\.(nib|storyboardc|car|plist|strings|stringsdict|json|xml|mom|momd|cdm|loctable|pch|modulemap|map)$/i;
+function appPath(path) {
+  const m = /^Payload\/[^/]+\.app\/(.*)$/.exec(path);
+  const rel = m ? m[1] : path;
+  const inAppRoot = m ? !rel.includes("/") : false;
+  const fw = /\.framework\/([^/]+)$/.exec(path);
+  return { rel, inAppRoot, inFrameworkRoot: !!fw };
+}
+function categorizeIos(path) {
+  const { rel, inAppRoot, inFrameworkRoot } = appPath(path);
+  const base = rel.split("/").pop() ?? rel;
+  if (JS_BUNDLE2.test(base) || /(^|\/)main\.jsbundle$/.test(rel)) return "js";
+  if (NATIVE_EXT.test(base)) return "native";
+  if (!base.includes(".") && (inAppRoot || inFrameworkRoot) && base !== "PkgInfo") return "native";
+  if (FONT_EXT2.test(base)) return "font";
+  if (IMAGE_EXT3.test(base) || base === "Assets.car") return "image";
+  if (RESOURCE_EXT.test(base) || /\.(lproj|bundle|storyboardc)\//.test(rel) || base === "PkgInfo" || path.includes("_CodeSignature/") || /\.mobileprovision$/.test(base)) {
+    return "resources";
+  }
+  return "other";
+}
+function appRootOf(entries) {
+  for (const e of entries) {
+    const m = /^(Payload\/[^/]+\.app\/)/.exec(e.path);
+    if (m) return m[1];
+  }
+  return "";
+}
+function classifyIosEntries(entries) {
+  return entries.filter((e) => !e.path.endsWith("/")).map((e) => ({
+    path: e.path,
+    category: categorizeIos(e.path),
+    compressed: e.compressedSize,
+    uncompressed: e.uncompressedSize,
+    module: "base",
+    delivered: true,
+    crc32: e.crc32
+  }));
+}
+
+// ../core/src/ios/plist.ts
+function parsePlist(buf) {
+  if (buf.length >= 8 && buf.toString("latin1", 0, 8) === "bplist00") {
+    try {
+      const v = parseBinary(buf);
+      return v && typeof v === "object" && !Array.isArray(v) ? v : {};
+    } catch {
+      return {};
+    }
+  }
+  return parseXml(buf.toString("utf8"));
+}
+function parseBinary(buf) {
+  const trailer = buf.length - 32;
+  const offsetSize = buf[trailer + 6];
+  const refSize = buf[trailer + 7];
+  const numObjects = Number(buf.readBigUInt64BE(trailer + 8));
+  const topObject = Number(buf.readBigUInt64BE(trailer + 16));
+  const offsetTableStart = Number(buf.readBigUInt64BE(trailer + 24));
+  const readSized = (pos, size) => {
+    let n = 0;
+    for (let i = 0; i < size; i++) n = n * 256 + buf[pos + i];
+    return n;
+  };
+  const offsets = [];
+  for (let i = 0; i < numObjects; i++) offsets.push(readSized(offsetTableStart + i * offsetSize, offsetSize));
+  const readObject = (index) => {
+    let pos = offsets[index];
+    const marker = buf[pos];
+    const type = marker >> 4;
+    let info4 = marker & 15;
+    pos++;
+    const readCount = () => {
+      if (info4 !== 15) return info4;
+      const intMarker = buf[pos];
+      const intLen = 1 << (intMarker & 15);
+      pos++;
+      const n = readSized(pos, intLen);
+      pos += intLen;
+      return n;
+    };
+    switch (type) {
+      case 0:
+        return info4 === 8 ? false : info4 === 9 ? true : null;
+      case 1: {
+        const len = 1 << info4;
+        return readSized(pos, len);
+      }
+      case 5: {
+        const len = readCount();
+        return buf.toString("latin1", pos, pos + len);
+      }
+      case 6: {
+        const len = readCount();
+        return decodeUtf16BE(buf, pos, len);
+      }
+      case 10: {
+        const count = readCount();
+        const arr = [];
+        for (let i = 0; i < count; i++) arr.push(readObject(readSized(pos + i * refSize, refSize)));
+        return arr;
+      }
+      case 13: {
+        const count = readCount();
+        const keysAt = pos;
+        const valsAt = pos + count * refSize;
+        const obj = {};
+        for (let i = 0; i < count; i++) {
+          const key = readObject(readSized(keysAt + i * refSize, refSize));
+          obj[String(key)] = readObject(readSized(valsAt + i * refSize, refSize));
+        }
+        return obj;
+      }
+      default:
+        return null;
+    }
+  };
+  return readObject(topObject);
+}
+function decodeUtf16BE(buf, start, chars2) {
+  const swapped = Buffer.alloc(chars2 * 2);
+  for (let i = 0; i < chars2; i++) {
+    swapped[i * 2] = buf[start + i * 2 + 1];
+    swapped[i * 2 + 1] = buf[start + i * 2];
+  }
+  return swapped.toString("utf16le");
+}
+function parseXml(xml) {
+  const out = {};
+  const re = /<key>([^<]*)<\/key>\s*<(string|integer|real|true|false)(?:\/>|>([^<]*)<\/\2>)/g;
+  for (const m of xml.matchAll(re)) {
+    const [, key, tag, value] = m;
+    out[key] = tag === "true" ? true : tag === "false" ? false : tag === "integer" ? Number(value) : value ?? "";
+  }
+  return out;
+}
+
+// ../core/src/ios/analyze-ios.ts
+var sum = (files, key) => files.reduce((s, f) => s + f[key], 0);
+var str = (v) => typeof v === "string" ? v : void 0;
+async function readIosJs(zip, files, warnings) {
+  const bundles = files.filter((f) => f.category === "js").sort((a, b) => b.uncompressed - a.uncompressed);
+  const main = bundles.find((f) => /main\.jsbundle$/.test(f.path)) ?? bundles[0];
+  if (!main) return null;
+  try {
+    return { ...detectBundleKind(await zip.read(main.path, 64)), bundlePath: main.path, bytes: main.compressed };
+  } catch (err2) {
+    warnings.push(`Could not read ${main.path}: ${err2.message}`);
+    return { engine: "unknown", bundlePath: main.path, bytes: main.compressed };
+  }
+}
+async function analyzeIpa(zip, fileName, options, started, fileSize) {
+  const warnings = [];
+  const files = classifyIosEntries(zip.entries);
+  const delivered = files;
+  const appRoot = appRootOf(zip.entries);
+  let manifest = {};
+  try {
+    const plist = parsePlist(await zip.read(`${appRoot}Info.plist`));
+    const vc = Number(plist.CFBundleVersion);
+    manifest = {
+      packageName: str(plist.CFBundleIdentifier),
+      versionName: str(plist.CFBundleShortVersionString),
+      versionCode: Number.isInteger(vc) && vc > 0 ? vc : void 0,
+      minOsVersion: str(plist.MinimumOSVersion)
+    };
+  } catch (err2) {
+    warnings.push(`Could not read Info.plist: ${err2.message}`);
+  }
+  const js = await readIosJs(zip, delivered, warnings);
+  if (js?.engine === "unknown") warnings.push(`Could not tell whether ${js.bundlePath} is Hermes bytecode or plain JS.`);
+  const breakdown = CATEGORIES.map((category) => {
+    const inCat = delivered.filter((f) => f.category === category);
+    return {
+      category,
+      compressed: sum(inCat, "compressed"),
+      uncompressed: sum(inCat, "uncompressed"),
+      count: inCat.length
+    };
+  }).filter((r) => r.count > 0);
+  let packages = null;
+  if (options.sourceMaps && js) {
+    const jsEntry = files.find((f) => f.path === js.bundlePath);
+    if (jsEntry) {
+      const result = analyzePackages(
+        options.sourceMaps,
+        js,
+        jsEntry.uncompressed,
+        jsEntry.compressed,
+        delivered.filter((f) => f.category === "font").map((f) => f.path),
+        delivered.filter((f) => f.category === "image").map((f) => f.path),
+        warnings
+      );
+      packages = result.report;
+    }
+  }
+  const code = { minified: null, obfuscatedShare: 0, mappingFile: false };
+  warnings.push(
+    "iOS sizes are estimates: the App Store re-compresses, encrypts and thins the app per device, so the real download and install differ. App Store Connect shows the exact per-device sizes."
+  );
+  const checks = runChecks(
+    { artifact: "ipa", abi: "universal", files, delivered, js, manifest, code, nativeLibs: [], lottie: [], packages },
+    options.ignore
+  );
+  return {
+    schemaVersion: 1,
+    tool: { name: "rn-size-check", version: options.toolVersion ?? "0.0.0" },
+    createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+    app: { platform: "ios", artifact: "ipa", fileName, abis: [], extraModules: [], js, manifest, code },
+    sizes: {
+      file: fileSize,
+      download: { bytes: sum(delivered, "compressed"), estimate: true, abi: "universal" },
+      install: { bytes: sum(delivered, "uncompressed"), estimate: true, abi: "universal" },
+      notDelivered: 0
+    },
+    breakdown,
+    nativeByAbi: [],
+    nativeLibs: [],
+    lottie: [],
+    packages,
+    largestFiles: [...delivered].sort((a, b) => b.compressed - a.compressed).slice(0, options.topFiles ?? 25),
+    files: delivered.map((f) => ({ path: f.path, category: f.category, compressed: f.compressed })),
+    findings: checks.findings,
+    totals: { savingsBytes: checks.savingsBytes },
+    meta: { durationMs: Date.now() - started, warnings: [...warnings, ...checks.warnings] }
+  };
+}
+
+// ../core/src/android/detect.ts
+var UnsupportedArtifactError = class extends Error {
+};
+function detectArtifact(entries) {
+  const paths = new Set(entries.map((e) => e.path));
+  if (paths.has("BundleConfig.pb") && paths.has("base/manifest/AndroidManifest.xml")) return "aab";
+  if (paths.has("AndroidManifest.xml") && entries.some((e) => /^classes\d*\.dex$/.test(e.path))) return "apk";
+  if (entries.some((e) => /^Payload\/[^/]+\.app\//.test(e.path))) return "ipa";
+  throw new UnsupportedArtifactError("Not an Android APK/AAB or iOS .ipa (no AndroidManifest.xml or Payload/*.app found).");
+}
+
+// ../core/src/android/dex.ts
+function readDexClassNames(buf) {
+  if (buf.length < 112 || buf.toString("latin1", 0, 4) !== "dex\n") return [];
+  const stringIdsOff = buf.readUInt32LE(60);
+  const typeIdsOff = buf.readUInt32LE(68);
+  const classDefsSize = buf.readUInt32LE(96);
+  const classDefsOff = buf.readUInt32LE(100);
+  const names = [];
+  for (let i = 0; i < classDefsSize; i++) {
+    const typeIdx = buf.readUInt32LE(classDefsOff + i * 32);
+    const descriptorIdx = buf.readUInt32LE(typeIdsOff + typeIdx * 4);
+    let p = buf.readUInt32LE(stringIdsOff + descriptorIdx * 4);
+    while (buf[p] & 128) p++;
+    p++;
+    const end = buf.indexOf(0, p);
+    names.push(buf.toString("latin1", p, end));
+  }
+  return names;
+}
+function obfuscatedShare(classNames) {
+  if (classNames.length === 0) return 0;
+  let short = 0;
+  for (const descriptor of classNames) {
+    const simple = descriptor.slice(descriptor.lastIndexOf("/") + 1, -1).split("$").pop() ?? "";
+    if (/^[a-zA-Z]{1,2}\d?$/.test(simple)) short++;
+  }
+  return short / classNames.length;
+}
+
+// ../core/src/android/elf.ts
+var SHF_ALLOC = 2;
+var SHT_NOBITS = 8;
+var TINY_SECTION = 4 * 1024;
+function readElfHeader(head) {
+  if (head.length < 64 || head.readUInt32BE(0) !== 2135247942) return null;
+  const is64 = head[4] === 2;
+  if (head[5] !== 1) return null;
+  return is64 ? { is64, shoff: Number(head.readBigUInt64LE(40)), shentsize: head.readUInt16LE(58), shnum: head.readUInt16LE(60) } : { is64, shoff: head.readUInt32LE(32), shentsize: head.readUInt16LE(46), shnum: head.readUInt16LE(48) };
+}
+function debugSectionBytes(header, table) {
+  let total = 0;
+  for (let i = 0; i < header.shnum; i++) {
+    const s = i * header.shentsize;
+    if (s + header.shentsize > table.length) break;
+    const type = table.readUInt32LE(s + 4);
+    const flags = header.is64 ? Number(table.readBigUInt64LE(s + 8)) : table.readUInt32LE(s + 8);
+    const size = header.is64 ? Number(table.readBigUInt64LE(s + 32)) : table.readUInt32LE(s + 20);
+    if (type === 0 || type === SHT_NOBITS || (flags & SHF_ALLOC) !== 0 || size < TINY_SECTION) continue;
+    total += size;
+  }
+  return total;
+}
+
+// ../core/src/android/manifest.ts
+var ATTR_IDS = {
+  16843291: "versionCode",
+  16843292: "versionName",
+  16843276: "minSdkVersion",
+  16843376: "targetSdkVersion",
+  16842767: "debuggable",
+  16844010: "extractNativeLibs"
+};
+function collect(element, attrs, out) {
+  const str2 = (k) => {
+    const v = attrs.get(k);
+    return v === void 0 ? void 0 : String(v);
+  };
+  const num = (k) => {
+    const v = attrs.get(k);
+    const n = typeof v === "number" ? v : Number(v);
+    return v === void 0 || Number.isNaN(n) ? void 0 : n;
+  };
+  const bool = (k) => {
+    const v = attrs.get(k);
+    return v === void 0 ? void 0 : v === true || v === "true";
+  };
+  if (element === "manifest") {
+    out.packageName = str2("package");
+    out.versionName = str2("versionName");
+    out.versionCode = num("versionCode");
+  } else if (element === "uses-sdk") {
+    out.minSdk = num("minSdkVersion");
+    out.targetSdk = num("targetSdkVersion");
+  } else if (element === "application") {
+    out.debuggable = bool("debuggable");
+    out.extractNativeLibs = bool("extractNativeLibs");
+  }
+}
+var RES_STRING_POOL2 = 1;
+var RES_XML_RESOURCE_MAP = 384;
+var RES_XML_START_ELEMENT = 258;
+var TYPE_STRING2 = 3;
+var TYPE_INT_DEC = 16;
+var TYPE_INT_HEX = 17;
+var TYPE_BOOLEAN = 18;
+function parseBinaryManifest(buf) {
+  const out = {};
+  let strings = [];
+  let resourceIds = [];
+  let offset = buf.readUInt16LE(2);
+  while (offset + 8 <= buf.length) {
+    const type = buf.readUInt16LE(offset);
+    const headerSize = buf.readUInt16LE(offset + 2);
+    const size = buf.readUInt32LE(offset + 4);
+    if (size < 8) break;
+    if (type === RES_STRING_POOL2) {
+      strings = readStringPool(buf, offset);
+    } else if (type === RES_XML_RESOURCE_MAP) {
+      const count = (size - headerSize) / 4;
+      resourceIds = Array.from({ length: count }, (_, i) => buf.readUInt32LE(offset + headerSize + i * 4));
+    } else if (type === RES_XML_START_ELEMENT) {
+      const ext = offset + headerSize;
+      const name = strings[buf.readUInt32LE(ext + 4)] ?? "";
+      if (name === "manifest" || name === "uses-sdk" || name === "application") {
+        const attrStart = buf.readUInt16LE(ext + 8);
+        const attrSize = buf.readUInt16LE(ext + 10);
+        const attrCount = buf.readUInt16LE(ext + 12);
+        const attrs = /* @__PURE__ */ new Map();
+        for (let i = 0; i < attrCount; i++) {
+          const a = ext + attrStart + i * attrSize;
+          const nameIdx = buf.readUInt32LE(a + 4);
+          const attrName = ATTR_IDS[resourceIds[nameIdx] ?? -1] ?? strings[nameIdx] ?? "";
+          const rawIdx = buf.readInt32LE(a + 8);
+          const dataType = buf.readUInt8(a + 15);
+          const data = buf.readUInt32LE(a + 16);
+          let value;
+          if (dataType === TYPE_STRING2) value = strings[data] ?? "";
+          else if (dataType === TYPE_INT_DEC || dataType === TYPE_INT_HEX) value = data | 0;
+          else if (dataType === TYPE_BOOLEAN) value = data !== 0;
+          else if (rawIdx >= 0) value = strings[rawIdx] ?? "";
+          else continue;
+          attrs.set(attrName, value);
+        }
+        collect(name, attrs, out);
+      }
+    }
+    offset += size;
+  }
+  return out;
+}
+function readStringPool(buf, chunk) {
+  const count = buf.readUInt32LE(chunk + 8);
+  const flags = buf.readUInt32LE(chunk + 16);
+  const stringsStart = buf.readUInt32LE(chunk + 20);
+  const utf8 = (flags & 1 << 8) !== 0;
+  const offsetsAt = chunk + buf.readUInt16LE(chunk + 2);
+  const base = chunk + stringsStart;
+  const result = [];
+  for (let i = 0; i < count; i++) {
+    let p = base + buf.readUInt32LE(offsetsAt + i * 4);
+    if (utf8) {
+      p += (buf[p] & 128) !== 0 ? 2 : 1;
+      let len = buf[p];
+      if ((len & 128) !== 0) {
+        len = (len & 127) << 8 | buf[p + 1];
+        p += 2;
+      } else p += 1;
+      result.push(buf.toString("utf8", p, p + len));
+    } else {
+      let len = buf.readUInt16LE(p);
+      if ((len & 32768) !== 0) {
+        len = (len & 32767) << 16 | buf.readUInt16LE(p + 2);
+        p += 4;
+      } else p += 2;
+      result.push(buf.toString("utf16le", p, p + len * 2));
+    }
+  }
+  return result;
+}
+function* fields(buf) {
+  let p = 0;
+  const varint = () => {
+    let result = 0;
+    let shift = 0;
+    for (; ; ) {
+      const b = buf[p++];
+      result += (b & 127) * 2 ** shift;
+      if ((b & 128) === 0) return result;
+      shift += 7;
+    }
+  };
+  while (p < buf.length) {
+    const key = varint();
+    const num = Math.floor(key / 8);
+    const wire = key & 7;
+    if (wire === 0) yield { num, wire, varint: varint() };
+    else if (wire === 2) {
+      const len = varint();
+      yield { num, wire, bytes: buf.subarray(p, p + len) };
+      p += len;
+    } else if (wire === 5) p += 4;
+    else if (wire === 1) p += 8;
+    else return;
+  }
+}
+function parseProtoManifest(buf) {
+  const out = {};
+  walkProtoNode(buf, out);
+  return out;
+}
+function walkProtoNode(node, out) {
+  for (const f of fields(node)) {
+    if (f.num === 1 && f.bytes) walkProtoElement(f.bytes, out);
+  }
+}
+function walkProtoElement(el, out) {
+  let name = "";
+  const attrs = /* @__PURE__ */ new Map();
+  const children = [];
+  for (const f of fields(el)) {
+    if (f.num === 3 && f.bytes) name = f.bytes.toString("utf8");
+    else if (f.num === 4 && f.bytes) {
+      const [k, v] = protoAttribute(f.bytes);
+      if (k) attrs.set(k, v);
+    } else if (f.num === 5 && f.bytes) children.push(f.bytes);
+  }
+  collect(name, attrs, out);
+  for (const child of children) walkProtoNode(child, out);
+}
+function protoAttribute(attr) {
+  let name = "";
+  let value = "";
+  let resourceId;
+  let compiled;
+  for (const f of fields(attr)) {
+    if (f.num === 2 && f.bytes) name = f.bytes.toString("utf8");
+    else if (f.num === 3 && f.bytes) value = f.bytes.toString("utf8");
+    else if (f.num === 5 && f.varint !== void 0) resourceId = f.varint;
+    else if (f.num === 6 && f.bytes) compiled = protoPrimitive(f.bytes);
+  }
+  if (resourceId !== void 0 && ATTR_IDS[resourceId]) name = ATTR_IDS[resourceId];
+  return [name, value === "" && compiled !== void 0 ? compiled : value];
+}
+function protoPrimitive(item) {
+  for (const f of fields(item)) {
+    if (f.num !== 7 || !f.bytes) continue;
+    for (const p of fields(f.bytes)) {
+      if ((p.num === 6 || p.num === 7) && p.varint !== void 0) return p.varint | 0;
+      if (p.num === 8 && p.varint !== void 0) return p.varint !== 0;
+    }
+  }
+  return void 0;
+}
+
+// ../core/src/archive/zip.ts
+var EOCD_SIG = 101010256;
+var ZIP64_LOCATOR_SIG = 117853008;
+var ZIP64_EOCD_SIG = 101075792;
+var CENTRAL_SIG = 33639248;
+var LOCAL_SIG = 67324752;
+var MAX_COMMENT = 65535;
+var CHUNK = 1024 * 1024;
+var ZipError = class extends Error {
+};
+var ZipArchive = class _ZipArchive {
+  constructor(blob, byPath, entries) {
+    this.blob = blob;
+    this.byPath = byPath;
+    this.entries = entries;
+  }
+  blob;
+  byPath;
+  entries;
+  static async open(blob) {
+    const { cdOffset, cdSize, count } = await readEndOfCentralDirectory(blob);
+    const cd = await slice(blob, cdOffset, cdSize);
+    const view = new DataView(cd.buffer, cd.byteOffset, cd.byteLength);
+    const byPath = /* @__PURE__ */ new Map();
+    const entries = [];
+    let p = 0;
+    for (let i = 0; i < count; i++) {
+      if (p + 46 > cd.length || view.getUint32(p, true) !== CENTRAL_SIG) {
+        throw new ZipError("Corrupt zip: bad central directory entry");
+      }
+      const method = view.getUint16(p + 10, true);
+      const crc32 = view.getUint32(p + 16, true);
+      let compressedSize = view.getUint32(p + 20, true);
+      let uncompressedSize = view.getUint32(p + 24, true);
+      const nameLen = view.getUint16(p + 28, true);
+      const extraLen = view.getUint16(p + 30, true);
+      const commentLen = view.getUint16(p + 32, true);
+      let localHeaderOffset = view.getUint32(p + 42, true);
+      const path = cd.toString("utf8", p + 46, p + 46 + nameLen);
+      if (uncompressedSize === 4294967295 || compressedSize === 4294967295 || localHeaderOffset === 4294967295) {
+        let e = p + 46 + nameLen;
+        const end = e + extraLen;
+        while (e + 4 <= end) {
+          const id = view.getUint16(e, true);
+          const size = view.getUint16(e + 2, true);
+          if (id === 1) {
+            let f = e + 4;
+            if (uncompressedSize === 4294967295) uncompressedSize = readU64(view, f), f += 8;
+            if (compressedSize === 4294967295) compressedSize = readU64(view, f), f += 8;
+            if (localHeaderOffset === 4294967295) localHeaderOffset = readU64(view, f);
+            break;
+          }
+          e += 4 + size;
+        }
+      }
+      if (!path.endsWith("/")) {
+        const entry = {
+          path,
+          compressedSize,
+          uncompressedSize,
+          compressionMethod: method,
+          crc32,
+          localHeaderOffset
+        };
+        byPath.set(path, entry);
+        entries.push({ path, compressedSize, uncompressedSize, compressionMethod: method, crc32 });
+      }
+      p += 46 + nameLen + extraLen + commentLen;
+    }
+    return new _ZipArchive(blob, byPath, entries);
+  }
+  has(path) {
+    return this.byPath.has(path);
+  }
+  /** Read an entry's (decompressed) bytes. `limit` stops early, e.g. to read only a header. */
+  async read(path, limit = Infinity) {
+    const chunks = [];
+    let total = 0;
+    await this.stream(path, (chunk) => {
+      chunks.push(chunk);
+      total += chunk.length;
+      return total < limit;
+    });
+    const buf = Buffer.concat(chunks);
+    return limit === Infinity ? buf : buf.subarray(0, limit);
+  }
+  /**
+   * Read the (decompressed) bytes from `start` to the end of an entry, keeping only that range in
+   * memory. Used for trailers such as ELF section tables at the end of large native libraries.
+   */
+  async readFrom(path, start) {
+    const chunks = [];
+    let pos = 0;
+    await this.stream(path, (chunk) => {
+      const end = pos + chunk.length;
+      if (end > start) chunks.push(pos >= start ? chunk : chunk.subarray(start - pos));
+      pos = end;
+      return true;
+    });
+    return Buffer.concat(chunks);
+  }
+  /** Nothing to release: Blob reads are stateless. Kept so callers don't depend on the backing store. */
+  close() {
+  }
+  /** Feeds decompressed chunks to `onData` until it returns false or the entry ends. */
+  async stream(path, onData) {
+    const entry = this.byPath.get(path);
+    if (!entry) throw new ZipError(`Entry not found: ${path}`);
+    if (entry.compressionMethod !== 0 && entry.compressionMethod !== 8) {
+      throw new ZipError(`Unsupported compression method ${entry.compressionMethod} for ${path}`);
+    }
+    const local = await slice(this.blob, entry.localHeaderOffset, 30);
+    if (local.readUInt32LE(0) !== LOCAL_SIG) throw new ZipError(`Corrupt zip: bad local header for ${path}`);
+    const dataStart = entry.localHeaderOffset + 30 + local.readUInt16LE(26) + local.readUInt16LE(28);
+    const dataEnd = dataStart + entry.compressedSize;
+    let more = true;
+    const inflate = entry.compressionMethod === 8 ? new Inflate((chunk) => {
+      if (more) more = onData(chunk);
+    }) : null;
+    for (let off = dataStart; off < dataEnd && more; off += CHUNK) {
+      const len = Math.min(CHUNK, dataEnd - off);
+      const raw = await slice(this.blob, off, len);
+      if (inflate) inflate.push(raw, off + len >= dataEnd);
+      else more = onData(raw);
+    }
+  }
+};
+async function slice(blob, offset, length) {
+  return Buffer.from(await blob.slice(offset, offset + length).arrayBuffer());
+}
+function readU64(view, offset) {
+  return Number(view.getBigUint64(offset, true));
+}
+async function readEndOfCentralDirectory(blob) {
+  const tailSize = Math.min(blob.size, 22 + MAX_COMMENT + 20);
+  const tailStart = blob.size - tailSize;
+  const tail = await slice(blob, tailStart, tailSize);
+  let eocd = -1;
+  for (let i = tail.length - 22; i >= 0; i--) {
+    if (tail.readUInt32LE(i) === EOCD_SIG) {
+      eocd = i;
+      break;
+    }
+  }
+  if (eocd === -1) throw new ZipError("Not a zip file (end of central directory not found)");
+  let count = tail.readUInt16LE(eocd + 10);
+  let cdSize = tail.readUInt32LE(eocd + 12);
+  let cdOffset = tail.readUInt32LE(eocd + 16);
+  if (count === 65535 || cdSize === 4294967295 || cdOffset === 4294967295) {
+    const loc = eocd - 20;
+    if (loc < 0 || tail.readUInt32LE(loc) !== ZIP64_LOCATOR_SIG) throw new ZipError("Corrupt zip64 locator");
+    const z64 = await slice(blob, Number(tail.readBigUInt64LE(loc + 8)), 56);
+    if (z64.readUInt32LE(0) !== ZIP64_EOCD_SIG) throw new ZipError("Corrupt zip64 end of central directory");
+    count = Number(z64.readBigUInt64LE(32));
+    cdSize = Number(z64.readBigUInt64LE(40));
+    cdOffset = Number(z64.readBigUInt64LE(48));
+  }
+  return { cdOffset, cdSize, count };
+}
+
+// ../core/src/errors.ts
+var InvalidOptionError = class extends Error {
+};
+
 // ../core/src/analyze.ts
 var ABI_PREFERENCE = ["arm64-v8a", "armeabi-v7a", "x86_64", "x86"];
-var sum = (files, key) => files.reduce((s, f) => s + f[key], 0);
+var sum2 = (files, key) => files.reduce((s, f) => s + f[key], 0);
 async function analyzeBlob(blob, fileName, options = {}) {
   const started = Date.now();
   const fileSize = blob.size;
   const zip = await ZipArchive.open(blob);
   try {
     const artifact = detectArtifact(zip.entries);
+    if (artifact === "ipa") return await analyzeIpa(zip, fileName, options, started, fileSize);
     const files = classifyEntries(zip.entries, artifact);
     const warnings = [];
     const abis = [...new Set(files.filter((f) => f.abi).map((f) => f.abi))].sort(
@@ -79637,6 +80076,21 @@ async function analyzeBlob(blob, fileName, options = {}) {
     const density = options.density ?? DEFAULT_DENSITY;
     if (!(density in DENSITIES)) {
       throw new InvalidOptionError(`Unknown density "${density}". Use one of: ${Object.keys(DENSITIES).join(", ")}.`);
+    }
+    const resourceNames = {};
+    if (artifact === "apk" && zip.has("resources.arsc")) {
+      try {
+        const map = readResourceNames(await zip.read("resources.arsc"));
+        for (const f of files) {
+          const name = map.get(f.path);
+          if (name) {
+            f.resourceName = name;
+            resourceNames[f.path] = name;
+          }
+        }
+      } catch (err2) {
+        warnings.push(`Could not read resources.arsc for real names: ${err2.message}`);
+      }
     }
     const delivered = deliveredTo(files, artifact, abi, density);
     const js = await readJsInfo(zip, delivered, warnings);
@@ -79657,18 +80111,18 @@ async function analyzeBlob(blob, fileName, options = {}) {
     }
     const breakdown = CATEGORIES.map((category) => {
       const inCat = delivered.filter((f) => f.category === category);
-      return { category, compressed: sum(inCat, "compressed"), uncompressed: sum(inCat, "uncompressed"), count: inCat.length };
+      return { category, compressed: sum2(inCat, "compressed"), uncompressed: sum2(inCat, "uncompressed"), count: inCat.length };
     }).filter((r) => r.count > 0);
     const nativeByAbi = abis.map((a) => {
       const libs2 = files.filter((f) => f.abi === a && (artifact === "apk" || f.module === "base"));
-      return { abi: a, compressed: sum(libs2, "compressed"), uncompressed: sum(libs2, "uncompressed"), count: libs2.length };
+      return { abi: a, compressed: sum2(libs2, "compressed"), uncompressed: sum2(libs2, "uncompressed"), count: libs2.length };
     });
-    const download = artifact === "apk" ? { bytes: fileSize, estimate: false, abi: abis.length > 1 ? "all" : abi } : { bytes: sum(delivered, "compressed"), estimate: true, abi, density };
+    const download = artifact === "apk" ? { bytes: fileSize, estimate: false, abi: abis.length > 1 ? "all" : abi } : { bytes: sum2(delivered, "compressed"), estimate: true, abi, density };
     const manifest = await readManifest(zip, artifact, warnings);
     const extractLibs = manifest.extractNativeLibs ?? (manifest.minSdk ?? 0) < 23;
     const libs = delivered.filter((f) => f.category === "native" && f.abi === abi);
-    const install = artifact === "apk" ? { bytes: fileSize + (extractLibs ? sum(libs, "uncompressed") : 0), estimate: true, abi } : {
-      bytes: sum(delivered, "compressed") - sum(libs, "compressed") + sum(libs, "uncompressed") + (extractLibs ? sum(libs, "compressed") : 0),
+    const install = artifact === "apk" ? { bytes: fileSize + (extractLibs ? sum2(libs, "uncompressed") : 0), estimate: true, abi } : {
+      bytes: sum2(delivered, "compressed") - sum2(libs, "compressed") + sum2(libs, "uncompressed") + (extractLibs ? sum2(libs, "compressed") : 0),
       estimate: true,
       abi
     };
@@ -79685,6 +80139,7 @@ async function analyzeBlob(blob, fileName, options = {}) {
           jsEntry.uncompressed,
           jsEntry.compressed,
           delivered.filter((f) => f.category === "font").map((f) => f.path),
+          delivered.filter((f) => f.category === "image").map((f) => f.path),
           warnings
         );
         packages = result.report;
@@ -79704,15 +80159,16 @@ async function analyzeBlob(blob, fileName, options = {}) {
         file: fileSize,
         download,
         install,
-        notDelivered: sum(files.filter((f) => !f.delivered), "compressed")
+        notDelivered: sum2(files.filter((f) => !f.delivered), "compressed")
       },
       breakdown,
       nativeByAbi,
       nativeLibs: nativeLibs.sort((a, b) => b.compressed - a.compressed),
       lottie,
       packages,
+      ...Object.keys(resourceNames).length > 0 ? { resourceNames } : {},
       largestFiles: [...delivered].sort((a, b) => b.compressed - a.compressed).slice(0, options.topFiles ?? 25),
-      files: delivered.map((f) => ({ path: f.path, category: f.category, compressed: f.compressed })),
+      files: delivered.map((f) => ({ path: f.path, category: f.category, compressed: f.compressed, ...f.resourceName ? { resourceName: f.resourceName } : {} })),
       findings: checks.findings,
       totals: { savingsBytes: checks.savingsBytes },
       meta: { durationMs: Date.now() - started, warnings: [...warnings, ...checks.warnings] }
@@ -79823,6 +80279,29 @@ async function loadExplicitMap(mapPath) {
   if (!await exists(mapPath)) throw new InvalidOptionError(`Source map not found: ${mapPath}`);
   return { input: { main: await readJson(mapPath), names: [(0, import_node_path.basename)(mapPath)], ...await siblingBundle(mapPath) }, notes: [] };
 }
+async function loadExpoExportMap(projectDir) {
+  const dir = (0, import_node_path.join)(projectDir, "dist", "_expo", "static", "js", "android");
+  const entries = await (0, import_promises.readdir)(dir).catch(() => []);
+  const maps = [];
+  for (const name of entries) {
+    if (!name.endsWith(".map")) continue;
+    const path = (0, import_node_path.join)(dir, name);
+    const info4 = await (0, import_promises.stat)(path).catch(() => null);
+    if (info4) maps.push({ path, mtime: info4.mtimeMs });
+  }
+  if (maps.length === 0) return null;
+  const newest = maps.sort((a, b) => b.mtime - a.mtime)[0];
+  const bundlePath = newest.path.replace(/\.map$/i, "");
+  const bundle = await (0, import_promises.stat)(bundlePath).catch(() => null);
+  return {
+    input: {
+      main: await readJson(newest.path),
+      siblingBundleBytes: bundle?.size,
+      names: [`dist/.../${(0, import_node_path.basename)(newest.path)}`]
+    },
+    notes: []
+  };
+}
 async function loadProjectMaps(projectDir) {
   const build = (0, import_node_path.join)(projectDir, "android", "app", "build");
   const mapsDir = (0, import_node_path.join)(build, "generated", "sourcemaps", "react");
@@ -79835,9 +80314,11 @@ async function loadProjectMaps(projectDir) {
     if (info4) candidates.push({ variant, path, mtime: info4.mtimeMs });
   }
   if (candidates.length === 0) {
+    const expo = await loadExpoExportMap(projectDir);
+    if (expo) return expo;
     return {
       notes: [
-        await exists((0, import_node_path.join)(projectDir, "android")) ? "No source map found in android/app/build. Build a release first (cd android && ./gradlew bundleRelease), then run this again with --project." : "No android folder in this project (Expo managed?). Run npx expo prebuild and a local release build, or pass a source map with --sourcemap."
+        await exists((0, import_node_path.join)(projectDir, "android")) ? "No source map found in android/app/build or dist/. Build a release (cd android && ./gradlew bundleRelease) or run npx expo export -p android --source-maps, then run --project again." : "No source map found. For Expo, run `npx expo export -p android --source-maps` (its map lands in dist/_expo/static/js/android/), then run --project again \u2014 or pass one with --sourcemap."
       ]
     };
   }
@@ -79872,6 +80353,7 @@ function reportToMarkdown(report) {
   const m = app.manifest;
   const name = m.packageName ? `${m.packageName}${m.versionName ? ` ${m.versionName}` : ""}` : app.fileName;
   const est = (e) => e ? " (est.)" : "";
+  const catLabel = (c) => c === "js" && app.js?.engine === "hermes" ? "JS bundle (Hermes)" : app.platform === "ios" && c === "native" ? "Native code" : app.platform === "ios" && c === "resources" ? "App resources" : CATEGORY_LABELS[c];
   const target = [sizes.download.abi === "all" ? "all ABIs" : sizes.download.abi, sizes.download.density].filter(Boolean).join(", ");
   const total = report.breakdown.reduce((s, r) => s + r.compressed, 0) || 1;
   const lines = [
@@ -79881,7 +80363,7 @@ function reportToMarkdown(report) {
     "",
     "| Category | Size | % |",
     "|---|---:|---:|",
-    ...[...report.breakdown].sort((a, b) => b.compressed - a.compressed).map((r) => `| ${r.category === "js" && app.js?.engine === "hermes" ? "JS bundle (Hermes)" : CATEGORY_LABELS[r.category]} | ${formatBytes(r.compressed)} | ${(r.compressed / total * 100).toFixed(1)}% |`)
+    ...[...report.breakdown].sort((a, b) => b.compressed - a.compressed).map((r) => `| ${catLabel(r.category)} | ${formatBytes(r.compressed)} | ${(r.compressed / total * 100).toFixed(1)}% |`)
   ];
   const pk = report.packages;
   if (pk && pk.items.length > 0) {

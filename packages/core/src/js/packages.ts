@@ -2,6 +2,7 @@ import { deflateSync } from 'fflate';
 import { embeddedImages, looksLikeLottie } from '../assets/lottie.js';
 import type { JsEngineInfo, LottieInfo, PackageReport, SourceMapInput } from '../types.js';
 import { fontUsage, iconFamiliesIn } from './font-usage.js';
+import { imageUsage, type SourceFile } from './image-usage.js';
 import { appRelative, jsonModules, sourceBytes, SourceMapError, summarizePackages, type RawSourceMap } from './sourcemap.js';
 
 const MAX_PACKAGES = 100;
@@ -26,6 +27,8 @@ export function analyzePackages(
   bundleCompressed: number,
   /** Font files in the build, to see which ones the code references. */
   fontPaths: string[],
+  /** Drawable image files delivered to the device, to see which ones the code references. */
+  imagePaths: string[],
   warnings: string[],
 ): PackageAnalysis {
   const none: PackageAnalysis = { report: null, bundledLottie: [] };
@@ -114,11 +117,27 @@ export function analyzePackages(
         .map((m) => ({ path: m.path, bytes: m.bytes, lottie: m.lottie })),
       duplicateModules: findDuplicateModules(maps, encoder),
       fontUsage: fontUsageFromMaps(maps, appText, fontPaths),
+      imageUsage: imageUsage(imagePaths, appSourceFiles(maps)),
       directImports: appText === null ? null : directImports(appText),
       maps: input.names,
     },
     bundledLottie,
   };
+}
+
+/** The app's own source files (path + text) from the maps' sourcesContent; null when there are none. */
+function appSourceFiles(maps: RawSourceMap[]): SourceFile[] | null {
+  const files: SourceFile[] = [];
+  for (const map of maps) {
+    const contents = (map as { sourcesContent?: (string | null)[] }).sourcesContent ?? [];
+    map.sources.forEach((source, i) => {
+      const text = contents[i];
+      if (source && typeof text === 'string' && !/(^|[\\/])node_modules[\\/]/.test(source) && !/\.json$/i.test(source)) {
+        files.push({ path: source, text });
+      }
+    });
+  }
+  return files.length > 0 ? files : null;
 }
 
 /** The app's own source code (not node_modules, not JSON) from the maps' sourcesContent, or null. */

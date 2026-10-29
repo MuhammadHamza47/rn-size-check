@@ -50,6 +50,7 @@ export function ReportView({ report, options, onOptionsChange, onReset, onAddMap
               <span className={`chip ${app.code.minified ? 'chip-ok' : 'chip-bad'}`}>R8 {app.code.minified ? 'on' : 'off'}</span>
             )}
             {m.minSdk && <span className="chip">minSdk {m.minSdk}</span>}
+            {m.minOsVersion && <span className="chip">iOS {m.minOsVersion}+</span>}
             {debug && <span className="chip chip-bad">debug build</span>}
           </div>
           <p className="file-name">{app.fileName}</p>
@@ -88,7 +89,7 @@ export function ReportView({ report, options, onOptionsChange, onReset, onAddMap
           primary
         />
         <Stat label="Install" value={formatBytes(sizes.install.bytes)} note="estimate" />
-        <Stat label="File" value={formatBytes(sizes.file)} note={app.artifact === 'aab' ? 'the .aab itself' : 'the .apk itself'} />
+        <Stat label="File" value={formatBytes(sizes.file)} note={`the .${app.artifact} itself`} />
         {report.totals.savingsBytes > 0 && !debug && (
           <Stat label="You could save" value={`~${formatBytes(report.totals.savingsBytes)}`} note={`${savingsPct}% of the download`} good />
         )}
@@ -138,7 +139,7 @@ export function ReportView({ report, options, onOptionsChange, onReset, onAddMap
         ) : (
           <div className="findings">
             {findings.map((f) => (
-              <FindingCard key={`${f.checkId}-${f.title}`} finding={f} />
+              <FindingCard key={`${f.checkId}-${f.title}`} finding={f} resourceNames={report.resourceNames} />
             ))}
           </div>
         )}
@@ -177,6 +178,7 @@ export function ReportView({ report, options, onOptionsChange, onReset, onAddMap
                 <td className="path" title={f.path}>
                   <span className={`dot cat-${f.category}`} />
                   {f.path}
+                  {f.resourceName && <span className="muted small"> ({f.resourceName})</span>}
                 </td>
                 <td className="num">{formatBytes(f.compressed)}</td>
               </tr>
@@ -200,7 +202,7 @@ function Stat({ label, value, note, primary, good }: { label: string; value: str
 
 const ITEMS_COLLAPSED = 4;
 
-function FindingCard({ finding: f }: { finding: Finding }) {
+function FindingCard({ finding: f, resourceNames }: { finding: Finding; resourceNames?: Record<string, string> }) {
   const [open, setOpen] = useState(false);
   const items = open ? f.items : f.items.slice(0, ITEMS_COLLAPSED);
   return (
@@ -219,7 +221,10 @@ function FindingCard({ finding: f }: { finding: Finding }) {
           {items.map((i) => (
             <li key={i.path} title={i.path}>
               <span className="num">{formatBytes(i.bytes)}</span>
-              <span className="path">{shortPath(i.path)}</span>
+              <span className="path">
+                {shortPath(i.path)}
+                {resourceNames?.[i.path] && <span className="muted small"> ({resourceNames[i.path]})</span>}
+              </span>
               {i.note && <span className="muted">{i.note.replace(/\S+\/\S+/g, shortPath)}</span>}
             </li>
           ))}
@@ -241,8 +246,15 @@ function FindingCard({ finding: f }: { finding: Finding }) {
 function Breakdown({ report }: { report: Report }) {
   const rows = [...report.breakdown].sort((a, b) => b.compressed - a.compressed);
   const total = rows.reduce((s, r) => s + r.compressed, 0) || 1;
+  const ios = report.app.platform === 'ios';
   const label = (c: (typeof rows)[number]['category']) =>
-    c === 'js' && report.app.js?.engine === 'hermes' ? 'JS bundle (Hermes)' : CATEGORY_LABELS[c];
+    c === 'js' && report.app.js?.engine === 'hermes'
+      ? 'JS bundle (Hermes)'
+      : ios && c === 'native'
+        ? 'Native code'
+        : ios && c === 'resources'
+          ? 'App resources'
+          : CATEGORY_LABELS[c];
   return (
     <section>
       <h2>What's inside</h2>

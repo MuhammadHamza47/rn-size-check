@@ -1,4 +1,6 @@
+import { readResourceNames } from './android/arsc.js';
 import { classifyEntries, deliveredTo } from './android/classify.js';
+import { analyzeIpa } from './ios/analyze-ios.js';
 import { DEFAULT_DENSITY, DENSITIES } from './android/density.js';
 import { detectArtifact } from './android/detect.js';
 import { embeddedImages, looksLikeLottie } from './assets/lottie.js';
@@ -37,6 +39,7 @@ export async function analyzeBlob(blob: Blob, fileName: string, options: Analyze
   const zip = await ZipArchive.open(blob);
   try {
     const artifact = detectArtifact(zip.entries);
+    if (artifact === 'ipa') return await analyzeIpa(zip, fileName, options, started, fileSize);
     const files = classifyEntries(zip.entries, artifact);
     const warnings: string[] = [];
 
@@ -52,6 +55,23 @@ export async function analyzeBlob(blob: Blob, fileName: string, options: Analyze
     if (!(density in DENSITIES)) {
       throw new InvalidOptionError(`Unknown density "${density}". Use one of: ${Object.keys(DENSITIES).join(', ')}.`);
     }
+    // Real resource names for files R8/shrinkResources renamed to res/xx (APK resources.arsc).
+    const resourceNames: Record<string, string> = {};
+    if (artifact === 'apk' && zip.has('resources.arsc')) {
+      try {
+        const map = readResourceNames(await zip.read('resources.arsc'));
+        for (const f of files) {
+          const name = map.get(f.path);
+          if (name) {
+            f.resourceName = name;
+            resourceNames[f.path] = name;
+          }
+        }
+      } catch (err) {
+        warnings.push(`Could not read resources.arsc for real names: ${(err as Error).message}`);
+      }
+    }
+
     const delivered = deliveredTo(files, artifact, abi, density);
     const js = await readJsInfo(zip, delivered, warnings);
     if (!js) {
@@ -119,6 +139,7 @@ export async function analyzeBlob(blob: Blob, fileName: string, options: Analyze
           jsEntry.uncompressed,
           jsEntry.compressed,
           delivered.filter((f) => f.category === 'font').map((f) => f.path),
+          delivered.filter((f) => f.category === 'image').map((f) => f.path),
           warnings,
         );
         packages = result.report;
@@ -147,8 +168,9 @@ export async function analyzeBlob(blob: Blob, fileName: string, options: Analyze
       nativeLibs: nativeLibs.sort((a, b) => b.compressed - a.compressed),
       lottie,
       packages,
+      ...(Object.keys(resourceNames).length > 0 ? { resourceNames } : {}),
       largestFiles: [...delivered].sort((a, b) => b.compressed - a.compressed).slice(0, options.topFiles ?? 25),
-      files: delivered.map((f) => ({ path: f.path, category: f.category, compressed: f.compressed })),
+      files: delivered.map((f) => ({ path: f.path, category: f.category, compressed: f.compressed, ...(f.resourceName ? { resourceName: f.resourceName } : {}) })),
       findings: checks.findings,
       totals: { savingsBytes: checks.savingsBytes },
       meta: { durationMs: Date.now() - started, warnings: [...warnings, ...checks.warnings] },

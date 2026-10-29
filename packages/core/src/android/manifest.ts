@@ -8,6 +8,8 @@ export interface ManifestInfo {
   versionName?: string;
   versionCode?: number;
   minSdk?: number;
+  /** iOS MinimumOSVersion (e.g. "13.0"); Android builds leave this unset. */
+  minOsVersion?: string;
   targetSdk?: number;
   debuggable?: boolean;
   /** android:extractNativeLibs; undefined = not set (default depends on minSdk / AGP). */

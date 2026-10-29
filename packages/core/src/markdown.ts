@@ -9,6 +9,14 @@ export function reportToMarkdown(report: Report): string {
   const m = app.manifest;
   const name = m.packageName ? `${m.packageName}${m.versionName ? ` ${m.versionName}` : ''}` : app.fileName;
   const est = (e: boolean) => (e ? ' (est.)' : '');
+  const catLabel = (c: Report['breakdown'][number]['category']) =>
+    c === 'js' && app.js?.engine === 'hermes'
+      ? 'JS bundle (Hermes)'
+      : app.platform === 'ios' && c === 'native'
+        ? 'Native code'
+        : app.platform === 'ios' && c === 'resources'
+          ? 'App resources'
+          : CATEGORY_LABELS[c];
   const target = [sizes.download.abi === 'all' ? 'all ABIs' : sizes.download.abi, sizes.download.density]
     .filter(Boolean)
     .join(', ');
@@ -23,7 +31,7 @@ export function reportToMarkdown(report: Report): string {
     '|---|---:|---:|',
     ...[...report.breakdown]
       .sort((a, b) => b.compressed - a.compressed)
-      .map((r) => `| ${r.category === 'js' && app.js?.engine === 'hermes' ? 'JS bundle (Hermes)' : CATEGORY_LABELS[r.category]} | ${formatBytes(r.compressed)} | ${((r.compressed / total) * 100).toFixed(1)}% |`),
+      .map((r) => `| ${catLabel(r.category)} | ${formatBytes(r.compressed)} | ${((r.compressed / total) * 100).toFixed(1)}% |`),
   ];
 
   const pk = report.packages;
