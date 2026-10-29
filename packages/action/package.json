@@ -1,6 +1,6 @@
 {
   "name": "@rnsc/action",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "GitHub Action that comments React Native app size changes on pull requests.",
   "scripts": {
     "build": "tsup"
