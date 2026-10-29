@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0
+## 0.7.0
 
 **GitHub Action: size diff on every pull request.**
 

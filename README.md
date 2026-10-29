@@ -15,7 +15,7 @@ Point it at your Android `.aab` or `.apk` and get one report for the whole app: 
 
 **🌐 Try it in your browser: [rn-size-check-web.vercel.app](https://rn-size-check-web.vercel.app)** (no install; your file is never uploaded)
 
-> **Status:** v0.6. Android AAB/APK, and iOS .ipa (beta). Feedback very welcome!
+> **Status:** v0.7. Android AAB/APK, iOS .ipa (beta), and GitHub Action. Feedback very welcome!
 
 ## Example
 
