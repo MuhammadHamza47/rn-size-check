@@ -81,6 +81,7 @@ export async function analyzeIpa(
         jsEntry.uncompressed,
         jsEntry.compressed,
         delivered.filter((f) => f.category === 'font').map((f) => f.path),
+        delivered.filter((f) => f.category === 'image').map((f) => f.path),
         warnings,
       );
       packages = result.report;
