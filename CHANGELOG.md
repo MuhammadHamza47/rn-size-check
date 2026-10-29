@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.2
+
+- GitHub Action now available in the repository (referenced via GitHub, not npm)
+
 ## 0.7.1
 
 - Published GitHub Action package as `@rnsc/action@0.7.1` (previously was private and not published)

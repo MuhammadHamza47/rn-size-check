@@ -15,7 +15,7 @@ Point it at your Android `.aab` or `.apk` and get one report for the whole app: 
 
 **🌐 Try it in your browser: [rn-size-check-web.vercel.app](https://rn-size-check-web.vercel.app)** (no install; your file is never uploaded)
 
-> **Status:** v0.7.1. Android AAB/APK, iOS .ipa (beta), and GitHub Action. Feedback very welcome!
+> **Status:** v0.7.2. Android AAB/APK, iOS .ipa (beta), and GitHub Action. Feedback very welcome!
 
 ## Example
 
@@ -166,7 +166,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       # ... build your release .aab/.apk ...
-      - uses: MuhammadHamza47/rn-size-check/packages/action@v0.7.1
+      - uses: MuhammadHamza47/rn-size-check/packages/action@v0.7.2
         with:
           build: android/app/build/outputs/bundle/release/app-release.aab
           max-growth: 1   # fail the PR if the download grew more than 1 MB

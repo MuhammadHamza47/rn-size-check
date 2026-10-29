@@ -39,7 +39,7 @@ jobs:
       # - uses: actions/setup-java@v4 with { distribution: temurin, java-version: 17 }
       # - run: cd android && ./gradlew bundleRelease
 
-      - uses: MuhammadHamza47/rn-size-check/packages/action@v0.7.1
+      - uses: MuhammadHamza47/rn-size-check/packages/action@v0.7.2
         with:
           build: android/app/build/outputs/bundle/release/app-release.aab
           project: .            # optional: adds the npm package breakdown from source maps
