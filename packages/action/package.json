@@ -1,11 +1,15 @@
 {
   "name": "@rnsc/action",
-  "version": "0.4.0",
-  "private": true,
+  "version": "0.7.0",
   "description": "GitHub Action that comments React Native app size changes on pull requests.",
   "scripts": {
     "build": "tsup"
   },
+  "files": [
+    "action.yml",
+    "dist",
+    "README.md"
+  ],
   "dependencies": {
     "@actions/cache": "^3.2.4",
     "@actions/core": "^1.11.1",
@@ -14,5 +18,14 @@
   "devDependencies": {
     "@rnsc/core": "0.0.0",
     "tsup": "^8.3.0"
-  }
+  },
+  "license": "MIT",
+  "author": "Muhammad Hamza",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MuhammadHamza47/rn-size-check.git",
+    "directory": "packages/action"
+  },
+  "homepage": "https://github.com/MuhammadHamza47/rn-size-check#readme",
+  "bugs": "https://github.com/MuhammadHamza47/rn-size-check/issues"
 }

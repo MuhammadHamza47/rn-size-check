@@ -166,7 +166,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       # ... build your release .aab/.apk ...
-      - uses: MuhammadHamza47/rn-size-check/packages/action@v0.4.0
+      - uses: MuhammadHamza47/rn-size-check/packages/action@v0.7.0
         with:
           build: android/app/build/outputs/bundle/release/app-release.aab
           max-growth: 1   # fail the PR if the download grew more than 1 MB
