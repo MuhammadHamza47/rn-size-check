@@ -10,6 +10,9 @@
     "dist",
     "README.md"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@actions/cache": "^3.2.4",
     "@actions/core": "^1.11.1",
